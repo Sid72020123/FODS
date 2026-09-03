@@ -6,6 +6,34 @@
 int front = -1, rear = -1;
 int QUEUE[SIZE];
 
+// === Utilities ===
+
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    int input;
+    char extra;
+    char buffer[100];
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        if (sscanf(buffer, "%d %c", &input, &extra) == 1)
+        {
+            *result = input;
+            return 1; // SUCCESS
+        }
+
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+
 // === Queue Methods ===
 
 int isEmpty()
@@ -109,9 +137,10 @@ void addValue()
     {
         int value;
 
-        printf("Enter a value [%d / %d]: ", getSize() + 1, SIZE);
-        scanf("%d", &value);
-        enqueue(value);
+        printf("\n{ QUEUE - ADDING New Value [%d / %d] }\n", getSize() + 1, SIZE);
+
+        if (get_int_input("Enter a value: ", 5, &value))
+            enqueue(value);
     }
 }
 
@@ -123,10 +152,11 @@ void deleteValue()
         return;
     }
 
-    int value;
+    printf("\n{ QUEUE - DELETING Value [size of queue - %d] }\n", getSize());
 
-    printf("Enter the value to delete [size of queue - %d]: ", getSize());
-    scanf("%d", &value);
+    int value;
+    if (!get_int_input("Enter a value: ", 5, &value))
+        return;
 
     int index = 0, found = 0, count = getSize();
     int TEMP_QUEUE[count];
@@ -161,12 +191,15 @@ void updateValue()
         return;
     }
 
-    int value, new_value;
+    printf("\n{ QUEUE - UPDATING Value [size of queue - %d] }\n", getSize());
 
-    printf("Enter the value to update [size of queue - %d]: ", getSize());
-    scanf("%d", &value);
-    printf("Enter the new value: ");
-    scanf("%d", &new_value);
+    int value;
+    if (!get_int_input("Enter the value to update: ", 5, &value))
+        return;
+
+    int new_value;
+    if (!get_int_input("Enter the new value: ", 5, &new_value))
+        return;
 
     int index = front, found = 0, count = getSize();
 
@@ -188,10 +221,10 @@ void updateValue()
 
 int main()
 {
-    // enqueue(10);
-    // enqueue(20);
-    // enqueue(30);
-    // enqueue(40);
+    enqueue(100);
+    enqueue(200);
+    enqueue(300);
+    enqueue(400);
 
     // displayQueue();
 
@@ -214,13 +247,8 @@ int main()
         printf("3. Delete Value\n");
         printf("4. Update Value\n");
         printf("5. Exit\n");
-        printf("Enter your choice: ");
 
-        if (scanf("%d", &choice) != 1)
-        {
-            printf("\nInvalid Option Entered! Please enter numbers only...\n");
-        }
-        else
+        if (get_int_input("Enter your choice: ", 3, &choice))
         {
             switch (choice)
             {
