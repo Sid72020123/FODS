@@ -66,8 +66,11 @@ void printTreeBreadthFirst()
     }
     else
     {
+        emptyQueue();
         enqueue(root);
         struct Node *traverse;
+
+        printf("[*] TREE: ");
 
         while (!isQueueEmpty())
         {
@@ -85,14 +88,56 @@ void printTreeBreadthFirst()
     }
 }
 
+void updateNode(int old_value, int new_value)
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyQueue();
+        enqueue(root);
+        struct Node *traverse;
+        int found = 0;
+
+        while (!isQueueEmpty() && !found)
+        {
+            dequeue(&traverse);
+
+            if (traverse->value == old_value)
+            {
+                traverse->value = new_value;
+                emptyQueue();
+                found = 1;
+            }
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left);
+
+            if (traverse->right != NULL)
+                enqueue(traverse->right);
+        }
+
+        printf("\n");
+    }
+}
+
 int main(void)
 {
-    printTree();
+    printTreeBreadthFirst();
+    addNode(10);
+    addNode(10);
+    addNode(10);
+    addNode(10);
     addNode(10);
     addNode(20);
     addNode(30);
     addNode(40);
     addNode(50);
-    printTree();
+    printTreeBreadthFirst();
+
+    updateNode(30, 99);
+    printTreeBreadthFirst();
     return 0;
 }
