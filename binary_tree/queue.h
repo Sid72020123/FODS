@@ -1,7 +1,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-int isEmpty(void);
+int isQueueEmpty(void);
 int getSize(void);
 void enqueue(int);
 int dequeue(int *);

@@ -14,14 +14,14 @@ struct QueueNode *front = NULL, *rear = NULL;
 
 // === Queue Methods ===
 
-int isEmpty()
+int isQueueEmpty()
 {
     return front == NULL;
 }
 
 int getSize()
 {
-    if (isEmpty())
+    if (isQueueEmpty())
         return 0;
     else
     {
@@ -75,7 +75,7 @@ int dequeue(int *value)
 
 int peek(int *value)
 {
-    if (isEmpty())
+    if (isQueueEmpty())
     {
         printf("\n[*] Queue is Empty!\n");
         return 0;
@@ -86,7 +86,7 @@ int peek(int *value)
 
 void emptyQueue()
 {
-    if (isEmpty())
+    if (isQueueEmpty())
         return;
 
     int temp;
