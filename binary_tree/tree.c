@@ -174,18 +174,48 @@ void deleteNode(int value)
         return;
     }
 
-    // --- If the value is found in the leaf node ---
     emptyQueue();
-    enqueue(root);
+    enqueue(root->left);
+    enqueue(root->right);
 
     struct Node *traverse;
+    struct Node *parent;
+    int found = 0;
 
     while (!isQueueEmpty())
     {
         dequeue(&traverse);
+
         if (traverse->value == value)
         {
+            emptyQueue();
+            found = 1;
         }
+        else
+        {
+            parent = traverse;
+            if (traverse->left != NULL)
+                enqueue(traverse->left);
+            if (traverse->right != NULL)
+                enqueue(traverse->right);
+        }
+    }
+
+    if (!found)
+        return;
+
+    // --- If the value is found in the leaf node ---
+    if (traverse->left == NULL && traverse->right == NULL)
+    {
+        if (parent->left == traverse)
+            parent->left = NULL;
+        else
+            parent->right = NULL;
+        free(traverse);
+    }
+
+    else
+    {
     }
 }
 
