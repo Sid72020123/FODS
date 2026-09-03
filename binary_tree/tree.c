@@ -161,22 +161,12 @@ void deleteNode(int value)
             free(root);
             root = NULL;
         }
-        else
-        {
-            struct Node *replacementParent;
-            struct Node *replacement = getRightmost(root, &replacementParent);
-
-            root->value = replacement->value;
-            replacementParent->right = NULL;
-            free(replacement);
-        }
 
         return;
     }
 
     emptyQueue();
-    enqueue(root->left);
-    enqueue(root->right);
+    enqueue(root);
 
     struct Node *traverse;
     struct Node *parent;
@@ -214,8 +204,16 @@ void deleteNode(int value)
         free(traverse);
     }
 
+    // --- If the value is found in the sibling nodes / middle-level nodes ---
     else
     {
+        struct Node *replacementParent;
+        struct Node *replacement = getRightmost(traverse, &replacementParent);
+
+        traverse->value = replacement->value;
+        replacementParent->right = NULL;
+
+        free(replacement);
     }
 }
 
@@ -235,5 +233,9 @@ int main(void)
 
     updateNode(30, 99);
     printTreeBreadthFirst();
+
+    deleteNode(50);
+    printTreeBreadthFirst();
+    
     return 0;
 }
