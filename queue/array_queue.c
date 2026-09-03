@@ -113,7 +113,7 @@ void displayQueue()
         return;
     }
 
-    printf("\n[*] Queue: ");
+    printf("\n[*] QUEUE: ");
 
     int i = front;
 
@@ -155,7 +155,7 @@ void deleteValue()
     printf("\n{ QUEUE - DELETING Value [size of queue - %d] }\n", getSize());
 
     int value;
-    if (!get_int_input("Enter a value: ", 5, &value))
+    if (!get_int_input("Enter the value to delete: ", 5, &value))
         return;
 
     int index = 0, found = 0, count = getSize();
