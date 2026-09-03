@@ -120,29 +120,80 @@ void clear_input_buffer(void)
         ;
 }
 
-int get_int_input(const char *prompt)
+// int get_int_input(const char *prompt)
+// {
+//     int input;
+//     char extra;
+
+//     while (1)
+//     {
+//         printf("%s", prompt);
+
+//         if (scanf("%d%c", &input, &extra) == 2)
+//         {
+//             if (extra == '\n')
+//                 return input;
+//         }
+
+//         clear_input_buffer();
+//     }
+// }
+
+// int get_int_input(const char *prompt)
+// {
+//     int input;
+//     char extra;
+//     char buffer[100];
+
+//     while (1)
+//     {
+//         printf("%s", prompt);
+//         fgets(buffer, sizeof(buffer), stdin);
+//         if (buffer[0] == '\n')
+//         {
+//             printf("You just pressed ENTER!\n");
+//             continue;
+//         }
+
+//         if (sscanf(buffer, "%d", &input) == 1)
+//         {
+//             return input;
+//         }
+//         printf("Invalid input. Try again.\n");
+//     }
+// }
+
+int get_int_input(const char *prompt, int max_tries, int *result)
 {
     int input;
     char extra;
+    char buffer[100];
+    int tries = 0;
 
-    while (1)
+    while (tries < max_tries)
     {
         printf("%s", prompt);
+        fgets(buffer, sizeof(buffer), stdin);
 
-        if (scanf("%d%c", &input, &extra) == 2)
+        if (sscanf(buffer, "%d %c", &input, &extra) == 1)
         {
-            if (extra == '\n')
-                return input;
+            *result = input;
+            return 1; // SUCCESS
         }
 
-        clear_input_buffer();
+        printf("Invalid input. Try again.\n");
+        tries++;
     }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
 }
 
 int main(void)
 {
-    int a = get_int_input("Enter a number: ");
-    int b = get_int_input("Enter another number: ");
+    int a, b;
+    get_int_input("Enter a number: ", 5, &a);
+    get_int_input("Enter another number: ", 5, &b);
 
     printf("\nRECEIVED A: %d\n", a);
     printf("RECEIVED B: %d\n", b);
