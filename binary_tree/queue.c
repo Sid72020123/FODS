@@ -4,14 +4,13 @@
 #include "queue.h"
 
 // === Global Variables / Structures ===
-
-struct Node
+struct QueueNode
 {
     int value;
-    struct Node *next;
+    struct QueueNode *next;
 };
 
-struct Node *front = NULL, *rear = NULL;
+struct QueueNode *front = NULL, *rear = NULL;
 
 // === Queue Methods ===
 
@@ -27,7 +26,7 @@ int getSize()
     else
     {
         int size = 0;
-        struct Node *traverse = front;
+        struct QueueNode *traverse = front;
 
         while (traverse != NULL)
         {
@@ -40,7 +39,7 @@ int getSize()
 
 void enqueue(int value)
 {
-    struct Node *newNode = (struct Node *)(malloc(sizeof(struct Node)));
+    struct QueueNode *newNode = (struct QueueNode *)(malloc(sizeof(struct QueueNode)));
     newNode->value = value;
     newNode->next = NULL;
 
@@ -67,7 +66,7 @@ int dequeue(int *value)
     }
     else
     {
-        struct Node *deleteNode = front;
+        struct QueueNode *deleteNode = front;
         front = front->next;
         free(deleteNode);
     }
@@ -83,4 +82,16 @@ int peek(int *value)
     }
     *value = front->value;
     return 1;
+}
+
+void emptyQueue()
+{
+    if (isEmpty())
+        return;
+
+    int temp;
+    while (front != NULL)
+    {
+        dequeue(&temp);
+    }
 }
