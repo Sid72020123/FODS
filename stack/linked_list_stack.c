@@ -100,7 +100,7 @@ int peek()
 {
     if (isEmpty())
     {
-        printf("\n[*] Queue is Empty!\n");
+        printf("\n[*] Stack is Empty!\n");
         return -0;
     }
 
