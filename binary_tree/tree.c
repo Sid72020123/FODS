@@ -35,33 +35,64 @@ void addNode(int value)
 
         while (!isQueueEmpty())
         {
-            dequeue(traverse);
-
+            dequeue(&traverse);
+            printf("%d\n", traverse->value);
+            parentNode = traverse;
             if (traverse->left == NULL || traverse->right == NULL)
             {
                 emptyQueue();
+                // break;
             }
             else
             {
-                parentNode = traverse;
-                if (traverse->left != NULL)
-                    enqueue(traverse->left);
-                if (traverse->right != NULL)
-                    enqueue(traverse->right);
+                enqueue(traverse->left);
+                enqueue(traverse->right);
             }
         }
 
         if (parentNode->left == NULL)
             parentNode->left = newNode;
-        else if (parentNode->right == NULL)
+        else
             parentNode->right = newNode;
+    }
+}
+
+// Breadth-First traversal / Level-Order traversal
+void printTreeBreadthFirst()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        enqueue(root);
+        struct Node *traverse;
+
+        while (!isQueueEmpty())
+        {
+            dequeue(&traverse);
+            printf("[%3d] ", traverse->value);
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left);
+
+            if (traverse->right != NULL)
+                enqueue(traverse->right);
+        }
+
+        printf("\n");
     }
 }
 
 int main(void)
 {
+    printTree();
     addNode(10);
     addNode(20);
     addNode(30);
+    addNode(40);
+    addNode(50);
+    printTree();
     return 0;
 }
