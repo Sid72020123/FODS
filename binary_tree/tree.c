@@ -162,6 +162,16 @@ void deleteNode(int value)
             root = NULL;
         }
 
+        else
+        {
+            struct Node *replacementParent;
+            struct Node *replacement = getRightmost(root, &replacementParent);
+
+            root->value = replacement->value;
+            replacementParent->right = NULL;
+
+            free(replacement);
+        }
         return;
     }
 
@@ -183,11 +193,16 @@ void deleteNode(int value)
         }
         else
         {
-            parent = traverse;
             if (traverse->left != NULL)
+            {
+                parent = traverse;
                 enqueue(traverse->left);
+            }
             if (traverse->right != NULL)
+            {
+                parent = traverse;
                 enqueue(traverse->right);
+            }
         }
     }
 
@@ -234,8 +249,8 @@ int main(void)
     updateNode(30, 99);
     printTreeBreadthFirst();
 
-    deleteNode(50);
+    deleteNode(10);
     printTreeBreadthFirst();
-    
+
     return 0;
 }
