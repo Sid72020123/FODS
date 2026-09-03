@@ -1,11 +1,12 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+struct Node;
+
 int isQueueEmpty(void);
-int getSize(void);
-void enqueue(int);
-int dequeue(int *);
-int peek(int *);
+void enqueue(struct Node *);
+int dequeue(struct Node **);
+int peek(struct Node **);
 void emptyQueue(void);
 
 #endif

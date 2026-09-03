@@ -6,7 +6,7 @@
 // === Global Variables / Structures ===
 struct QueueNode
 {
-    int value;
+    struct Node *location;
     struct QueueNode *next;
 };
 
@@ -37,10 +37,10 @@ int getSize()
     }
 }
 
-void enqueue(int value)
+void enqueue(struct Node *location)
 {
     struct QueueNode *newNode = (struct QueueNode *)(malloc(sizeof(struct QueueNode)));
-    newNode->value = value;
+    newNode->location = location;
     newNode->next = NULL;
 
     if (front == NULL)
@@ -52,12 +52,12 @@ void enqueue(int value)
     }
 }
 
-int dequeue(int *value)
+int dequeue(struct Node **location)
 {
     if (front == NULL)
         return 0;
 
-    *value = front->value;
+    *location = front->location;
 
     if (front == rear)
     {
@@ -73,14 +73,14 @@ int dequeue(int *value)
     return 1;
 }
 
-int peek(int *value)
+int peek(struct Node **location)
 {
     if (isQueueEmpty())
     {
         printf("\n[*] Queue is Empty!\n");
         return 0;
     }
-    *value = front->value;
+    *location = front->location;
     return 1;
 }
 
@@ -89,7 +89,7 @@ void emptyQueue()
     if (isQueueEmpty())
         return;
 
-    int temp;
+    struct Node *temp;
     while (front != NULL)
     {
         dequeue(&temp);
