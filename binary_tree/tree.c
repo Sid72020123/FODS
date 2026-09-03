@@ -123,6 +123,23 @@ void updateNode(int old_value, int new_value)
     }
 }
 
+// Function to get the rightmost node in tree
+struct Node *getRightmost(struct Node *node, struct Node **replacementParent)
+{
+    if (node == NULL)
+        return NULL;
+
+    struct Node *searchNode = node;
+
+    while (searchNode->right != NULL)
+    {
+        *replacementParent = searchNode;
+        searchNode = searchNode->right;
+    }
+
+    return searchNode;
+}
+
 void deleteNode(int value)
 {
     if (root == NULL)
@@ -131,10 +148,45 @@ void deleteNode(int value)
         return;
     }
 
+    // --- If the value is found in the root itself ---
+    /*
+        -> Delete the root node if it has no children.
+        -> Else, get the rightmost node and replace the root node's value with that node,
+            then, delete the rightmost node
+    */
+    if (root->value == value)
+    {
+        if (root->left == NULL && root->right == NULL)
+        {
+            free(root);
+            root = NULL;
+        }
+        else
+        {
+            struct Node *replacementParent;
+            struct Node *replacement = getRightmost(root, &replacementParent);
+
+            root->value = replacement->value;
+            replacementParent->right = NULL;
+            free(replacement);
+        }
+
+        return;
+    }
+
+    // --- If the value is found in the leaf node ---
     emptyQueue();
     enqueue(root);
-    
+
     struct Node *traverse;
+
+    while (!isQueueEmpty())
+    {
+        dequeue(&traverse);
+        if (traverse->value == value)
+        {
+        }
+    }
 }
 
 int main(void)
