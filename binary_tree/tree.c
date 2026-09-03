@@ -123,6 +123,20 @@ void updateNode(int old_value, int new_value)
     }
 }
 
+void deleteNode(int value)
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!\n");
+        return;
+    }
+
+    emptyQueue();
+    enqueue(root);
+    
+    struct Node *traverse;
+}
+
 int main(void)
 {
     printTreeBreadthFirst();
