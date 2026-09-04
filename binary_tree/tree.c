@@ -14,7 +14,64 @@ struct Node
 
 struct Node *root = NULL;
 
+// === Utilities ===
+
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    int input;
+    char extra;
+    char buffer[100];
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        if (sscanf(buffer, "%d %c", &input, &extra) == 1)
+        {
+            *result = input;
+            return 1; // SUCCESS
+        }
+
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+
 // === Binary Tree Methods ===
+
+int getSize()
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        emptyQueue();
+        enqueue(root);
+        struct Node *traverse;
+
+        int size = 0;
+
+        while (!isQueueEmpty())
+        {
+            dequeue(&traverse);
+            size++;
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left);
+
+            if (traverse->right != NULL)
+                enqueue(traverse->right);
+        }
+        return size;
+    }
+}
 
 void addNode(int value)
 {
@@ -225,11 +282,11 @@ void printTreePostorderRecursive(struct Node *node)
     printf("[%3d] ", node->value);
 }
 
-void updateNode(int old_value, int new_value)
+int updateNode(int old_value, int new_value)
 {
     if (root == NULL)
     {
-        printf("[*] Tree is Empty!");
+        return 0;
     }
     else
     {
@@ -256,7 +313,7 @@ void updateNode(int old_value, int new_value)
                 enqueue(traverse->right);
         }
 
-        printf("\n");
+        return found;
     }
 }
 
@@ -277,12 +334,11 @@ struct Node *getRightmost(struct Node *node, struct Node **replacementParent)
     return searchNode;
 }
 
-void deleteNode(int value)
+int deleteNode(int value)
 {
     if (root == NULL)
     {
-        printf("[*] Tree is Empty!\n");
-        return;
+        return 0;
     }
 
     // --- If the value is found in the root itself ---
@@ -309,7 +365,7 @@ void deleteNode(int value)
 
             free(replacement);
         }
-        return;
+        return 1;
     }
 
     emptyQueue();
@@ -346,7 +402,7 @@ void deleteNode(int value)
     }
 
     if (!found)
-        return;
+        return 0;
 
     // --- If the value is found in the leaf node ---
     if (traverse->left == NULL && traverse->right == NULL)
@@ -378,10 +434,119 @@ void deleteNode(int value)
 
         free(replacement);
     }
+    return 1;
+}
+
+// === CRUD Methods ===
+
+void displayTree()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+    printTreeBreadthFirst();
+    printTreePreorder();
+    printTreeInorder();
+    printTreePostorder();
+}
+
+void addValue()
+{
+    printf("\n{ TREE - ADDING New Value [%d] }\n", getSize() + 1);
+    int value;
+    if (get_int_input("Enter a value: ", 5, &value))
+    {
+        addNode(value);
+        printf("\nAdded '%d' to tree.\n", value);
+    }
+}
+
+void deleteValue()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+
+    printf("\n{ TREE - DELETING Value [size of tree - %d] }\n", getSize());
+    int value;
+    if (!get_int_input("Enter a value: ", 5, &value))
+        return;
+
+    int found = deleteNode(value);
+
+    if (!found)
+        printf("\n[*] Couldn't delete value '%d' as it was not found!\n", value);
+}
+
+void updateValue()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+
+    printf("\n{ TREE - UPDATING Value [size of tree - %d] }\n", getSize());
+
+    int value;
+    if (!get_int_input("Enter a value: ", 5, &value))
+        return;
+
+    int new_value;
+    if (!get_int_input("Enter the new value: ", 5, &new_value))
+        return;
+
+    int found = updateNode(value, new_value);
+
+    if (!found)
+        printf("\n[*] Couldn't update value '%d' as it was not found!\n", value);
 }
 
 int main(void)
 {
+    int choice = 0;
+    do
+    {
+        printf("\n===== MENU [TREE] =====\n");
+        printf("1. Display Tree (using various methods)\n");
+        printf("2. Add value\n");
+        printf("3. Delete Value\n");
+        printf("4. Update Value\n");
+        printf("5. Exit\n");
+
+        if (get_int_input("Enter your choice: ", 3, &choice))
+        {
+            switch (choice)
+            {
+            case 1:
+                printf("\n");
+                displayTree();
+                break;
+            case 2:
+                addValue();
+                break;
+            case 3:
+                deleteValue();
+                break;
+            case 4:
+                updateValue();
+                break;
+            case 5:
+                printf("\nExiting...\n");
+                break;
+            default:
+                printf("\nInvalid choice!\n");
+            }
+        }
+
+    } while (choice != 5);
+
+    return 0;
+    /*
     printTreeBreadthFirst();
     addNode(10);
     addNode(10);
@@ -414,6 +579,6 @@ int main(void)
     printf("[*] TREE (postorder - RECURSION): ");
     printTreePostorderRecursive(root);
     printf("\n");
-
+    */
     return 0;
 }
