@@ -8,6 +8,6 @@ int getSizeStack(void);
 void push(struct Node *);
 int pop(struct Node **);
 int peekStack(struct Node **);
-void emptyQueue(void);
+void emptyStack(void);
 
 #endif
