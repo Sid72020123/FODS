@@ -153,6 +153,48 @@ void printTreeInorder()
     }
 }
 
+// postorder traversal (left -> right -> root) [Depth-First traversal]
+void printTreePostorder()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyStack();
+        struct Node *traverse = root;
+        struct Node *previous = NULL;
+
+        printf("[*] TREE (postorder): ");
+
+        while (traverse != NULL || !isStackEmpty())
+        {
+            while (traverse != NULL)
+            {
+                push(traverse);
+                traverse = traverse->left;
+            }
+
+            pop(&traverse);
+
+            if (traverse->right != NULL && traverse->right != previous)
+            {
+                push(traverse);
+                traverse = traverse->right;
+            }
+            else
+            {
+                printf("[%3d] ", traverse->value);
+                previous = traverse;
+                traverse = NULL;
+            }
+        }
+
+        printf("\n");
+    }
+}
+
 void updateNode(int old_value, int new_value)
 {
     if (root == NULL)
@@ -330,6 +372,8 @@ int main(void)
     deleteNode(20);
     printTreeBreadthFirst();
     printTreePreorder();
+    printTreeInorder();
+    printTreePostorder();
 
     return 0;
 }
