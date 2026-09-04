@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "queue.h"
+#include "stack.h"
 
 // === Global Variables / Structures ===
 struct Node
@@ -82,6 +84,37 @@ void printTreeBreadthFirst()
 
             if (traverse->right != NULL)
                 enqueue(traverse->right);
+        }
+
+        printf("\n");
+    }
+}
+
+// preorder traversal [Depth-First traversal]
+void printTreePreorder()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyStack();
+        push(root);
+        struct Node *traverse;
+
+        printf("[*] TREE (preorder): ");
+
+        while (!isStackEmpty())
+        {
+            pop(&traverse);
+            printf("[%3d] ", traverse->value);
+
+            if (traverse->right != NULL)
+                push(traverse->right);
+
+            if (traverse->left != NULL)
+                push(traverse->left);
         }
 
         printf("\n");
@@ -264,6 +297,7 @@ int main(void)
     printTreeBreadthFirst();
     deleteNode(20);
     printTreeBreadthFirst();
+    printTreePreorder();
 
     return 0;
 }
