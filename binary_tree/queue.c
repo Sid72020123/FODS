@@ -19,7 +19,7 @@ int isQueueEmpty()
     return front == NULL;
 }
 
-int getSize()
+int getSizeQueue()
 {
     if (isQueueEmpty())
         return 0;
@@ -73,11 +73,10 @@ int dequeue(struct Node **location)
     return 1;
 }
 
-int peek(struct Node **location)
+int peekQueue(struct Node **location)
 {
     if (isQueueEmpty())
     {
-        printf("\n[*] Queue is Empty!\n");
         return 0;
     }
     *location = front->location;
