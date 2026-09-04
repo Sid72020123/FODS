@@ -480,6 +480,8 @@ void deleteValue()
 
     if (!found)
         printf("\n[*] Couldn't delete value '%d' as it was not found!\n", value);
+    else
+        printf("\nDeleted '%d' from tree.\n", value);
 }
 
 void updateValue()
@@ -504,6 +506,8 @@ void updateValue()
 
     if (!found)
         printf("\n[*] Couldn't update value '%d' as it was not found!\n", value);
+    else
+        printf("\nUpdated the value '%d' to '%d' in the tree.\n", value, new_value);
 }
 
 int main(void)
