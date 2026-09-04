@@ -154,6 +154,7 @@ void deleteNode(int value)
         -> Else, get the rightmost node and replace the root node's value with that node,
             then, delete the rightmost node
     */
+
     if (root->value == value)
     {
         if (root->left == NULL && root->right == NULL)
@@ -161,14 +162,13 @@ void deleteNode(int value)
             free(root);
             root = NULL;
         }
-
         else
         {
-            struct Node *replacementParent;
+            struct Node *replacementParent = root;
             struct Node *replacement = getRightmost(root, &replacementParent);
 
             root->value = replacement->value;
-            replacementParent->right = NULL;
+            replacementParent->right = replacement->left;
 
             free(replacement);
         }
@@ -179,7 +179,7 @@ void deleteNode(int value)
     enqueue(root);
 
     struct Node *traverse;
-    struct Node *parent;
+    struct Node *parent = NULL;
     int found = 0;
 
     while (!isQueueEmpty())
@@ -195,12 +195,14 @@ void deleteNode(int value)
         {
             if (traverse->left != NULL)
             {
-                parent = traverse;
+                if (traverse->left->value == value)
+                    parent = traverse;
                 enqueue(traverse->left);
             }
             if (traverse->right != NULL)
             {
-                parent = traverse;
+                if (traverse->right->value == value)
+                    parent = traverse;
                 enqueue(traverse->right);
             }
         }
@@ -218,15 +220,24 @@ void deleteNode(int value)
             parent->right = NULL;
         free(traverse);
     }
-
-    // --- If the value is found in the sibling nodes / middle-level nodes ---
+    // --- If traverse has only a left child, promote that child up directly ---
+    else if (traverse->right == NULL)
+    {
+        struct Node *onlyChild = traverse->left;
+        if (parent->left == traverse)
+            parent->left = onlyChild;
+        else
+            parent->right = onlyChild;
+        free(traverse);
+    }
+    // --- If the value is found in the sibling nodes / middle-level nodes which have two children ---
     else
     {
-        struct Node *replacementParent;
+        struct Node *replacementParent = traverse;
         struct Node *replacement = getRightmost(traverse, &replacementParent);
 
         traverse->value = replacement->value;
-        replacementParent->right = NULL;
+        replacementParent->right = replacement->left;
 
         free(replacement);
     }
@@ -250,6 +261,8 @@ int main(void)
     printTreeBreadthFirst();
 
     deleteNode(10);
+    printTreeBreadthFirst();
+    deleteNode(20);
     printTreeBreadthFirst();
 
     return 0;
