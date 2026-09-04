@@ -95,7 +95,6 @@ void addNode(int value)
         while (!isQueueEmpty())
         {
             dequeue(&traverse);
-            printf("%d\n", traverse->value);
             parentNode = traverse;
             if (traverse->left == NULL || traverse->right == NULL)
             {
@@ -512,6 +511,14 @@ void updateValue()
 
 int main(void)
 {
+    addNode(10);
+    addNode(20);
+    addNode(30);
+    addNode(40);
+    addNode(50);
+    addNode(60);
+    addNode(70);
+
     int choice = 0;
     do
     {
