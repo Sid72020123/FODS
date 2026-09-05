@@ -100,11 +100,63 @@ void printTreeBreadthFirst()
     }
 }
 
+int updateNode(int old_value, int new_value)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+
+    if (root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        // find / traverse the tree according to BST rules
+        // and update the value of the node accordingly
+
+        struct Node *traverse = root;
+
+        while (traverse != NULL)
+        {
+            if (old_value < traverse->value)
+            {
+                // try the left side
+                if (traverse->left->value == old_value)
+                {
+                    // replace the value
+                    traverse->left->value = new_value;
+                    traverse = NULL;
+                }
+                else
+                    traverse = traverse->left;
+            }
+            else
+            {
+                if (old_value >= traverse->value)
+                {
+                    // try the right side
+                    if (traverse->right->value == old_value)
+                    {
+                        // replace the value
+                        traverse->right->value = new_value;
+                        traverse = NULL;
+                    }
+                    else
+                        traverse = traverse->right;
+                }
+            }
+        }
+    }
+}
+
 int main(void)
 {
     addNode(10);
+    addNode(70);
+    addNode(5);
+    addNode(15);
     addNode(10);
-    addNode(10);
+    printTreeBreadthFirst();
+    updateNode(70, 88);
     printTreeBreadthFirst();
     return 0;
 }
