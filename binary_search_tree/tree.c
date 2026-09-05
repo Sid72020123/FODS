@@ -50,18 +50,20 @@ void addNode(int value)
                 else
                     traverse = traverse->left;
             }
-
-            if (value >= traverse->value)
+            else
             {
-                // try the right side
-                if (traverse->right == NULL)
+                if (value >= traverse->value)
                 {
-                    // link the new node
-                    traverse->right = newNode;
-                    traverse = NULL;
+                    // try the right side
+                    if (traverse->right == NULL)
+                    {
+                        // link the new node
+                        traverse->right = newNode;
+                        traverse = NULL;
+                    }
+                    else
+                        traverse = traverse->right;
                 }
-                else
-                    traverse = traverse->right;
             }
         }
     }
