@@ -42,8 +42,11 @@ void addNode(int value)
             {
                 // try the left side
                 if (traverse->left == NULL)
+                {
                     // link the new node
                     traverse->left = newNode;
+                    traverse = NULL;
+                }
                 else
                     traverse = traverse->left;
             }
@@ -52,8 +55,11 @@ void addNode(int value)
             {
                 // try the right side
                 if (traverse->right == NULL)
+                {
                     // link the new node
                     traverse->right = newNode;
+                    traverse = NULL;
+                }
                 else
                     traverse = traverse->right;
             }
@@ -96,7 +102,7 @@ int main(void)
 {
     addNode(10);
     addNode(10);
-    // addNode(10);
-    // printTreeBreadthFirst();
+    addNode(10);
+    printTreeBreadthFirst();
     return 0;
 }
