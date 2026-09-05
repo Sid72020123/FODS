@@ -31,6 +31,25 @@ void addNode(int value)
     else
     {
         struct Node *traverse = root;
+
+        while (traverse != NULL)
+        {
+            if (value < traverse->value)
+            {
+                if (traverse->left == NULL)
+                    traverse->left = newNode;
+                else
+                    traverse = traverse->left;
+            }
+
+            if (value >= traverse->value)
+            {
+                if (traverse->right == NULL)
+                    traverse->right = newNode;
+                else
+                    traverse = traverse->right;
+            }
+        }
     }
 }
 
