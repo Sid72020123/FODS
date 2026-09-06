@@ -55,11 +55,14 @@ Space Complexity: O(n)
 */
 int *mergeSort(int arr[], int size)
 {
-    // if (size == 0)
-    //     return arr;
+    printArray(arr, size);
+    if (size <= 1)
+        return arr[0];
     int half_index = size / 2;
-    printf("%d\n", half_index);
-    printArray(copyArray(arr, 0, half_index), size / 2);
+    // printf("%d\n", half_index);
+    // printArray(copyArray(arr, 0, half_index), size / 2);
+    printf("======\n");
+    mergeSort(copyArray(arr, 0, half_index), size / 2);
     // mergeSort(copyArray(arr, 0, half_index), size / 2);
     // mergeSort(copyArray(arr, half_index, size), size / 2);
 }
@@ -70,12 +73,12 @@ int main(void)
     int n = sizeof(original_array) / sizeof(original_array[0]);
 
     // Before Sort
-    printArray(original_array, n);
+    // printArray(original_array, n);
 
     // Sort the array
     mergeSort(original_array, n);
 
     // After Sort
-    printArray(original_array, n);
+    // printArray(original_array, n);
     return 0;
 }
