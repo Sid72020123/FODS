@@ -49,32 +49,20 @@ int *merge(int *left, int leftSize, int *right, int rightSize)
     while (i < leftSize && j < rightSize)
     {
         if (left[i] <= right[j])
-        {
             // the value in the left array was smaller or equal, so add it first
-            merged[k++] = left[i];
-            i++;
-        }
+            merged[k++] = left[i++];
         else
-        {
             // the value in the right array was smaller, so add it first
-            merged[k++] = right[j];
-            j++;
-        }
+            merged[k++] = right[j++];
     }
 
     // add the remaining values of the left array
     while (i < leftSize)
-    {
-        merged[k++] = left[i];
-        i++;
-    }
+        merged[k++] = left[i++];
 
     // add the remaining values of the right array
     while (j < rightSize)
-    {
-        merged[k++] = right[j];
-        j++;
-    }
+        merged[k++] = right[j++];
 
     return merged;
 }
@@ -131,5 +119,7 @@ int main(void)
 
     // After Sort
     printArray(sorted_array, n);
+
+    free(sorted_array);
     return 0;
 }
