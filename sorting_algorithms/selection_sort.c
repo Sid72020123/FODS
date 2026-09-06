@@ -12,6 +12,14 @@
 
 #include <stdio.h>
 
+// Function to swap the values of two int variables
+void swap(int *x, int *y)
+{
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
 /*
 Function to do selection sort on an array
 
@@ -42,9 +50,7 @@ void selectionSort(int arr[], int size)
 
         // Swap the minimum value with the first value in the
         // array from i to size
-        int temp = arr[i];
-        arr[i] = arr[min_index];
-        arr[min_index] = temp;
+        swap(&arr[i], &arr[min_index]);
     }
 }
 
