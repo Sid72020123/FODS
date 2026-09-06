@@ -28,6 +28,8 @@ int *copyArray(int arr[], int start_index, int n)
     {
         newArray[i] = arr[c];
     }
+
+    return newArray;
 }
 
 // Function to print the elements in the array
