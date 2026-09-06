@@ -100,10 +100,9 @@ void printTreeBreadthFirst()
     }
 }
 
+// TODO: Fix the bugs...
 int updateNode(int old_value, int new_value)
 {
-    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-
     if (root == NULL)
     {
         return 0;
