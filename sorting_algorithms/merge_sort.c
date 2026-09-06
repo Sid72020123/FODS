@@ -13,14 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Function to swap the values of two int variables
-void swap(int *x, int *y)
-{
-    int temp = *x;
-    *x = *y;
-    *y = temp;
-}
-
 int *copyArray(int arr[], int start_index, int n)
 {
     int *newArray = (int *)malloc(n * sizeof(int));
@@ -42,6 +34,28 @@ void printArray(int arr[], int n)
     printf("\n");
 }
 
+int *merge(int *left, int leftSize, int *right, int rightSize)
+{
+    int *merged = (int *)malloc((leftSize + rightSize) * sizeof(int));
+
+    int i = 0, j = 0, k = 0;
+    while (i < leftSize && j < leftSize)
+    {
+        if (left[i] <= right[j])
+        {
+            merged[k++] = left[i];
+            i++;
+        }
+        else
+        {
+            merged[k++] = right[j];
+            j++;
+        }
+    }
+
+    return merged;
+}
+
 /*
 Function to do merge sort on an array
 
@@ -57,14 +71,29 @@ int *mergeSort(int arr[], int size)
 {
     printArray(arr, size);
     if (size <= 1)
-        return arr[0];
-    int half_index = size / 2;
-    // printf("%d\n", half_index);
-    // printArray(copyArray(arr, 0, half_index), size / 2);
-    printf("======\n");
-    mergeSort(copyArray(arr, 0, half_index), size / 2);
-    // mergeSort(copyArray(arr, 0, half_index), size / 2);
-    // mergeSort(copyArray(arr, half_index, size), size / 2);
+    {
+        int *base = (int *)malloc(size * sizeof(int));
+        for (int i = 0; i < size; i++)
+            base[i] = arr[i];
+        return base;
+    }
+
+    int half = size / 2;
+
+    int *left = copyArray(arr, 0, half);
+    int *right = copyArray(arr, half, size - half);
+
+    int *sortedLeft = mergeSort(left, half);
+    int *sortedRight = mergeSort(right, size - half);
+
+    int *result = merge(sortedLeft, half, sortedRight, size - half);
+
+    free(left);
+    free(right);
+    free(sortedLeft);
+    free(sortedRight);
+
+    return result;
 }
 
 int main(void)
@@ -76,9 +105,9 @@ int main(void)
     // printArray(original_array, n);
 
     // Sort the array
-    mergeSort(original_array, n);
+    int *sorted_array = mergeSort(original_array, n);
 
     // After Sort
-    // printArray(original_array, n);
+    printArray(sorted_array, n);
     return 0;
 }
