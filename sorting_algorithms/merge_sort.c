@@ -13,17 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int *copyArray(int arr[], int start_index, int n)
-{
-    int *newArray = (int *)malloc(n * sizeof(int));
-    for (int c = start_index, i = 0; i < n; c++, i++)
-    {
-        newArray[i] = arr[c];
-    }
-
-    return newArray;
-}
-
 // Function to print the elements in the array
 void printArray(int arr[], int n)
 {
@@ -34,31 +23,53 @@ void printArray(int arr[], int n)
     printf("\n");
 }
 
+// Function to copy the elements of an array into a new array
+// values are copied from start_index to start_index + (n - 1)
+int *copyArray(int arr[], int start_index, int n)
+{
+    // allocate memory space to the new array
+    int *newArray = (int *)malloc(n * sizeof(int));
+    for (int c = start_index, i = 0; i < n; c++, i++)
+    {
+        newArray[i] = arr[c];
+    }
+
+    return newArray;
+}
+
+// Compare the values in the arrays and merge them into a single array
 int *merge(int *left, int leftSize, int *right, int rightSize)
 {
+    // allocate memory space to the new merged array
     int *merged = (int *)malloc((leftSize + rightSize) * sizeof(int));
 
     int i = 0, j = 0, k = 0;
+
+    // loop through both the arrays at the same time
     while (i < leftSize && j < rightSize)
     {
         if (left[i] <= right[j])
         {
+            // the value in the left array was smaller or equal, so add it first
             merged[k++] = left[i];
             i++;
         }
         else
         {
+            // the value in the right array was smaller, so add it first
             merged[k++] = right[j];
             j++;
         }
     }
 
+    // add the remaining values of the left array
     while (i < leftSize)
     {
         merged[k++] = left[i];
         i++;
     }
 
+    // add the remaining values of the right array
     while (j < rightSize)
     {
         merged[k++] = right[j];
@@ -81,7 +92,6 @@ Space Complexity: O(n)
 */
 int *mergeSort(int arr[], int size)
 {
-    printArray(arr, size);
     if (size <= 1)
     {
         int *base = (int *)malloc(size * sizeof(int));
@@ -114,7 +124,7 @@ int main(void)
     int n = sizeof(original_array) / sizeof(original_array[0]);
 
     // Before Sort
-    // printArray(original_array, n);
+    printArray(original_array, n);
 
     // Sort the array
     int *sorted_array = mergeSort(original_array, n);
