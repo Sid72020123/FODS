@@ -39,7 +39,7 @@ int *merge(int *left, int leftSize, int *right, int rightSize)
     int *merged = (int *)malloc((leftSize + rightSize) * sizeof(int));
 
     int i = 0, j = 0, k = 0;
-    while (i < leftSize && j < leftSize)
+    while (i < leftSize && j < rightSize)
     {
         if (left[i] <= right[j])
         {
@@ -51,6 +51,18 @@ int *merge(int *left, int leftSize, int *right, int rightSize)
             merged[k++] = right[j];
             j++;
         }
+    }
+
+    while (i < leftSize)
+    {
+        merged[k++] = left[i];
+        i++;
+    }
+
+    while (j < rightSize)
+    {
+        merged[k++] = right[j];
+        j++;
     }
 
     return merged;
