@@ -11,6 +11,7 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 // Function to swap the values of two int variables
 void swap(int *x, int *y)
@@ -20,13 +21,23 @@ void swap(int *x, int *y)
     *y = temp;
 }
 
-int *copyArray(int arr[], int start, int end)
+int *copyArray(int arr[], int start_index, int n)
 {
-    int *newArray = (int *)malloc((end - start + 1) * sizeof(int));
-    for (int c = start, i = 0; c < end + 1; c++, i++)
+    int *newArray = (int *)malloc(n * sizeof(int));
+    for (int c = start_index, i = 0; i < n; c++, i++)
     {
         newArray[i] = arr[c];
     }
+}
+
+// Function to print the elements in the array
+void printArray(int arr[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
 }
 
 /*
@@ -42,19 +53,13 @@ Space Complexity: O(n)
 */
 int *mergeSort(int arr[], int size)
 {
+    // if (size == 0)
+    //     return arr;
     int half_index = size / 2;
-    mergeSort(copyArray(arr, 0, half_index), size / 2);
-    mergeSort(copyArray(arr, half_index, size), size / 2);
-}
-
-// Function to print the elements in the array
-void printArray(int arr[], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        printf("%d ", arr[i]);
-    }
-    printf("\n");
+    printf("%d\n", half_index);
+    printArray(copyArray(arr, 0, half_index), size / 2);
+    // mergeSort(copyArray(arr, 0, half_index), size / 2);
+    // mergeSort(copyArray(arr, half_index, size), size / 2);
 }
 
 int main(void)
