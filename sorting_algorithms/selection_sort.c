@@ -4,10 +4,10 @@
 => Program to perform selection sort on an array.
 
 => Algorithm:
-   1. Loop the array from index (i) 0 to n - 1
-   2. Assume the smallest value from i to n - 1 in the array to be at index i
-   3. Find the smallest value index in the array from i + 1 to n
-   4. Swap the current index value with the new smallest value
+   -> Loop the array from index (i) 0 to n - 1
+   -> Assume the smallest value from i to n - 1 in the array to be at index i
+   -> Find the smallest value index in the array from i + 1 to n
+   -> Swap the current index value with the new smallest value
 */
 
 #include <stdio.h>
