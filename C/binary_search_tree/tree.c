@@ -184,9 +184,21 @@ int deleteNode(int value)
         else
         {
             if (deleteNode->left != NULL)
-                deleteNode->right = deleteNode->left;
+            {
+                // attach any left child / subtree of delete node to delete node's parent
+                if (deleteNodeParent == searchNode)
+                    deleteNodeParent->left = deleteNode->left;
+                else
+                    deleteNodeParent->right = deleteNode->left;
+            }
             else
-                deleteNode->left = deleteNode->right;
+            {
+                // attach any right child / subtree of delete node to delete node's parent
+                if (deleteNodeParent == searchNode)
+                    deleteNodeParent->right = deleteNode->right;
+                else
+                    deleteNodeParent->left = deleteNode->right;
+            }
         }
 
         searchNode->value = deleteNode->value;
