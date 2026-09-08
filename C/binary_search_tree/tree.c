@@ -116,6 +116,7 @@ int updateNode(int old_value, int new_value)
             // find / traverse the tree according to BST rules
             // and update the value of the node accordingly
 
+            int found = 0;
             struct Node *traverse = root;
 
             while (traverse != NULL)
@@ -127,6 +128,7 @@ int updateNode(int old_value, int new_value)
                     {
                         // replace the value
                         traverse->left->value = new_value;
+                        found = 1;
                         traverse = NULL;
                     }
                     else
@@ -141,6 +143,7 @@ int updateNode(int old_value, int new_value)
                         {
                             // replace the value
                             traverse->right->value = new_value;
+                            found = 1;
                             traverse = NULL;
                         }
                         else
@@ -148,7 +151,7 @@ int updateNode(int old_value, int new_value)
                     }
                 }
             }
-            return 1;
+            return found;
         }
     }
 }
