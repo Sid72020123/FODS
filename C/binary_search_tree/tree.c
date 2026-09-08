@@ -102,9 +102,7 @@ void printTreeBreadthFirst()
 int updateNode(int old_value, int new_value)
 {
     if (root == NULL)
-    {
         return 0;
-    }
     else
     {
         if (root->value == old_value)
@@ -172,11 +170,13 @@ int deleteNode(int value)
         }
         else if (searchNode->value > value)
         {
+            // traverse left side
             parent = searchNode;
             searchNode = searchNode->left;
         }
         else if (searchNode->value < value) // this condition checking is not required
         {
+            // traverse right side
             parent = searchNode;
             searchNode = searchNode->right;
         }
@@ -184,7 +184,7 @@ int deleteNode(int value)
 
     if (!found)
         return 0;
-
+    printf("Inside!\n");
     // --- For leaf node ---
     if (searchNode->left == NULL && searchNode->right == NULL)
     {
@@ -232,6 +232,7 @@ int deleteNode(int value)
 
         if (deleteNode->left == NULL && deleteNode->right == NULL)
         {
+            // if the node to be deleted is a leaf node
             if (deleteNodeParent->left == deleteNode)
                 deleteNodeParent->left = NULL;
             else
@@ -263,7 +264,8 @@ int main(void)
     updateNode(10, 88);
     updateNode(99, 55);
     printTreeBreadthFirst();
-    deleteNode(70);
+    int result = deleteNode(70);
+    printf("%i\n", result);
     printTreeBreadthFirst();
     return 0;
 }
