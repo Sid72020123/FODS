@@ -97,65 +97,6 @@ void printTreeBreadthFirst()
     }
 }
 
-// TODO: Fix the update node bugs
-// It should actually delete the value and then add the new value
-int updateNode(int old_value, int new_value)
-{
-    if (root == NULL)
-        return 0;
-    else
-    {
-        if (root->value == old_value)
-        {
-            // if the value is found in root itself, update the root
-            root->value = new_value;
-            return 1;
-        }
-        else
-        {
-            // find / traverse the tree according to BST rules
-            // and update the value of the node accordingly
-
-            int found = 0;
-            struct Node *traverse = root;
-
-            while (traverse != NULL)
-            {
-                if (old_value < traverse->value)
-                {
-                    // try the left side
-                    if (traverse->left->value == old_value)
-                    {
-                        // replace the value
-                        traverse->left->value = new_value;
-                        found = 1;
-                        traverse = NULL;
-                    }
-                    else
-                        traverse = traverse->left;
-                }
-                else
-                {
-                    if (old_value >= traverse->value)
-                    {
-                        // try the right side
-                        if (traverse->right->value == old_value)
-                        {
-                            // replace the value
-                            traverse->right->value = new_value;
-                            found = 1;
-                            traverse = NULL;
-                        }
-                        else
-                            traverse = traverse->right;
-                    }
-                }
-            }
-            return found;
-        }
-    }
-}
-
 int deleteNode(int value)
 {
     if (root == NULL)
@@ -253,6 +194,71 @@ int deleteNode(int value)
     }
 
     return 1;
+}
+
+int updateNode(int old_value, int new_value)
+{
+    /*
+    if (root == NULL)
+        return 0;
+    else
+    {
+        if (root->value == old_value)
+        {
+            // if the value is found in root itself, update the root
+            root->value = new_value;
+            return 1;
+        }
+        else
+        {
+            // find / traverse the tree according to BST rules
+            // and update the value of the node accordingly
+
+            int found = 0;
+            struct Node *traverse = root;
+
+            while (traverse != NULL)
+            {
+                if (old_value < traverse->value)
+                {
+                    // try the left side
+                    if (traverse->left->value == old_value)
+                    {
+                        // replace the value
+                        traverse->left->value = new_value;
+                        found = 1;
+                        traverse = NULL;
+                    }
+                    else
+                        traverse = traverse->left;
+                }
+                else
+                {
+                    if (old_value >= traverse->value)
+                    {
+                        // try the right side
+                        if (traverse->right->value == old_value)
+                        {
+                            // replace the value
+                            traverse->right->value = new_value;
+                            found = 1;
+                            traverse = NULL;
+                        }
+                        else
+                            traverse = traverse->right;
+                    }
+                }
+            }
+            return found;
+        }
+    }
+    */
+    if (deleteNode(old_value))
+    {
+        addNode(new_value);
+        return 1;
+    }
+    return 0;
 }
 
 int main(void)
