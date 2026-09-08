@@ -354,6 +354,18 @@ int deleteNode(int value)
             free(root);
             root = NULL;
         }
+        else if (root->right == NULL)
+        {
+            struct Node *onlyChild = root->left;
+            free(root);
+            root = onlyChild;
+        }
+        else if (root->left == NULL)
+        {
+            struct Node *onlyChild = root->right;
+            free(root);
+            root = onlyChild;
+        }
         else
         {
             struct Node *replacementParent = root;
