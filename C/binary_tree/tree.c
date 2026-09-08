@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "queue.h"
 #include "stack.h"
@@ -28,12 +27,16 @@ int get_int_input(const char *prompt, int max_tries, int *result)
     while (tries < max_tries)
     {
         printf("%s", prompt);
+
         // fgets(buffer, sizeof(buffer), stdin);
         // scanf("%s", buffer);
+
         char ch = getchar();
 
         if (!(ch == '\n'))
         {
+            ungetc(ch, stdin); // put the extracted character back into input buffer
+
             if (scanf("%d%c", &input, &extra) == 2 && extra == '\n')
             {
                 *result = input;
