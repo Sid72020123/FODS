@@ -185,10 +185,12 @@ int deleteNode(int value)
     if (!found)
         return 0;
 
+    // --- For leaf node ---
     if (searchNode->left == NULL && searchNode->right == NULL)
     {
         if (parent != NULL)
         {
+            // delete after removing the link to the parent pointer
             if (parent->left == searchNode)
                 parent->left = NULL;
             else
@@ -197,8 +199,57 @@ int deleteNode(int value)
             free(searchNode);
         }
         else
-            root = NULL;
+            root = NULL; // the node to delete was a root node
     }
+    // --- For mid-level / parent-child node ---
+    else
+    {
+        struct Node *deleteNode = NULL;
+        struct Node *deleteNodeParent = NULL;
+
+        if (searchNode->left != NULL)
+        {
+            // get the rightmost node from left subtree
+            deleteNode = searchNode->left;
+
+            while (deleteNode->right != NULL)
+            {
+                deleteNodeParent = deleteNode;
+                deleteNode = deleteNode->right;
+            }
+        }
+        else
+        {
+            // get the leftmost node from right subtree
+            deleteNode = searchNode->right;
+
+            while (deleteNode->left != NULL)
+            {
+                deleteNodeParent = deleteNode;
+                deleteNode = deleteNode->left;
+            }
+        }
+
+        if (deleteNode->left == NULL && deleteNode->right == NULL)
+        {
+            if (deleteNodeParent->left == deleteNode)
+                deleteNodeParent->left = NULL;
+            else
+                deleteNodeParent->right = NULL;
+        }
+        else
+        {
+            if (deleteNode->left != NULL)
+                deleteNode->right = deleteNode->left;
+            else
+                deleteNode->left = deleteNode->right;
+        }
+
+        searchNode->value = deleteNode->value;
+        free(searchNode);
+    }
+
+    return 1;
 }
 
 int main(void)
@@ -211,6 +262,8 @@ int main(void)
     printTreeBreadthFirst();
     updateNode(10, 88);
     updateNode(99, 55);
+    printTreeBreadthFirst();
+    deleteNode(70);
     printTreeBreadthFirst();
     return 0;
 }
