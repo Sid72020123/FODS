@@ -184,6 +184,21 @@ int deleteNode(int value)
 
     if (!found)
         return 0;
+
+    if (searchNode->left == NULL && searchNode->right == NULL)
+    {
+        if (parent != NULL)
+        {
+            if (parent->left == searchNode)
+                parent->left = NULL;
+            else
+                parent->right = NULL;
+
+            free(searchNode);
+        }
+        else
+            root = NULL;
+    }
 }
 
 int main(void)
