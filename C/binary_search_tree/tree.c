@@ -198,17 +198,16 @@ int deleteNode(int value)
                 parent->left = NULL;
             else
                 parent->right = NULL;
-
-            free(searchNode);
         }
         else
             root = NULL; // the node to delete was a root node
+        free(searchNode);
     }
     // --- For mid-level / parent-child node ---
     else
     {
         struct Node *deleteNode = NULL;
-        struct Node *deleteNodeParent = NULL;
+        struct Node *deleteNodeParent = searchNode;
 
         if (searchNode->left != NULL)
         {
@@ -250,7 +249,7 @@ int deleteNode(int value)
         }
 
         searchNode->value = deleteNode->value;
-        free(searchNode);
+        free(deleteNode);
     }
 
     return 1;
@@ -263,9 +262,9 @@ int main(void)
     addNode(5);
     addNode(15);
     addNode(99);
-    printTreeBreadthFirst();
-    updateNode(10, 88);
-    updateNode(99, 55);
+    // printTreeBreadthFirst();
+    // updateNode(10, 88);
+    // updateNode(99, 55);
     printTreeBreadthFirst();
     int result = deleteNode(70);
     printf("%i\n", result);
