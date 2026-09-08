@@ -128,7 +128,7 @@ int deleteNode(int value)
 
     if (!found)
         return 0;
-    printf("Inside!\n");
+
     // --- For leaf node ---
     if (searchNode->left == NULL && searchNode->right == NULL)
     {
@@ -201,8 +201,8 @@ int deleteNode(int value)
             }
         }
 
-        searchNode->value = deleteNode->value;
-        free(deleteNode);
+        searchNode->value = deleteNode->value; // copy the value
+        free(deleteNode);                      // free the node / memory
     }
 
     return 1;
