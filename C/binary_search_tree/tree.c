@@ -25,10 +25,7 @@ void addNode(int value)
     newNode->right = NULL;
 
     if (root == NULL)
-    {
-        // replace the NULL root node with the new node
-        root = newNode;
-    }
+        root = newNode; // replace the NULL root node with the new node
     else
     {
         // find the empty link / location according to BST rules
@@ -100,7 +97,8 @@ void printTreeBreadthFirst()
     }
 }
 
-// TODO: Fix the bugs...
+// TODO: Fix the update node bugs
+// It should actually delete the value and then add the new value
 int updateNode(int old_value, int new_value)
 {
     if (root == NULL)
@@ -155,6 +153,37 @@ int updateNode(int old_value, int new_value)
             return 1;
         }
     }
+}
+
+int deleteNode(int value)
+{
+    if (root == NULL)
+        return 0;
+
+    int found = 0;
+    struct Node *searchNode = root;
+    struct Node *parent = NULL;
+
+    while (searchNode != NULL && !found)
+    {
+        if (searchNode->value == value)
+        {
+            found = 1;
+        }
+        else if (searchNode->value > value)
+        {
+            parent = searchNode;
+            searchNode = searchNode->left;
+        }
+        else if (searchNode->value < value) // this condition checking is not required
+        {
+            parent = searchNode;
+            searchNode = searchNode->right;
+        }
+    }
+
+    if (!found)
+        return 0;
 }
 
 int main(void)
