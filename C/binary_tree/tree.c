@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "queue.h"
 #include "stack.h"
@@ -20,21 +21,27 @@ int get_int_input(const char *prompt, int max_tries, int *result)
 {
     int input;
     char extra;
-    char buffer[100];
+    // char buffer[100];
+    // char *buffer;
     int tries = 0;
 
     while (tries < max_tries)
     {
         printf("%s", prompt);
-        fgets(buffer, sizeof(buffer), stdin);
-
-        if (sscanf(buffer, "%d %c", &input, &extra) == 1)
+        // fgets(buffer, sizeof(buffer), stdin);
+        // scanf("%s", buffer);
+        if (scanf("%d%c", &input, &extra) == 2 && extra == '\n')
         {
             *result = input;
             return 1; // SUCCESS
         }
 
         printf("Invalid input. Try again.\n");
+
+        // Clear input buffer
+        while (getchar() != '\n')
+            ;
+
         tries++;
     }
 
