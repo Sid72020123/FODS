@@ -109,40 +109,50 @@ int updateNode(int old_value, int new_value)
     }
     else
     {
-        // find / traverse the tree according to BST rules
-        // and update the value of the node accordingly
-
-        struct Node *traverse = root;
-
-        while (traverse != NULL)
+        if (root->value == old_value)
         {
-            if (old_value < traverse->value)
+            // if the value is found in root itself, update the root
+            root->value = new_value;
+            return 1;
+        }
+        else
+        {
+            // find / traverse the tree according to BST rules
+            // and update the value of the node accordingly
+
+            struct Node *traverse = root;
+
+            while (traverse != NULL)
             {
-                // try the left side
-                if (traverse->left->value == old_value)
+                if (old_value < traverse->value)
                 {
-                    // replace the value
-                    traverse->left->value = new_value;
-                    traverse = NULL;
-                }
-                else
-                    traverse = traverse->left;
-            }
-            else
-            {
-                if (old_value >= traverse->value)
-                {
-                    // try the right side
-                    if (traverse->right->value == old_value)
+                    // try the left side
+                    if (traverse->left->value == old_value)
                     {
                         // replace the value
-                        traverse->right->value = new_value;
+                        traverse->left->value = new_value;
                         traverse = NULL;
                     }
                     else
-                        traverse = traverse->right;
+                        traverse = traverse->left;
+                }
+                else
+                {
+                    if (old_value >= traverse->value)
+                    {
+                        // try the right side
+                        if (traverse->right->value == old_value)
+                        {
+                            // replace the value
+                            traverse->right->value = new_value;
+                            traverse = NULL;
+                        }
+                        else
+                            traverse = traverse->right;
+                    }
                 }
             }
+            return 1;
         }
     }
 }
@@ -153,9 +163,10 @@ int main(void)
     addNode(70);
     addNode(5);
     addNode(15);
-    addNode(10);
+    addNode(99);
     printTreeBreadthFirst();
-    updateNode(70, 88);
+    updateNode(10, 88);
+    updateNode(99, 55);
     printTreeBreadthFirst();
     return 0;
 }
