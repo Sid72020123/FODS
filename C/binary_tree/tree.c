@@ -387,15 +387,28 @@ int deleteNode(int value)
         {
             if (traverse->left != NULL)
             {
-                if (traverse->left->value == value)
+                if (traverse->left->value == value && !found)
+                {
                     parent = traverse;
-                enqueue(traverse->left);
+                    emptyQueue();
+                    enqueue(traverse->left);
+                }
             }
-            if (traverse->right != NULL)
+            else if (traverse->right != NULL)
             {
-                if (traverse->right->value == value)
+                if (traverse->right->value == value && !found)
+                {
                     parent = traverse;
-                enqueue(traverse->right);
+                    emptyQueue();
+                    enqueue(traverse->right);
+                }
+            }
+            else
+            {
+                if (traverse->left != NULL)
+                    enqueue(traverse->left);
+                if (traverse->right != NULL)
+                    enqueue(traverse->right);
             }
         }
     }
