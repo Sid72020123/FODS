@@ -30,22 +30,27 @@ int get_int_input(const char *prompt, int max_tries, int *result)
         printf("%s", prompt);
         // fgets(buffer, sizeof(buffer), stdin);
         // scanf("%s", buffer);
-        if (scanf("%d%c", &input, &extra) == 2 && extra == '\n')
+        char ch = getchar();
+
+        if (!(ch == '\n'))
         {
-            *result = input;
-            return 1; // SUCCESS
+            if (scanf("%d%c", &input, &extra) == 2 && extra == '\n')
+            {
+                *result = input;
+                return 1; // SUCCESS
+            }
+
+            // Clear input buffer
+            while (getchar() != '\n')
+                ;
         }
 
         printf("Invalid input. Try again.\n");
 
-        // Clear input buffer
-        while (getchar() != '\n')
-            ;
-
         tries++;
     }
 
-    printf("Maximum tries exceeded! Please try again...\n");
+    printf("\nMaximum tries exceeded! Please try again...\n");
     return 0; // FAILURE
 }
 
