@@ -1,3 +1,5 @@
+/* === Binary Search Tree (BST) === */
+
 #include <stdio.h>
 #include <stdlib.h>
 
