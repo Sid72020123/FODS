@@ -190,7 +190,6 @@ int updateNode(int old_value, int new_value)
             if (traverse->value == old_value)
             {
                 traverse->value = new_value;
-                traverse = NULL;
                 found = 1;
             }
 
@@ -210,8 +209,8 @@ int updateNode(int old_value, int new_value)
 
 int main(void)
 {
-    printTreeBreadthFirst();
-    printTreeInorder();
+    // printTreeBreadthFirst();
+    // printTreeInorder();
 
     addNode(10);
     addNode(20);
@@ -222,6 +221,12 @@ int main(void)
     addNode(70);
 
     printTreeInorder();
-    printTreeBreadthFirst();
+    // printTreeBreadthFirst();
+
+    updateNode(30, 99);
+    updateNode(99, 100);
+    updateNode(50, 500);
+    updateNode(70, 999);
+    printTreeInorder();
     return 0;
 }
