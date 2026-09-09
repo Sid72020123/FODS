@@ -77,6 +77,23 @@ struct Node *leftMostNode(struct Node *parent)
     return leftMost;
 }
 
+// Function to get the rightmost node in tree
+struct Node *getRightMostNode(struct Node *node, struct Node **replacementParent)
+{
+    if (node == NULL)
+        return NULL;
+
+    struct Node *searchNode = node;
+
+    while (searchNode->right != NULL)
+    {
+        *replacementParent = searchNode;
+        searchNode = searchNode->right;
+    }
+
+    return searchNode;
+}
+
 // inorder traversal (left -> root -> right) [Depth-First traversal]
 void printTreeInorder()
 {
@@ -205,6 +222,130 @@ int updateNode(int old_value, int new_value)
 
         return found;
     }
+}
+
+int deleteNode(int value)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+
+    // --- If the value is found in the root itself ---
+    /*
+        -> Delete the root node if it has no children.
+        -> Else, get the rightmost node and replace the root node's value with that node,
+            then, delete the rightmost node
+    */
+
+    if (root->value == value)
+    {
+        if (root->left == NULL && root->right == NULL)
+        {
+            free(root);
+            root = NULL;
+        }
+        else if (root->right == NULL)
+        {
+            struct Node *onlyChild = root->left;
+            free(root);
+            root = onlyChild;
+        }
+        else if (root->left == NULL)
+        {
+            struct Node *onlyChild = root->right;
+            free(root);
+            root = onlyChild;
+        }
+        else
+        {
+            struct Node *replacementParent = root;
+            struct Node *replacement = getRightMostNode(root, &replacementParent);
+
+            root->value = replacement->value;
+            replacementParent->right = replacement->left;
+
+            free(replacement);
+        }
+        return 1;
+    }
+
+    emptyQueue();
+    enqueue(root);
+
+    struct Node *traverse;
+    struct Node *parent = NULL;
+    int found = 0;
+
+    while (!isQueueEmpty())
+    {
+        dequeue(&traverse);
+
+        if (traverse->value == value)
+        {
+            emptyQueue();
+            found = 1;
+        }
+        else
+        {
+            if (traverse->left != NULL && traverse->left->value == value && !found)
+            {
+
+                parent = traverse;
+                emptyQueue();
+                enqueue(traverse->left);
+            }
+            else if (traverse->right != NULL && traverse->right->value == value && !found)
+            {
+
+                parent = traverse;
+                emptyQueue();
+                enqueue(traverse->right);
+            }
+            else
+            {
+                if (traverse->left != NULL)
+                    enqueue(traverse->left);
+                if (traverse->right != NULL)
+                    enqueue(traverse->right);
+            }
+        }
+    }
+
+    if (!found)
+        return 0;
+
+    // --- If the value is found in the leaf node ---
+    if (traverse->left == NULL && traverse->right == NULL)
+    {
+        if (parent->left == traverse)
+            parent->left = NULL;
+        else
+            parent->right = NULL;
+        free(traverse);
+    }
+    // --- If traverse has only a left child, promote that child up directly ---
+    else if (traverse->right == NULL)
+    {
+        struct Node *onlyChild = traverse->left;
+        if (parent->left == traverse)
+            parent->left = onlyChild;
+        else
+            parent->right = onlyChild;
+        free(traverse);
+    }
+    // --- If the value is found in the sibling nodes / middle-level nodes which have two children ---
+    else
+    {
+        struct Node *replacementParent = traverse;
+        struct Node *replacement = getRightMostNode(traverse, &replacementParent);
+
+        traverse->value = replacement->value;
+        replacementParent->right = replacement->left;
+
+        free(replacement);
+    }
+    return 1;
 }
 
 int main(void)
