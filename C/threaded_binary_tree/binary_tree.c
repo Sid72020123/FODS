@@ -53,7 +53,7 @@ void printTreeBreadthFirst()
             if (traverse->left != NULL)
                 enqueue(traverse->left);
 
-            if (traverse->right != NULL)
+            if (traverse->right != NULL && !traverse->rightThread)
                 enqueue(traverse->right);
         }
 
@@ -87,6 +87,8 @@ void printTreeInorder()
     else
     {
         struct Node *traverse = leftMostNode(root);
+
+        printf("[*] TREE (inorder): ");
 
         while (traverse != NULL)
         {
@@ -175,8 +177,9 @@ int main(void)
     addNode(40);
     addNode(50);
     addNode(60);
+    addNode(70);
 
     printTreeInorder();
-    // printTreeBreadthFirst();
+    printTreeBreadthFirst();
     return 0;
 }
