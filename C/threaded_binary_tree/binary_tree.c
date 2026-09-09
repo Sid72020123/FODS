@@ -175,9 +175,18 @@ void addNode(int value)
         else if (parentNode->right != NULL && parentNode->rightThread)
         {
             parentNode->right = newNode;
-            newNode->right = findParent(parentNode);
-            parentNode->rightThread = 0;
-            newNode->rightThread = 1;
+            struct Node *threadParentNode = findParent(parentNode);
+
+            if (threadParentNode != root)
+            {
+                newNode->right = threadParentNode;
+                parentNode->rightThread = 0;
+                newNode->rightThread = 1;
+            }
+            else
+            {
+                parentNode->rightThread = 0;
+            }
         }
         else
         {
@@ -193,7 +202,12 @@ int main(void)
 
     addNode(10);
     addNode(20);
+    addNode(30);
+    addNode(40);
+    addNode(50);
+    addNode(60);
 
     printTreeInorder();
+    // printTreeBreadthFirst();
     return 0;
 }
