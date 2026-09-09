@@ -554,11 +554,11 @@ void updateValue()
 int main(void)
 {
     addNode(100);
-    addNode(200);
     addNode(300);
-    addNode(400);
-    addNode(500);
-    addNode(600);
+    addNode(50);
+    addNode(250);
+    addNode(70);
+    addNode(800);
     addNode(700);
 
     int choice = 0;
