@@ -76,30 +76,6 @@ struct Node *leftMostNode(struct Node *parent)
     return leftMost;
 }
 
-struct Node *findParent(struct Node *node)
-{
-    if (node == NULL)
-        return NULL;
-
-    struct Node *traverse = leftMostNode(root);
-    struct Node *parent = NULL;
-
-    while (traverse != NULL)
-    {
-        parent = traverse;
-
-        if (parent == node)
-            break;
-
-        if (traverse->rightThread)
-            traverse = traverse->right;
-        else
-            traverse = leftMostNode(traverse->right);
-    }
-
-    return parent;
-}
-
 // inorder traversal (left -> root -> right) [Depth-First traversal]
 void printTreeInorder()
 {
@@ -174,19 +150,12 @@ void addNode(int value)
         }
         else if (parentNode->right != NULL && parentNode->rightThread)
         {
+            struct Node *threadParentNode = parentNode->right;
             parentNode->right = newNode;
-            struct Node *threadParentNode = findParent(parentNode);
+            parentNode->rightThread = 0;
 
-            if (threadParentNode != root)
-            {
-                newNode->right = threadParentNode;
-                parentNode->rightThread = 0;
-                newNode->rightThread = 1;
-            }
-            else
-            {
-                parentNode->rightThread = 0;
-            }
+            newNode->right = threadParentNode;
+            newNode->rightThread = 1;
         }
         else
         {
