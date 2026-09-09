@@ -73,6 +73,30 @@ struct Node *leftMostNode(struct Node *parent)
     return leftMost;
 }
 
+struct Node *findParent(struct Node *node)
+{
+    if (node == NULL)
+        return NULL;
+
+    struct Node *traverse = leftMostNode(root);
+    struct Node *parent = NULL;
+
+    while (traverse != NULL)
+    {
+        parent = traverse;
+
+        if (parent == node)
+            break;
+
+        if (traverse->rightThread)
+            traverse = traverse->right;
+        else
+            traverse = leftMostNode(traverse->right);
+    }
+
+    return parent;
+}
+
 // inorder traversal (left -> root -> right) [Depth-First traversal]
 void printTreeInorder()
 {
@@ -101,4 +125,60 @@ void printTreeInorder()
     }
 
     printf("\n");
+}
+
+void addNode(int value)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+
+    newNode->value = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    newNode->leftThread = 0;
+    newNode->rightThread = 0;
+
+    if (root == NULL)
+        root = newNode; // replace the NULL root node with the new node
+    else
+    {
+        emptyQueue();
+        enqueue(root);
+
+        struct Node *traverse;
+        struct Node *parentNode = NULL;
+
+        while (!isQueueEmpty())
+        {
+            dequeue(&traverse);
+            parentNode = traverse;
+
+            if (traverse->left == NULL || (traverse->right == NULL || traverse->rightThread))
+            {
+                emptyQueue();
+            }
+            else
+            {
+                enqueue(traverse->left);
+                enqueue(traverse->right);
+            }
+        }
+
+        if (parentNode->left == NULL)
+        {
+            parentNode->left = newNode;
+            newNode->right = parentNode;
+            newNode->rightThread = 1;
+        }
+        else if (parentNode->right != NULL && parentNode->rightThread)
+        {
+            parentNode->right = newNode;
+            newNode->right = findParent(parentNode);
+            parentNode->rightThread = 0;
+            newNode->rightThread = 1;
+        }
+        else
+        {
+            parentNode->right = newNode;
+        }
+    }
 }
