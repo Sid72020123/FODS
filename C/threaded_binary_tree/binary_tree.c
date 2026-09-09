@@ -35,7 +35,7 @@ void printTreeBreadthFirst()
     requires level relationships */
     if (root == NULL)
     {
-        printf("[*] Tree is Empty!");
+        printf("[*] Tree is Empty!\n");
     }
     else
     {
@@ -63,9 +63,12 @@ void printTreeBreadthFirst()
 
 struct Node *leftMostNode(struct Node *parent)
 {
+    if (parent == NULL)
+        return NULL;
+
     struct Node *leftMost = parent;
 
-    while (leftMost != NULL)
+    while (leftMost->left != NULL)
     {
         leftMost = leftMost->left;
     }
@@ -103,7 +106,7 @@ void printTreeInorder()
     /* This method of traversal uses the "threads" */
     if (root == NULL)
     {
-        printf("[*] Tree is Empty!");
+        printf("[*] Tree is Empty!\n");
     }
     else
     {
@@ -181,4 +184,16 @@ void addNode(int value)
             parentNode->right = newNode;
         }
     }
+}
+
+int main(void)
+{
+    printTreeBreadthFirst();
+    printTreeInorder();
+
+    addNode(10);
+    addNode(20);
+
+    printTreeInorder();
+    return 0;
 }
