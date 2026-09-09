@@ -59,6 +59,33 @@ int get_int_input(const char *prompt, int max_tries, int *result)
 
 // === Binary Tree Methods ===
 
+int getSize()
+{
+    if (root == NULL)
+        return 0;
+    else
+    {
+        emptyQueue();
+        enqueue(root);
+        struct Node *traverse;
+
+        int size = 0;
+
+        while (!isQueueEmpty())
+        {
+            dequeue(&traverse);
+            size++;
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left);
+
+            if (traverse->right != NULL)
+                enqueue(traverse->right);
+        }
+        return size;
+    }
+}
+
 void addNode(int value)
 {
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
@@ -330,5 +357,6 @@ int main(void)
     int result = deleteNode(70);
     printf("%i\n", result);
     printTreeBreadthFirst();
+    printf("%d\n", getSize());
     return 0;
 }
