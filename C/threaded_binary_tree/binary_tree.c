@@ -63,6 +63,7 @@ void printTreeBreadthFirst()
 
 struct Node *leftMostNode(struct Node *parent)
 {
+    // this functions returns the leftmost node a particular node
     if (parent == NULL)
         return NULL;
 
@@ -128,6 +129,7 @@ void addNode(int value)
         struct Node *traverse;
         struct Node *parentNode = NULL;
 
+        // Find / search the empty left or right links
         while (!isQueueEmpty())
         {
             dequeue(&traverse);
@@ -135,6 +137,7 @@ void addNode(int value)
 
             if (traverse->left == NULL || (traverse->right == NULL || traverse->rightThread))
             {
+                // (the condition also check if the right link is not null but is a thread)
                 emptyQueue();
             }
             else
@@ -146,12 +149,15 @@ void addNode(int value)
 
         if (parentNode->left == NULL)
         {
+            // change the left node
             parentNode->left = newNode;
             newNode->right = parentNode;
             newNode->rightThread = 1;
         }
         else if (parentNode->right != NULL && parentNode->rightThread)
         {
+            // keep (store) the "thread" of the parent node and link it's right to the new node
+            // then thread / link the right of the new node to the stored parent's thread node
             struct Node *threadParentNode = parentNode->right;
             parentNode->right = newNode;
             parentNode->rightThread = 0;
@@ -161,6 +167,7 @@ void addNode(int value)
         }
         else
         {
+            // if the parent node has no right child, just link the new node to it
             parentNode->right = newNode;
         }
     }
