@@ -60,3 +60,45 @@ void printTreeBreadthFirst()
         printf("\n");
     }
 }
+
+struct Node *leftMostNode(struct Node *parent)
+{
+    struct Node *leftMost = parent;
+
+    while (leftMost != NULL)
+    {
+        leftMost = leftMost->left;
+    }
+
+    return leftMost;
+}
+
+// inorder traversal (left -> root -> right) [Depth-First traversal]
+void printTreeInorder()
+{
+    /* This method of traversal uses the "threads" */
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        struct Node *traverse = leftMostNode(root);
+
+        while (traverse != NULL)
+        {
+            printf("[%3d] ", traverse->value);
+
+            if (traverse->rightThread)
+            {
+                traverse = traverse->right;
+            }
+            else
+            {
+                traverse = leftMostNode(traverse->right);
+            }
+        }
+    }
+
+    printf("\n");
+}
