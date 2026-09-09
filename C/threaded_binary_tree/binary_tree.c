@@ -137,7 +137,7 @@ void addNode(int value)
 
             if (traverse->left == NULL || (traverse->right == NULL || traverse->rightThread))
             {
-                // (the condition also check if the right link is not null but is a thread)
+                // (the condition also checks if the right link is not null but is a thread)
                 emptyQueue();
             }
             else
@@ -170,6 +170,41 @@ void addNode(int value)
             // if the parent node has no right child, just link the new node to it
             parentNode->right = newNode;
         }
+    }
+}
+
+int updateNode(int old_value, int new_value)
+{
+    /* This method does traversal using "threads" */
+    if (root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        struct Node *traverse = leftMostNode(root);
+        int found = 0;
+
+        while (traverse != NULL && !found)
+        {
+            if (traverse->value == old_value)
+            {
+                traverse->value = new_value;
+                traverse = NULL;
+                found = 1;
+            }
+
+            if (traverse->rightThread)
+            {
+                traverse = traverse->right;
+            }
+            else
+            {
+                traverse = leftMostNode(traverse->right);
+            }
+        }
+
+        return found;
     }
 }
 
