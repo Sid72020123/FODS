@@ -1,20 +1,20 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -g -MMD -MP
 
-TARGET = binary_tree
-OBJS = binary_tree.o queue.o stack.o
+SOURCES = $(wildcard *.c)
+PROGRAMS = $(SOURCES:.c=)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
+all: $(PROGRAMS)
 
-binary_tree.o: binary_tree.c queue.h stack.h
-	$(CC) $(CFLAGS) -c binary_tree.c
+binary_tree: binary_tree.o queue.o stack.o
+	$(CC) $(CFLAGS) $^ -o $@.out
 
-queue.o: queue.c queue.h
-	$(CC) $(CFLAGS) -c queue.c
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-stack.o: stack.c stack.h
-	$(CC) $(CFLAGS) -c stack.c
+-include $(SOURCES:.c=.d)
 
 clean:
-	rm -f $(TARGET) $(OBJS)
+	rm -f *.o *.d *.out
+
+.PHONY: all clean
