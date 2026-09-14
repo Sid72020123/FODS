@@ -128,11 +128,9 @@ struct Node *getRightMostNode(struct Node *node, struct Node **replacementParent
 
     struct Node *searchNode = node;
 
-    while (searchNode->right != NULL)
+    while (searchNode->right != NULL && !searchNode->rightThread)
     {
         *replacementParent = searchNode;
-        if (searchNode->rightThread)
-            break;
         searchNode = searchNode->right;
     }
 
@@ -538,9 +536,7 @@ void displayTree()
         return;
     }
     printTreeBreadthFirst();
-    printTreePreorder();
     printTreeInorder();
-    printTreePostorder();
 }
 
 void addValue()
@@ -603,13 +599,13 @@ void updateValue()
 
 int main(void)
 {
-    addNode(10);
-    addNode(20);
-    addNode(30);
-    addNode(40);
-    addNode(50);
-    addNode(60);
-    addNode(70);
+    addNode(100);
+    addNode(200);
+    addNode(300);
+    addNode(400);
+    addNode(500);
+    addNode(600);
+    addNode(700);
 
     int choice = 0;
     do
