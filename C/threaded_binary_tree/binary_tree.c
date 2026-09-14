@@ -226,7 +226,6 @@ int updateNode(int old_value, int new_value)
     }
 }
 
-// TODO: Change the threads after node deletion...
 int deleteNode(int value)
 {
     if (root == NULL)
@@ -238,9 +237,8 @@ int deleteNode(int value)
     /*
         -> Delete the root node if it has no children.
         -> Else, get the rightmost node and replace the root node's value with that node,
-            then, delete the rightmost node
+           then, delete the rightmost node
     */
-
     if (root->value == value)
     {
         if (root->left == NULL && (root->right == NULL || root->rightThread))
@@ -251,6 +249,7 @@ int deleteNode(int value)
         else if (root->right == NULL || root->rightThread)
         {
             struct Node *onlyChild = root->left;
+
             struct Node *parent = onlyChild;
             struct Node *replacement = getRightMostNode(onlyChild, &parent);
 
@@ -263,10 +262,9 @@ int deleteNode(int value)
         else if (root->left == NULL)
         {
             struct Node *onlyChild = root->right;
+
             free(root);
             root = onlyChild;
-            root->right = NULL;
-            root->rightThread = 0;
         }
         else
         {
@@ -276,21 +274,39 @@ int deleteNode(int value)
             root->value = replacement->value;
 
             if (replacementParent == root)
+            {
                 replacementParent->left = replacement->left;
+            }
             else
-                replacementParent->right = replacement->left;
+            {
+                if (replacement->left != NULL)
+                {
+                    replacementParent->right = replacement->left;
+                    replacementParent->rightThread = 0;
+                }
+                else
+                {
+                    // replacement was the rightmost node, so replacementParent
+                    // becomes the inorder predecessor of root
+                    replacementParent->right = root;
+                    replacementParent->rightThread = 1;
+                }
+            }
 
             if (replacement->left != NULL)
             {
                 struct Node *p = replacement->left;
+
                 while (p->right != NULL && !p->rightThread)
                     p = p->right;
+
                 p->right = replacement->rightThread ? replacement->right : root;
                 p->rightThread = 1;
             }
 
             free(replacement);
         }
+
         return 1;
     }
 
@@ -312,13 +328,18 @@ int deleteNode(int value)
         }
         else
         {
-            if (traverse->left != NULL && traverse->left->value == value && !found)
+            if (traverse->left != NULL &&
+                traverse->left->value == value &&
+                !found)
             {
                 parent = traverse;
                 emptyQueue();
                 enqueue(traverse->left);
             }
-            else if (traverse->right != NULL && traverse->right->value == value && !found)
+            else if (traverse->right != NULL &&
+                     !traverse->rightThread &&
+                     traverse->right->value == value &&
+                     !found)
             {
                 parent = traverse;
                 emptyQueue();
@@ -328,7 +349,8 @@ int deleteNode(int value)
             {
                 if (traverse->left != NULL)
                     enqueue(traverse->left);
-                if (traverse->right != NULL)
+
+                if (traverse->right != NULL && !traverse->rightThread)
                     enqueue(traverse->right);
             }
         }
@@ -338,9 +360,10 @@ int deleteNode(int value)
         return 0;
 
     // --- If the value is found in the leaf node ---
-    if (traverse->left == NULL && (traverse->right == NULL || traverse->rightThread))
+    if (traverse->left == NULL &&
+        (traverse->right == NULL || traverse->rightThread))
     {
-        if (parent->right == traverse && parent->rightThread)
+        if (parent->right == traverse)
         {
             parent->right = traverse->rightThread ? traverse->right : NULL;
             parent->rightThread = traverse->rightThread;
@@ -348,8 +371,9 @@ int deleteNode(int value)
 
         if (parent->left == traverse)
             parent->left = NULL;
-        else
+        else if (parent->right == traverse)
             parent->right = NULL;
+
         free(traverse);
     }
 
@@ -360,13 +384,34 @@ int deleteNode(int value)
 
         struct Node *predParent = onlyChild;
         struct Node *pred = getRightMostNode(onlyChild, &predParent);
+
         pred->right = traverse->rightThread ? traverse->right : NULL;
         pred->rightThread = traverse->rightThread;
 
         if (parent->left == traverse)
             parent->left = onlyChild;
         else
+        {
             parent->right = onlyChild;
+            parent->rightThread = 0;
+        }
+
+        free(traverse);
+    }
+
+    // --- If traverse has only a right child, promote that child up directly ---
+    else if (traverse->left == NULL)
+    {
+        struct Node *onlyChild = traverse->right;
+
+        if (parent->left == traverse)
+            parent->left = onlyChild;
+        else
+        {
+            parent->right = onlyChild;
+            parent->rightThread = 0;
+        }
+
         free(traverse);
     }
 
@@ -379,21 +424,39 @@ int deleteNode(int value)
         traverse->value = replacement->value;
 
         if (replacementParent == traverse)
+        {
             replacementParent->left = replacement->left;
+        }
         else
-            replacementParent->right = replacement->left;
+        {
+            if (replacement->left != NULL)
+            {
+                replacementParent->right = replacement->left;
+                replacementParent->rightThread = 0;
+            }
+            else
+            {
+                // replacement was the rightmost node, so replacementParent
+                // becomes the inorder predecessor of traverse
+                replacementParent->right = traverse;
+                replacementParent->rightThread = 1;
+            }
+        }
 
         if (replacement->left != NULL)
         {
             struct Node *p = replacement->left;
+
             while (p->right != NULL && !p->rightThread)
                 p = p->right;
+
             p->right = replacement->rightThread ? replacement->right : traverse;
             p->rightThread = 1;
         }
 
         free(replacement);
     }
+
     return 1;
 }
 
@@ -418,7 +481,8 @@ int main(void)
     updateNode(50, 500);
     updateNode(70, 999);
     printTreeInorder();
-    deleteNode(500);
+    // deleteNode(500);
+    deleteNode(40);
     printTreeInorder();
     return 0;
 }
