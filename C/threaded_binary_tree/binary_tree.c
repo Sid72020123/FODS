@@ -24,6 +24,49 @@ struct Node
 
 struct Node *root = NULL;
 
+// === Utilities ===
+
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    int input;
+    char extra;
+    // char buffer[100];
+    // char *buffer;
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+
+        // fgets(buffer, sizeof(buffer), stdin);
+        // scanf("%s", buffer);
+
+        char ch = getchar();
+
+        if (!(ch == '\n'))
+        {
+            ungetc(ch, stdin); // put the extracted character back into input buffer
+
+            if (scanf("%d%c", &input, &extra) == 2 && extra == '\n')
+            {
+                *result = input;
+                return 1; // SUCCESS
+            }
+
+            // Clear input buffer
+            while (getchar() != '\n')
+                ;
+        }
+
+        printf("Invalid input. Try again.\n");
+
+        tries++;
+    }
+
+    printf("\nMaximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+
 // === Threaded Binary Tree Methods ===
 
 // Breadth-First traversal / Level-Order traversal
@@ -485,8 +528,129 @@ int deleteNode(int value)
     return 1;
 }
 
+// === CRUD Methods ===
+
+void displayTree()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+    printTreeBreadthFirst();
+    printTreePreorder();
+    printTreeInorder();
+    printTreePostorder();
+}
+
+void addValue()
+{
+    printf("\n{ TREE - ADDING New Value [%d] }\n", getSize() + 1);
+    int value;
+    if (get_int_input("Enter a value: ", 5, &value))
+    {
+        addNode(value);
+        printf("\nAdded '%d' to tree.\n", value);
+    }
+}
+
+void deleteValue()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+
+    printf("\n{ TREE - DELETING Value [size of tree - %d] }\n", getSize());
+    int value;
+    if (!get_int_input("Enter a value: ", 5, &value))
+        return;
+
+    int found = deleteNode(value);
+
+    if (!found)
+        printf("\n[*] Couldn't delete value '%d' as it was not found!\n", value);
+    else
+        printf("\nDeleted '%d' from tree.\n", value);
+}
+
+void updateValue()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+
+    printf("\n{ TREE - UPDATING Value [size of tree - %d] }\n", getSize());
+
+    int value;
+    if (!get_int_input("Enter a value: ", 5, &value))
+        return;
+
+    int new_value;
+    if (!get_int_input("Enter the new value: ", 5, &new_value))
+        return;
+
+    int found = updateNode(value, new_value);
+
+    if (!found)
+        printf("\n[*] Couldn't update value '%d' as it was not found!\n", value);
+    else
+        printf("\nUpdated the value '%d' to '%d' in the tree.\n", value, new_value);
+}
+
 int main(void)
 {
+    addNode(10);
+    addNode(20);
+    addNode(30);
+    addNode(40);
+    addNode(50);
+    addNode(60);
+    addNode(70);
+
+    int choice = 0;
+    do
+    {
+        printf("\n===== MENU [THREADED - TREE] =====\n");
+        printf("1. Display Tree (using various methods)\n");
+        printf("2. Add value\n");
+        printf("3. Delete Value\n");
+        printf("4. Update Value\n");
+        printf("5. Exit\n");
+
+        if (get_int_input("Enter your choice: ", 3, &choice))
+        {
+            switch (choice)
+            {
+            case 1:
+                printf("\n");
+                displayTree();
+                break;
+            case 2:
+                addValue();
+                break;
+            case 3:
+                deleteValue();
+                break;
+            case 4:
+                updateValue();
+                break;
+            case 5:
+                printf("\nExiting...\n");
+                break;
+            default:
+                printf("\nInvalid choice!\n");
+            }
+        }
+
+    } while (choice != 5);
+
+    return 0;
+
+    /*
     // printTreeBreadthFirst();
     // printTreeInorder();
 
@@ -510,4 +674,5 @@ int main(void)
     deleteNode(40);
     printTreeInorder();
     return 0;
+    */
 }
