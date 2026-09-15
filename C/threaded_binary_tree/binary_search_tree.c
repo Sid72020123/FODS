@@ -127,6 +127,31 @@ void printTreeInorder()
     printf("\n");
 }
 
+int getSize()
+{
+    /* This method of traversal uses the "threads" */
+    if (root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        struct Node *traverse = leftMostNode(root);
+
+        int size = 0;
+        while (traverse != NULL)
+        {
+            size++;
+            if (traverse->rightThread)
+                traverse = traverse->right;
+            else
+                traverse = leftMostNode(traverse->right);
+        }
+
+        return size;
+    }
+}
+
 int main(void)
 {
     return 0;
