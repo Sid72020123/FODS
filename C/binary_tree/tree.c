@@ -19,13 +19,6 @@ struct Node *root = NULL;
 
 // === Utilities ===
 
-void clearInputBuffer()
-{
-    // Clear input buffer
-    while (getchar() != '\n')
-        ;
-}
-
 int validateDigits(char *input)
 {
     int i = 0;
@@ -41,25 +34,11 @@ int validateDigits(char *input)
 int get_int_input(const char *prompt, int max_tries, int *result)
 {
     char input[100];
-    // char extra;
-    // char buffer[100];
-    // char *buffer;
     int tries = 0;
 
     while (tries < max_tries)
     {
-        // clearInputBuffer();
         printf("%s", prompt);
-        // gets(input);
-
-        // fgets(buffer, sizeof(buffer), stdin);
-        // scanf("%s", buffer);
-
-        // char ch = getchar();
-
-        // if (!(ch == '\n'))
-        // {
-        // ungetc(ch, stdin); // put the extracted character back into input buffer
 
         if (gets(input) != NULL)
         {
@@ -72,10 +51,7 @@ int get_int_input(const char *prompt, int max_tries, int *result)
                 }
             }
         }
-
-        // clearInputBuffer();
         printf("Invalid input. Try again.\n");
-
         tries++;
     }
 
