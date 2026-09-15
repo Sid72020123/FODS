@@ -152,7 +152,65 @@ int getSize()
     }
 }
 
+void addNode(int value)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+
+    newNode->value = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    newNode->leftThread = 0;
+    newNode->rightThread = 0;
+
+    if (root == NULL)
+        root = newNode; // replace the NULL root node with the new node
+    else
+    {
+        struct Node *traverse = root;
+        short int node_inserted = 0;
+
+        // Find / search the empty left or right links
+        while (!node_inserted)
+        {
+            if (traverse->value > value)
+            {
+                if (traverse->left == NULL)
+                {
+                    traverse->left = newNode;
+                    newNode->right = traverse;
+                    newNode->rightThread = 1;
+
+                    node_inserted = 1;
+                }
+                else
+                {
+                    traverse = traverse->left;
+                }
+            }
+            else
+            {
+                if (traverse->right == NULL || traverse->rightThread == 1)
+                {
+                    newNode->right = traverse->right;
+                    newNode->rightThread = traverse->rightThread;
+                    traverse->right = newNode;
+
+                    node_inserted = 1;
+                }
+                else
+                {
+                    traverse = traverse->right;
+                }
+            }
+        }
+    }
+}
+
 int main(void)
 {
+    printTreeBreadthFirst();
+    printTreeInorder();
+    addNode(100);
+    printTreeInorder();
     return 0;
 }
