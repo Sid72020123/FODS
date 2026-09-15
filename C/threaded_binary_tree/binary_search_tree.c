@@ -24,6 +24,49 @@ struct Node
 
 struct Node *root = NULL;
 
+// === Utilities ===
+
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    int input;
+    char extra;
+    // char buffer[100];
+    // char *buffer;
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+
+        // fgets(buffer, sizeof(buffer), stdin);
+        // scanf("%s", buffer);
+
+        char ch = getchar();
+
+        if (!(ch == '\n'))
+        {
+            ungetc(ch, stdin); // put the extracted character back into input buffer
+
+            if (scanf("%d%c", &input, &extra) == 2 && extra == '\n')
+            {
+                *result = input;
+                return 1; // SUCCESS
+            }
+
+            // Clear input buffer
+            while (getchar() != '\n')
+                ;
+        }
+
+        printf("Invalid input. Try again.\n");
+
+        tries++;
+    }
+
+    printf("\nMaximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+
 // === Threaded Binary Search Tree Methods ===
 
 // Breadth-First traversal / Level-Order traversal
@@ -76,23 +119,6 @@ struct Node *leftMostNode(struct Node *parent)
     }
 
     return leftMost;
-}
-
-// Function to get the rightmost node in tree
-struct Node *getRightMostNode(struct Node *node, struct Node **replacementParent)
-{
-    if (node == NULL)
-        return NULL;
-
-    struct Node *searchNode = node;
-
-    while (searchNode->right != NULL && !searchNode->rightThread)
-    {
-        *replacementParent = searchNode;
-        searchNode = searchNode->right;
-    }
-
-    return searchNode;
 }
 
 // inorder traversal (left -> root -> right) [Depth-First traversal]
