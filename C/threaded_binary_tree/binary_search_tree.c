@@ -227,11 +227,15 @@ int deleteNode(int value)
             parent = searchNode;
             searchNode = searchNode->left;
         }
-        else if (searchNode->value < value) // this condition checking is not required
+        else
         {
             // traverse right side
             parent = searchNode;
-            searchNode = searchNode->right;
+
+            if (searchNode->right != NULL && !searchNode->rightThread)
+                searchNode = searchNode->right;
+            else
+                searchNode = NULL;
         }
     }
 
@@ -239,79 +243,91 @@ int deleteNode(int value)
         return 0;
 
     // --- For leaf node ---
-    if (searchNode->left == NULL && searchNode->right == NULL)
+    if (searchNode->left == NULL &&
+        (searchNode->right == NULL || searchNode->rightThread))
     {
-        if (parent != NULL)
-        {
-            // delete after removing the link to the parent pointer
-            if (parent->left == searchNode)
-                parent->left = NULL;
-            else
-                parent->right = NULL;
-        }
+        if (parent == NULL)
+            root = NULL;
+        else if (parent->left == searchNode)
+            parent->left = NULL;
         else
-            root = NULL; // the node to delete was a root node
+        {
+            // delete after preserving the inorder thread
+            parent->right = searchNode->right;
+            parent->rightThread = searchNode->rightThread;
+        }
+
         free(searchNode);
     }
-    // --- For mid-level / parent-child node ---
+
+    // --- If traverse has only a left child, promote that child up directly ---
+    else if (searchNode->right == NULL || searchNode->rightThread)
+    {
+        struct Node *onlyChild = searchNode->left;
+        struct Node *replacement = onlyChild;
+
+        while (replacement->right != NULL && !replacement->rightThread)
+            replacement = replacement->right;
+
+        replacement->right = searchNode->right;
+        replacement->rightThread = searchNode->rightThread;
+
+        if (parent == NULL)
+        {
+            root = onlyChild;
+        }
+        else if (parent->left == searchNode)
+        {
+            parent->left = onlyChild;
+        }
+        else
+        {
+            parent->right = onlyChild;
+            parent->rightThread = 0;
+        }
+
+        free(searchNode);
+    }
+
+    // --- If the value is found in the sibling nodes / middle-level nodes which have two children ---
     else
     {
-        struct Node *deleteNode = NULL;
+        struct Node *deleteNode = searchNode->right;
         struct Node *deleteNodeParent = searchNode;
 
-        if (searchNode->left != NULL)
+        // get the leftmost node from right subtree
+        while (deleteNode->left != NULL)
         {
-            // get the rightmost node from left subtree
-            deleteNode = searchNode->left;
-
-            while (deleteNode->right != NULL)
-            {
-                deleteNodeParent = deleteNode;
-                deleteNode = deleteNode->right;
-            }
-        }
-        else
-        {
-            // get the leftmost node from right subtree
-            deleteNode = searchNode->right;
-
-            while (deleteNode->left != NULL)
-            {
-                deleteNodeParent = deleteNode;
-                deleteNode = deleteNode->left;
-            }
-        }
-
-        if (deleteNode->left == NULL && deleteNode->right == NULL)
-        {
-            // if the node to be deleted is a leaf node
-            if (deleteNodeParent->left == deleteNode)
-                deleteNodeParent->left = NULL;
-            else
-                deleteNodeParent->right = NULL;
-        }
-        else
-        {
-            if (deleteNode->left != NULL)
-            {
-                // attach any left child / subtree of delete node to delete node's parent
-                if (deleteNodeParent == searchNode)
-                    deleteNodeParent->left = deleteNode->left;
-                else
-                    deleteNodeParent->right = deleteNode->left;
-            }
-            else
-            {
-                // attach any right child / subtree of delete node to delete node's parent
-                if (deleteNodeParent == searchNode)
-                    deleteNodeParent->right = deleteNode->right;
-                else
-                    deleteNodeParent->left = deleteNode->right;
-            }
+            deleteNodeParent = deleteNode;
+            deleteNode = deleteNode->left;
         }
 
         searchNode->value = deleteNode->value; // copy the value
-        free(deleteNode);                      // free the node / memory
+
+        /*
+            deleteNode cannot have a left child because it is the
+            leftmost node of the right subtree.
+        */
+        if (deleteNodeParent == searchNode)
+        {
+            searchNode->right = deleteNode->right;
+            searchNode->rightThread = deleteNode->rightThread;
+        }
+        else
+        {
+            if (deleteNode->right != NULL && !deleteNode->rightThread)
+            {
+                // attach any right child / subtree of delete node to delete node's parent
+                deleteNodeParent->left = deleteNode->right;
+            }
+            else
+            {
+                // deleteNode was a leaf / threaded leaf
+                deleteNodeParent->left = NULL;
+            }
+        }
+
+        free(deleteNode); // free the node / memory
     }
 
     return 1;
@@ -331,20 +347,28 @@ int main(void)
 {
     printTreeBreadthFirst();
     printTreeInorder();
-    addNode(100);
-    addNode(200);
-    addNode(300);
-    addNode(400);
-    addNode(500);
     // addNode(100);
     // addNode(200);
     // addNode(300);
     // addNode(400);
     // addNode(500);
+    // addNode(100);
+    // addNode(200);
+    // addNode(300);
+    // addNode(400);
+    // addNode(500);
+
+    addNode(500);
+    addNode(300);
+    addNode(700);
+    addNode(200);
+    addNode(400);
+    addNode(600);
+    addNode(800);
     printTreeInorder();
     printTreeBreadthFirst();
-    deleteNode(100);
-    updateNode(200, 999);
+    deleteNode(500);
+    // updateNode(200, 999);
     printTreeInorder();
     return 0;
 }
