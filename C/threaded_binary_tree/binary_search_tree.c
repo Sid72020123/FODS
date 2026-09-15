@@ -1,0 +1,68 @@
+/*
+=== Threaded Binary Search Tree (TBST) ===
+
+The code in this file implements right-threaded binary tree.
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "queue.h"
+#include "stack.h"
+
+// === Global Variables / Structures ===
+struct Node
+{
+    int value;
+
+    struct Node *left;
+    struct Node *right;
+
+    short int leftThread;
+    short int rightThread;
+};
+
+struct Node *root = NULL;
+
+// === Threaded Binary Search Tree Methods ===
+
+// Breadth-First traversal / Level-Order traversal
+void printTreeBreadthFirst()
+{
+    /* For Breath-First / Level-Order traversal,
+    queue is required as "threads" are based on inorder
+    relationships while breath first traversal
+    requires level relationships */
+
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!\n");
+    }
+    else
+    {
+        emptyQueue();
+        enqueue(root);
+        struct Node *traverse;
+
+        printf("[*] TREE: ");
+
+        while (!isQueueEmpty())
+        {
+            dequeue(&traverse);
+            printf("[%3d] ", traverse->value);
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left);
+
+            if (traverse->right != NULL && !traverse->rightThread)
+                enqueue(traverse->right);
+        }
+
+        printf("\n");
+    }
+}
+
+int main(void)
+{
+    return 0;
+}
