@@ -317,6 +317,16 @@ int deleteNode(int value)
     return 1;
 }
 
+int updateNode(int old_value, int new_value)
+{
+    if (deleteNode(old_value))
+    {
+        addNode(new_value);
+        return 1;
+    }
+    return 0;
+}
+
 int main(void)
 {
     printTreeBreadthFirst();
@@ -334,6 +344,7 @@ int main(void)
     printTreeInorder();
     printTreeBreadthFirst();
     deleteNode(100);
+    updateNode(200, 999);
     printTreeInorder();
     return 0;
 }
