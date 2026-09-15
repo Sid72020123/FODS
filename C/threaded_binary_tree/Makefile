@@ -9,6 +9,9 @@ all: $(PROGRAMS)
 binary_tree: binary_tree.o queue.o stack.o
 	$(CC) $(CFLAGS) $^ -o $@.out
 
+binary_search_tree: binary_search_tree.o queue.o stack.o
+	$(CC) $(CFLAGS) $^ -o $@.out
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
