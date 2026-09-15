@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "queue.h"
 #include "stack.h"
@@ -18,38 +19,61 @@ struct Node *root = NULL;
 
 // === Utilities ===
 
+void clearInputBuffer()
+{
+    // Clear input buffer
+    while (getchar() != '\n')
+        ;
+}
+
+int validateDigits(char *input)
+{
+    int i = 0;
+    while (input[i] != '\0')
+    {
+        if (isdigit(input[i]) == 0)
+            return 0;
+        i++;
+    }
+    return 1;
+}
+
 int get_int_input(const char *prompt, int max_tries, int *result)
 {
-    int input;
-    char extra;
+    char input[100];
+    // char extra;
     // char buffer[100];
     // char *buffer;
     int tries = 0;
 
     while (tries < max_tries)
     {
+        // clearInputBuffer();
         printf("%s", prompt);
+        // gets(input);
 
         // fgets(buffer, sizeof(buffer), stdin);
         // scanf("%s", buffer);
 
-        char ch = getchar();
+        // char ch = getchar();
 
-        if (!(ch == '\n'))
+        // if (!(ch == '\n'))
+        // {
+        // ungetc(ch, stdin); // put the extracted character back into input buffer
+
+        if (gets(input) != NULL)
         {
-            ungetc(ch, stdin); // put the extracted character back into input buffer
-
-            if (scanf("%d%c", &input, &extra) == 2 && extra == '\n')
+            if (input[0] != '\0')
             {
-                *result = input;
-                return 1; // SUCCESS
+                if (validateDigits(input))
+                {
+                    *result = atoi(input);
+                    return 1; // SUCCESS
+                }
             }
-
-            // Clear input buffer
-            while (getchar() != '\n')
-                ;
         }
 
+        // clearInputBuffer();
         printf("Invalid input. Try again.\n");
 
         tries++;
