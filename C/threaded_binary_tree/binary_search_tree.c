@@ -368,9 +368,127 @@ int updateNode(int old_value, int new_value)
     }
     return 0;
 }
+// === CRUD Methods ===
+
+void displayTree()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+    printTreeBreadthFirst();
+    printTreeInorder();
+}
+
+void addValue()
+{
+    printf("\n{ TREE - ADDING New Value [%d] }\n", getSize() + 1);
+    int value;
+    if (get_int_input("Enter a value: ", 5, &value))
+    {
+        addNode(value);
+        printf("\nAdded '%d' to tree.\n", value);
+    }
+}
+
+void deleteValue()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+
+    printf("\n{ TREE - DELETING Value [size of tree - %d] }\n", getSize());
+    int value;
+    if (!get_int_input("Enter a value: ", 5, &value))
+        return;
+
+    int found = deleteNode(value);
+
+    if (!found)
+        printf("\n[*] Couldn't delete value '%d' as it was not found!\n", value);
+    else
+        printf("\nDeleted '%d' from tree.\n", value);
+}
+
+void updateValue()
+{
+    if (root == NULL)
+    {
+        printf("\n[*] Tree is Empty!\n");
+        return;
+    }
+
+    printf("\n{ TREE - UPDATING Value [size of tree - %d] }\n", getSize());
+
+    int value;
+    if (!get_int_input("Enter a value: ", 5, &value))
+        return;
+
+    int new_value;
+    if (!get_int_input("Enter the new value: ", 5, &new_value))
+        return;
+
+    int found = updateNode(value, new_value);
+
+    if (!found)
+        printf("\n[*] Couldn't update value '%d' as it was not found!\n", value);
+    else
+        printf("\nUpdated the value '%d' to '%d' in the tree.\n", value, new_value);
+}
 
 int main(void)
 {
+    addNode(100);
+    addNode(200);
+    addNode(300);
+    addNode(400);
+    addNode(500);
+    addNode(600);
+    addNode(700);
+
+    int choice = 0;
+    do
+    {
+        printf("\n===== MENU [THREADED - SEARCH TREE] =====\n");
+        printf("1. Display Tree (using various methods)\n");
+        printf("2. Add value\n");
+        printf("3. Delete Value\n");
+        printf("4. Update Value\n");
+        printf("5. Exit\n");
+
+        if (get_int_input("Enter your choice: ", 3, &choice))
+        {
+            switch (choice)
+            {
+            case 1:
+                printf("\n");
+                displayTree();
+                break;
+            case 2:
+                addValue();
+                break;
+            case 3:
+                deleteValue();
+                break;
+            case 4:
+                updateValue();
+                break;
+            case 5:
+                printf("\nExiting...\n");
+                break;
+            default:
+                printf("\nInvalid choice!\n");
+            }
+        }
+
+    } while (choice != 5);
+
+    return 0;
+
+    /*
     printTreeBreadthFirst();
     printTreeInorder();
     // addNode(100);
@@ -397,4 +515,5 @@ int main(void)
     // updateNode(200, 999);
     printTreeInorder();
     return 0;
+    */
 }
