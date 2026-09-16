@@ -6,6 +6,9 @@ PROGRAMS = $(SOURCES:.c=)
 
 all: $(PROGRAMS)
 
+test: test.o queue.o stack.o
+	$(CC) $(CFLAGS) $^ -o $@.out
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 

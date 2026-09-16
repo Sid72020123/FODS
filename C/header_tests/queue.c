@@ -16,9 +16,12 @@ struct Queue
     struct QueueNode *rear;
 };
 
-// struct QueueNode *front = NULL, *rear = NULL;
-
 // === Queue Methods ===
+
+struct Queue *createNewQueue()
+{
+    return (struct Queue *)malloc(sizeof(struct Queue));
+}
 
 int isQueueEmpty(struct Queue *location)
 {

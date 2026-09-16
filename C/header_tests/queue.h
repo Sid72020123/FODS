@@ -2,12 +2,14 @@
 #define QUEUE_H
 
 struct Node;
+struct Queue;
 
-int isQueueEmpty(void);
-int getSizeQueue(void);
-void enqueue(struct Node *);
-int dequeue(struct Node **);
-int peekQueue(struct Node **);
-void emptyQueue(void);
+struct Queue *createNewQueue(void);
+int isQueueEmpty(struct Queue *);
+int getSizeQueue(struct Queue *);
+void enqueue(struct Node *, struct Queue *);
+int dequeue(struct Node **, struct Queue *);
+int peekQueue(struct Node **, struct Queue *);
+void emptyQueue(struct Queue *);
 
 #endif
