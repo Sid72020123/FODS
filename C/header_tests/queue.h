@@ -27,7 +27,7 @@ struct Queue;
  * @param name Name assigned to the queue.
  * @return Pointer to the new queue, or NULL if allocation fails.
  */
-struct Queue *createNewQueue(char *name);
+struct Queue *createNewQueue(const char *name);
 
 /**
  * @brief Checks whether a queue is empty.

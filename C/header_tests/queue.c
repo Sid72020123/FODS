@@ -22,7 +22,7 @@ struct Queue
 
 // === Queue Methods ===
 
-struct Queue *createNewQueue(char *name)
+struct Queue *createNewQueue(const char *name)
 {
     struct Queue *newQueue = (struct Queue *)malloc(sizeof(struct Queue));
 

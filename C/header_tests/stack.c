@@ -20,7 +20,7 @@ struct Stack
 
 // === Stack Methods ===
 
-struct Stack *createNewStack(char *name)
+struct Stack *createNewStack(const char *name)
 {
     struct Stack *newStack = (struct Stack *)malloc(sizeof(struct Stack));
 
@@ -137,7 +137,7 @@ void _debugPrintStackContents(struct Stack *stackLocation)
     printf("===== Stack Details [%p] =====\n", stackLocation);
 
     printf("Name: %s\n", stackLocation->stackName);
-    printf("Size: %d\n", getSizeQueue(stackLocation));
+    printf("Size: %d\n", getSizeStack(stackLocation));
     printf("Is Empty? %s\n", (isEmpty ? "YES" : "NO"));
 
     printf("Contents:");
