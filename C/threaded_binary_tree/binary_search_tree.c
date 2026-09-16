@@ -139,7 +139,7 @@ void printTreeInorder()
         {
             printf("[%3d] ", traverse->value);
 
-            if (traverse->rightThread == 1)
+            if (traverse->rightThread)
             {
                 traverse = traverse->right;
             }
@@ -220,6 +220,7 @@ void addNode(int value)
                     newNode->right = traverse->right;
                     newNode->rightThread = traverse->rightThread;
                     traverse->right = newNode;
+                    traverse->rightThread = 0;
 
                     node_inserted = 1;
                 }
