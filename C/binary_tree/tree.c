@@ -31,33 +31,36 @@ int validateDigits(char *input)
     return 1;
 }
 
-// int get_int_input(const char *prompt, int max_tries, int *result)
-// {
-//     char input[100];
-//     int tries = 0;
+/*
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    char input[100];
+    int tries = 0;
 
-//     while (tries < max_tries)
-//     {
-//         printf("%s", prompt);
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
 
-//         if (gets(input) != NULL)
-//         {
-//             if (input[0] != '\0')
-//             {
-//                 if (validateDigits(input))
-//                 {
-//                     *result = atoi(input);
-//                     return 1; // SUCCESS
-//                 }
-//             }
-//         }
-//         printf("Invalid input. Try again.\n");
-//         tries++;
-//     }
+        if (gets(input) != NULL)
+        {
+            if (input[0] != '\0')
+            {
+                if (validateDigits(input))
+                {
+                    *result = atoi(input);
+                    return 1; // SUCCESS
+                }
+            }
+        }
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
 
-//     printf("\nMaximum tries exceeded! Please try again...\n");
-//     return 0; // FAILURE
-// }
+    printf("\nMaximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+*/
+
 
 int get_int_input(const char *prompt, int max_tries, int *result)
 {
@@ -89,6 +92,7 @@ int get_int_input(const char *prompt, int max_tries, int *result)
     printf("\nMaximum tries exceeded! Please try again...\n");
     return 0; // FAILURE
 }
+
 
 // === Binary Tree Methods ===
 
