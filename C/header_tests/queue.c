@@ -1,10 +1,12 @@
+// === Includes ===
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "queue.h"
 
-// === Global Variables / Structures ===
+// === Private Structures ===
 struct QueueNode
 {
     struct Node *location;
@@ -13,7 +15,7 @@ struct QueueNode
 
 struct Queue
 {
-    char queueName[10];
+    char queueName[15];
     struct QueueNode *front;
     struct QueueNode *rear;
 };
@@ -28,7 +30,10 @@ struct Queue *createNewQueue(char *name)
     {
         return NULL;
     }
-    strcpy(newQueue->queueName, name);
+
+    newQueue->front = NULL;
+    newQueue->rear = NULL;
+    snprintf(newQueue->queueName, sizeof newQueue->queueName, "%s", name);
 
     return newQueue;
 }
@@ -56,9 +61,15 @@ int getSizeQueue(struct Queue *location)
     }
 }
 
-void enqueue(struct Node *location, struct Queue *queueLocation)
+int enqueue(struct Node *location, struct Queue *queueLocation)
 {
     struct QueueNode *newNode = (struct QueueNode *)(malloc(sizeof(struct QueueNode)));
+
+    if (newNode == NULL)
+    {
+        return 0;
+    }
+
     newNode->location = location;
     newNode->next = NULL;
 
@@ -69,6 +80,8 @@ void enqueue(struct Node *location, struct Queue *queueLocation)
         queueLocation->rear->next = newNode;
         queueLocation->rear = newNode;
     }
+
+    return 1;
 }
 
 int dequeue(struct Node **location, struct Queue *queueLocation)
@@ -114,19 +127,28 @@ void emptyQueue(struct Queue *queueLocation)
     }
 }
 
+void destroyQueue(struct Queue *queueLocation)
+{
+    if (queueLocation == NULL)
+        return;
+
+    emptyQueue(queueLocation);
+    free(queueLocation);
+}
+
 void _debugPrintQueueContents(struct Queue *queueLocation)
 {
-    int emptyQueue = isQueueEmpty(queueLocation);
+    int isEmpty = isQueueEmpty(queueLocation);
 
     printf("===== Queue Details [%p] =====\n", queueLocation);
 
     printf("Name: %s\n", queueLocation->queueName);
     printf("Size: %d\n", getSizeQueue(queueLocation));
-    printf("Is Empty? %s\n", (emptyQueue ? "YES" : "NO"));
+    printf("Is Empty? %s\n", (isEmpty ? "YES" : "NO"));
 
     printf("Contents: ");
 
-    if (emptyQueue)
+    if (isEmpty)
     {
         printf("[EMPTY]");
     }
@@ -136,7 +158,7 @@ void _debugPrintQueueContents(struct Queue *queueLocation)
 
         while (traverse != NULL)
         {
-            printf(" [%p] ", traverse->location);
+            printf("[%p] ", traverse->location);
             traverse = traverse->next;
         }
     }

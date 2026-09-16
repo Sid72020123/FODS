@@ -25,17 +25,31 @@ int main(void)
     struct Queue *MAIN = createNewQueue("MAIN");
     struct Queue *TEMP = createNewQueue("TEMP");
 
-    printf("Queue Empty: %d\n", isQueueEmpty(MAIN));
-    printf("Queue Size: %d\n", getSizeQueue(MAIN));
-
-    enqueue(createStudent(1, "Siddhesh"), MAIN);
-
-    printf("Queue Empty: %d\n", isQueueEmpty(MAIN));
-    printf("Queue Size: %d\n", getSizeQueue(MAIN));
-
-    printf("[TEMP] Queue Empty: %d\n", isQueueEmpty(TEMP));
-    printf("[TEMP] Queue Size: %d\n", getSizeQueue(TEMP));
     _debugPrintQueueContents(MAIN);
     _debugPrintQueueContents(TEMP);
+
+    enqueue(createStudent(1, "Siddhesh"), MAIN);
+    enqueue(createStudent(2, "Person A"), MAIN);
+    enqueue(createStudent(3, "Person B"), MAIN);
+
+    _debugPrintQueueContents(MAIN);
+    enqueue(createStudent(0, "Dummy Person"), TEMP);
+    student *traverse = NULL;
+
+    while (!isQueueEmpty(MAIN))
+    {
+        dequeue(&traverse, MAIN);
+        printf("[%d] ==> [%s]\n", traverse->rollNo, traverse->name);
+        free(traverse);
+    }
+
+    _debugPrintQueueContents(TEMP);
+    dequeue(&traverse, TEMP);
+    _debugPrintQueueContents(TEMP);
+    printf("[%d] ==> [%s]\n", traverse->rollNo, traverse->name);
+    free(traverse);
+
+    (MAIN);
+    free(TEMP);
     return 0;
 }
