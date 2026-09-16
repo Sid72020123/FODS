@@ -139,7 +139,7 @@ void printTreeInorder()
         {
             printf("[%3d] ", traverse->value);
 
-            if (traverse->rightThread)
+            if (traverse->rightThread == 1)
             {
                 traverse = traverse->right;
             }
@@ -330,10 +330,6 @@ int deleteNode(int value)
 
         searchNode->value = deleteNode->value; // copy the value
 
-        /*
-            deleteNode cannot have a left child because it is the
-            leftmost node of the right subtree.
-        */
         if (deleteNodeParent == searchNode)
         {
             searchNode->right = deleteNode->right;
@@ -441,13 +437,20 @@ void updateValue()
 
 int main(void)
 {
-    addNode(100);
+    // addNode(100);
+    // addNode(200);
+    // addNode(300);
+    // addNode(400);
+    // addNode(500);
+    // addNode(600);
+    // addNode(700);
     addNode(200);
+    addNode(100);
     addNode(300);
-    addNode(400);
-    addNode(500);
-    addNode(600);
-    addNode(700);
+    addNode(50);
+    addNode(150);
+    addNode(120);
+    addNode(170);
 
     int choice = 0;
     do

@@ -14,12 +14,12 @@ struct QueueNode *front = NULL, *rear = NULL;
 
 // === Queue Methods ===
 
-int isQueueEmpty()
+int isQueueEmpty(struct QueueNode *node)
 {
-    return front == NULL;
+    return node == NULL;
 }
 
-int getSizeQueue()
+int getSizeQueue(struct QueueNode *node)
 {
     if (isQueueEmpty())
         return 0;
