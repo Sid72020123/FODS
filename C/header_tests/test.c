@@ -35,5 +35,7 @@ int main(void)
 
     printf("[TEMP] Queue Empty: %d\n", isQueueEmpty(TEMP));
     printf("[TEMP] Queue Size: %d\n", getSizeQueue(TEMP));
+    _debugPrintQueueContents(MAIN);
+    _debugPrintQueueContents(TEMP);
     return 0;
 }

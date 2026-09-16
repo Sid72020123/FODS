@@ -11,5 +11,6 @@ void enqueue(struct Node *, struct Queue *);
 int dequeue(struct Node **, struct Queue *);
 int peekQueue(struct Node **, struct Queue *);
 void emptyQueue(struct Queue *);
+void _debugPrintQueueContents(struct Queue *);
 
 #endif

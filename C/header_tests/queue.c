@@ -12,6 +12,7 @@ struct QueueNode
 
 struct Queue
 {
+    char queueName
     struct QueueNode *front;
     struct QueueNode *rear;
 };
@@ -102,4 +103,23 @@ void emptyQueue(struct Queue *queueLocation)
     {
         dequeue(&temp, queueLocation);
     }
+}
+
+void _debugPrintQueueContents(struct Queue *queueLocation)
+{
+    if (isQueueEmpty(queueLocation))
+    {
+        printf("[EMPTY]");
+    }
+    else
+    {
+        struct QueueNode *traverse = queueLocation->front;
+
+        while (traverse != NULL)
+        {
+            printf("[%p] ", traverse->location);
+            traverse = traverse->next;
+        }
+    }
+    printf("\n");
 }
