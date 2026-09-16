@@ -10,23 +10,29 @@ struct QueueNode
     struct QueueNode *next;
 };
 
-struct QueueNode *front = NULL, *rear = NULL;
+struct Queue
+{
+    struct QueueNode *front;
+    struct QueueNode *rear;
+};
+
+// struct QueueNode *front = NULL, *rear = NULL;
 
 // === Queue Methods ===
 
-int isQueueEmpty(struct QueueNode *node)
+int isQueueEmpty(struct Queue *location)
 {
-    return node == NULL;
+    return location->front == NULL;
 }
 
-int getSizeQueue(struct QueueNode *node)
+int getSizeQueue(struct Queue *location)
 {
-    if (isQueueEmpty())
+    if (isQueueEmpty(location))
         return 0;
     else
     {
         int size = 0;
-        struct QueueNode *traverse = front;
+        struct QueueNode *traverse = location->front;
 
         while (traverse != NULL)
         {
@@ -37,60 +43,60 @@ int getSizeQueue(struct QueueNode *node)
     }
 }
 
-void enqueue(struct Node *location)
+void enqueue(struct Node *location, struct Queue *queueLocation)
 {
     struct QueueNode *newNode = (struct QueueNode *)(malloc(sizeof(struct QueueNode)));
     newNode->location = location;
     newNode->next = NULL;
 
-    if (front == NULL)
-        front = newNode, rear = newNode;
+    if (queueLocation->front == NULL)
+        queueLocation->front = newNode, queueLocation->rear = newNode;
     else
     {
-        rear->next = newNode;
-        rear = newNode;
+        queueLocation->rear->next = newNode;
+        queueLocation->rear = newNode;
     }
 }
 
-int dequeue(struct Node **location)
+int dequeue(struct Node **location, struct Queue *queueLocation)
 {
-    if (front == NULL)
+    if (queueLocation->front == NULL)
         return 0;
 
-    *location = front->location;
+    *location = queueLocation->front->location;
 
-    if (front == rear)
+    if (queueLocation->front == queueLocation->rear)
     {
-        free(front);
-        front = rear = NULL;
+        free(queueLocation->front);
+        queueLocation->front = queueLocation->rear = NULL;
     }
     else
     {
-        struct QueueNode *deleteNode = front;
-        front = front->next;
+        struct QueueNode *deleteNode = queueLocation->front;
+        queueLocation->front = queueLocation->front->next;
         free(deleteNode);
     }
     return 1;
 }
 
-int peekQueue(struct Node **location)
+int peekQueue(struct Node **location, struct Queue *queueLocation)
 {
-    if (isQueueEmpty())
+    if (isQueueEmpty(queueLocation))
     {
         return 0;
     }
-    *location = front->location;
+    *location = queueLocation->front->location;
     return 1;
 }
 
-void emptyQueue()
+void emptyQueue(struct Queue *queueLocation)
 {
-    if (isQueueEmpty())
+    if (isQueueEmpty(queueLocation))
         return;
 
     struct Node *temp;
-    while (front != NULL)
+    while (queueLocation->front != NULL)
     {
-        dequeue(&temp);
+        dequeue(&temp, queueLocation);
     }
 }
