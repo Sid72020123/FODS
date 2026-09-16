@@ -22,8 +22,8 @@ student *createStudent(int rollNo, char name[])
 
 int main(void)
 {
-    struct Queue *MAIN = createNewQueue();
-    struct Queue *TEMP = createNewQueue();
+    struct Queue *MAIN = createNewQueue("MAIN");
+    struct Queue *TEMP = createNewQueue("TEMP");
 
     printf("Queue Empty: %d\n", isQueueEmpty(MAIN));
     printf("Queue Size: %d\n", getSizeQueue(MAIN));

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "queue.h"
 
@@ -12,16 +13,24 @@ struct QueueNode
 
 struct Queue
 {
-    char queueName
+    char queueName[10];
     struct QueueNode *front;
     struct QueueNode *rear;
 };
 
 // === Queue Methods ===
 
-struct Queue *createNewQueue()
+struct Queue *createNewQueue(char *name)
 {
-    return (struct Queue *)malloc(sizeof(struct Queue));
+    struct Queue *newQueue = (struct Queue *)malloc(sizeof(struct Queue));
+
+    if (newQueue == NULL)
+    {
+        return NULL;
+    }
+    strcpy(newQueue->queueName, name);
+
+    return newQueue;
 }
 
 int isQueueEmpty(struct Queue *location)
@@ -107,7 +116,17 @@ void emptyQueue(struct Queue *queueLocation)
 
 void _debugPrintQueueContents(struct Queue *queueLocation)
 {
-    if (isQueueEmpty(queueLocation))
+    int emptyQueue = isQueueEmpty(queueLocation);
+
+    printf("===== Queue Details [%p] =====\n", queueLocation);
+
+    printf("Name: %s\n", queueLocation->queueName);
+    printf("Size: %d\n", getSizeQueue(queueLocation));
+    printf("Is Empty? %s\n", (emptyQueue ? "YES" : "NO"));
+
+    printf("Contents: ");
+
+    if (emptyQueue)
     {
         printf("[EMPTY]");
     }
@@ -117,9 +136,9 @@ void _debugPrintQueueContents(struct Queue *queueLocation)
 
         while (traverse != NULL)
         {
-            printf("[%p] ", traverse->location);
+            printf(" [%p] ", traverse->location);
             traverse = traverse->next;
         }
     }
-    printf("\n");
+    printf("\n\n");
 }

@@ -4,7 +4,7 @@
 struct Node;
 struct Queue;
 
-struct Queue *createNewQueue(void);
+struct Queue *createNewQueue(char *);
 int isQueueEmpty(struct Queue *);
 int getSizeQueue(struct Queue *);
 void enqueue(struct Node *, struct Queue *);
