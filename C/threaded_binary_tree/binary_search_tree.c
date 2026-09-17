@@ -448,13 +448,13 @@ int main(void)
     // addNode(600);
     // addNode(700);
 
-    // addNode(200);
-    // addNode(100);
-    // addNode(300);
-    // addNode(50);
-    // addNode(150);
-    // addNode(120);
-    // addNode(170);
+    addNode(200);
+    addNode(100);
+    addNode(300);
+    addNode(50);
+    addNode(150);
+    addNode(120);
+    addNode(170);
 
     // addNode(100);
     // addNode(120);
@@ -464,10 +464,10 @@ int main(void)
     // addNode(200);
     // addNode(220);
 
-    addNode(50);
-    addNode(60);
-    addNode(70);
-    addNode(65);
+    // addNode(50);
+    // addNode(60);
+    // addNode(70);
+    // addNode(65);
 
     int choice = 0;
     do
