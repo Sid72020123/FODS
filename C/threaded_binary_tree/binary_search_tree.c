@@ -220,7 +220,7 @@ void addNode(int value)
                     newNode->right = traverse->right;
                     newNode->rightThread = traverse->rightThread;
                     traverse->right = newNode;
-                    traverse->rightThread = 0;
+                    traverse->rightThread = 0; // <-- mistake here
 
                     node_inserted = 1;
                 }
@@ -333,6 +333,7 @@ int deleteNode(int value)
 
         if (deleteNodeParent == searchNode)
         {
+            // only right node case is handled here...
             searchNode->right = deleteNode->right;
             searchNode->rightThread = deleteNode->rightThread;
         }
@@ -365,6 +366,7 @@ int updateNode(int old_value, int new_value)
     }
     return 0;
 }
+
 // === CRUD Methods ===
 
 void displayTree()
@@ -445,13 +447,27 @@ int main(void)
     // addNode(500);
     // addNode(600);
     // addNode(700);
-    addNode(200);
-    addNode(100);
-    addNode(300);
+
+    // addNode(200);
+    // addNode(100);
+    // addNode(300);
+    // addNode(50);
+    // addNode(150);
+    // addNode(120);
+    // addNode(170);
+
+    // addNode(100);
+    // addNode(120);
+    // addNode(140);
+    // addNode(160);
+    // addNode(180);
+    // addNode(200);
+    // addNode(220);
+
     addNode(50);
-    addNode(150);
-    addNode(120);
-    addNode(170);
+    addNode(60);
+    addNode(70);
+    addNode(65);
 
     int choice = 0;
     do
