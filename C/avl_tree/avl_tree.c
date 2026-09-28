@@ -263,7 +263,7 @@ int deleteNode(int value)
             parent = searchNode;
             searchNode = searchNode->left;
         }
-        else if (searchNode->value < value) // this condition checking is not required
+        else
         {
             // traverse right side
             parent = searchNode;
@@ -287,6 +287,9 @@ int deleteNode(int value)
         }
         else
             root = NULL; // the node to delete was a root node
+
+        parent->height = 1 + MAX(getNodeHeight(parent->left), getNodeHeight(parent->right)); // re-calculate parent height
+
         free(searchNode);
     }
     // --- For mid-level / parent-child node ---
@@ -345,6 +348,8 @@ int deleteNode(int value)
                     deleteNodeParent->left = deleteNode->right;
             }
         }
+
+        deleteNodeParent->height = 1 + MAX(getNodeHeight(deleteNodeParent->left), getNodeHeight(deleteNodeParent->right)); // re-calculate parent height
 
         searchNode->value = deleteNode->value; // copy the value
         free(deleteNode);                      // free the node / memory
@@ -450,12 +455,16 @@ int main(void)
     addNode(40);
     addNode(35);
     addNode(45);
+    addNode(65);
 
     // addNode(10);
     // addNode(10);
     // addNode(10);
     // addNode(10);
     // addNode(5);
+    printTreeBreadthFirst();
+
+    deleteNode(65);
     printTreeBreadthFirst();
 
     return 0;
