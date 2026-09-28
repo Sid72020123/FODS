@@ -33,7 +33,7 @@ int getNodeHeight(struct Node *n)
     }
 }
 
-void rightRotateNode(struct Node *node)
+void rightRotateNode(struct Node *node, struct Node *parent)
 {
     struct Node *child = node->left;
 
@@ -42,27 +42,25 @@ void rightRotateNode(struct Node *node)
     child->right = node;
 
     // Connect rotated subtree to parent
-    struct Node *parent = NULL;
-    if (!isStackEmpty(MAIN_STACK))
-    {
-        peekStack(&parent, MAIN_STACK);
-
-        if (parent->left == node)
-            parent->left = child;
-        else
-            parent->right = child;
-    }
-    else
+    if (parent == NULL)
     {
         // node was the root
         root = child;
+    }
+    else if (parent->left == node)
+    {
+        parent->left = child;
+    }
+    else
+    {
+        parent->right = child;
     }
     // peekStack(&parent, MAIN_STACK);
 
     // parent->left = child;
 }
 
-void leftRotateNode(struct Node *node)
+void leftRotateNode(struct Node *node, struct Node *parent)
 {
     struct Node *child = node->right;
 
@@ -71,21 +69,18 @@ void leftRotateNode(struct Node *node)
     child->left = node;
 
     // Connect rotated subtree to parent
-    struct Node *parent = NULL;
-
-    if (!isStackEmpty(MAIN_STACK))
-    {
-        peekStack(&parent, MAIN_STACK);
-
-        if (parent->left == node)
-            parent->left = child;
-        else
-            parent->right = child;
-    }
-    else
+    if (parent == NULL)
     {
         // node was the root
         root = child;
+    }
+    else if (parent->left == node)
+    {
+        parent->left = child;
+    }
+    else
+    {
+        parent->right = child;
     }
     // struct Node *parent;
     // peekStack(&parent, MAIN_STACK);
@@ -152,12 +147,19 @@ int addNode(int value)
     }
 
     printf("=============================================\n");
+    _debugPrintStackContents(MAIN_STACK);
     struct Node *node = NULL;
     while (!isStackEmpty(MAIN_STACK))
     {
 
-        // _debugPrintStackContents(MAIN_STACK);
         pop(&node, MAIN_STACK);
+
+        // get parent of node
+        struct Node *parent = NULL;
+        if (!isStackEmpty(MAIN_STACK))
+        {
+            peekStack(&parent, MAIN_STACK);
+        }
 
         int leftHeight = getNodeHeight(node->left);
         int rightHeight = getNodeHeight(node->right);
@@ -172,13 +174,13 @@ int addNode(int value)
             if (value < node->left->value)
             {
                 // Left-Left
-                rightRotateNode(node);
+                rightRotateNode(node, parent);
             }
             else
             {
                 // Left-Right
-                leftRotateNode(node->left);
-                rightRotateNode(node);
+                leftRotateNode(node->left, node);
+                rightRotateNode(node, parent);
             }
         }
         else if (balanceFactor < -1)
@@ -187,13 +189,13 @@ int addNode(int value)
             if (value > node->right->value)
             {
                 // Right-Right
-                leftRotateNode(node);
+                leftRotateNode(node, parent);
             }
             else
             {
                 // Right-Left
-                rightRotateNode(node->right);
-                leftRotateNode(node);
+                rightRotateNode(node->right, node);
+                leftRotateNode(node, parent);
             }
         }
     }
@@ -227,9 +229,8 @@ void printTreeBreadthFirst()
             if (traverse->right != NULL)
                 enqueue(traverse->right, MAIN_QUEUE);
         }
-
-        printf("\n");
     }
+    printf("\n");
 }
 
 int main(void)
@@ -237,11 +238,33 @@ int main(void)
     MAIN_QUEUE = createNewQueue("MAIN QUEUE");
     MAIN_STACK = createNewStack("MAIN STACK");
 
+    // addNode(10);
+    // addNode(20);
+    // addNode(30);
+    // addNode(40);
+    // addNode(50);
+
+    /* ===== Test Cases ===== */
+
+    // => Left-Left Rotation
+    // addNode(30);
+    // addNode(20);
+    // addNode(10);
+
+    // => Right-Right Rotation
+    // addNode(10);
+    // addNode(20);
+    // addNode(30);
+
+    // => Left-Right Rotation
+    // addNode(30);
+    // addNode(10);
+    // addNode(20);
+
+    // => Right-Right Rotation
     addNode(10);
-    printTreeBreadthFirst();
-    addNode(20);
-    printTreeBreadthFirst();
     addNode(30);
+    addNode(20);
     printTreeBreadthFirst();
 
     return 0;
