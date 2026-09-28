@@ -186,7 +186,7 @@ int addNode(int value)
     }
 
     // printf("=============================================\n");
-    _debugPrintStackContents(MAIN_STACK);
+    // _debugPrintStackContents(MAIN_STACK);
     struct Node *node = NULL;
     while (!isStackEmpty(MAIN_STACK))
     {
@@ -309,9 +309,9 @@ int deleteNode(int value)
 
             while (deleteNode->right != NULL)
             {
-                push(deleteNode, MAIN_STACK);
-
                 deleteNodeParent = deleteNode;
+                push(deleteNodeParent, MAIN_STACK);
+
                 deleteNode = deleteNode->right;
             }
         }
@@ -322,9 +322,9 @@ int deleteNode(int value)
 
             while (deleteNode->left != NULL)
             {
-                push(deleteNode, MAIN_STACK);
-
                 deleteNodeParent = deleteNode;
+                push(deleteNodeParent, MAIN_STACK);
+
                 deleteNode = deleteNode->left;
             }
         }
@@ -365,6 +365,7 @@ int deleteNode(int value)
     printf("=============================================\n");
     _debugPrintStackContents(MAIN_STACK);
     struct Node *node = NULL;
+    pop(&node, MAIN_STACK);
     while (!isStackEmpty(MAIN_STACK))
     {
 
@@ -380,7 +381,7 @@ int deleteNode(int value)
         int leftHeight = getNodeHeight(node->left);
         int rightHeight = getNodeHeight(node->right);
 
-        node->height = MAX(leftHeight, rightHeight);
+        node->height = 1 + MAX(leftHeight, rightHeight);
         printf("%i %i %i %i\n", node->value, node->height, leftHeight, rightHeight);
         int balanceFactor = leftHeight - rightHeight;
 
