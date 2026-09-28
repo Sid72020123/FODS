@@ -36,25 +36,61 @@ int getNodeHeight(struct Node *n)
 void rightRotateNode(struct Node *node)
 {
     struct Node *child = node->left;
+
+    // Perform rotation
     node->left = child->right;
     child->right = node;
 
-    struct Node *parent;
-    peekStack(&parent, MAIN_STACK);
+    // Connect rotated subtree to parent
+    struct Node *parent = NULL;
+    if (!isStackEmpty(MAIN_STACK))
+    {
+        peekStack(&parent, MAIN_STACK);
 
-    parent->left = child;
+        if (parent->left == node)
+            parent->left = child;
+        else
+            parent->right = child;
+    }
+    else
+    {
+        // node was the root
+        root = child;
+    }
+    // peekStack(&parent, MAIN_STACK);
+
+    // parent->left = child;
 }
 
 void leftRotateNode(struct Node *node)
 {
     struct Node *child = node->right;
+
+    // Perform rotation
     node->right = child->left;
     child->left = node;
 
-    struct Node *parent;
-    peekStack(&parent, MAIN_STACK);
+    // Connect rotated subtree to parent
+    struct Node *parent = NULL;
 
-    parent->right = child;
+    if (!isStackEmpty(MAIN_STACK))
+    {
+        peekStack(&parent, MAIN_STACK);
+
+        if (parent->left == node)
+            parent->left = child;
+        else
+            parent->right = child;
+    }
+    else
+    {
+        // node was the root
+        root = child;
+    }
+    // struct Node *parent;
+    // peekStack(&parent, MAIN_STACK);
+
+    // parent->right = child;
 }
 
 int addNode(int value)
@@ -71,9 +107,12 @@ int addNode(int value)
     newNode->right = NULL;
     newNode->height = -1;
 
+    emptyStack(MAIN_STACK);
+
     if (root == NULL)
     {
         root = newNode;
+        // push(root, MAIN_STACK); // No need to balance if there is only one element in tree
     }
     else
     {
@@ -85,6 +124,7 @@ int addNode(int value)
 
             if (traverse->value > value)
             {
+                // Left side
                 if (traverse->left == NULL)
                 {
                     traverse->left = newNode;
@@ -97,6 +137,7 @@ int addNode(int value)
             }
             else
             {
+                // Right side
                 if (traverse->right == NULL)
                 {
                     traverse->right = newNode;
@@ -108,53 +149,87 @@ int addNode(int value)
                 }
             }
         }
+    }
 
-        struct Node *node = NULL;
-        while (!isStackEmpty(MAIN_STACK))
+    printf("=============================================\n");
+    struct Node *node = NULL;
+    while (!isStackEmpty(MAIN_STACK))
+    {
+
+        // _debugPrintStackContents(MAIN_STACK);
+        pop(&node, MAIN_STACK);
+
+        int leftHeight = getNodeHeight(node->left);
+        int rightHeight = getNodeHeight(node->right);
+
+        node->height = 1 + MAX(leftHeight, rightHeight);
+        printf("%i %i %i %i\n", node->value, node->height, leftHeight, rightHeight);
+        int balanceFactor = leftHeight - rightHeight;
+
+        if (balanceFactor > 1)
         {
-            pop(&node, MAIN_STACK);
-
-            int leftHeight = getNodeHeight(node->left);
-            int rightHeight = getNodeHeight(node->right);
-
-            node->height = 1 + MAX(leftHeight, rightHeight);
-
-            int balanceFactor = leftHeight - rightHeight;
-
-            if (balanceFactor > 1)
+            // Left
+            if (value < node->left->value)
             {
-                // Left
-                if (value < node->left->value)
-                {
-                    // Left-Left
-                    rightRotateNode(node);
-                }
-                else
-                {
-                    // Left-Right
-                    leftRotateNode(node->left);
-                    rightRotateNode(node);
-                }
+                // Left-Left
+                rightRotateNode(node);
             }
-            else if (balanceFactor < -1)
+            else
             {
-                // Right
-                if (value > node->right->value)
-                {
-                    // Right-Right
-                    leftRotateNode(node);
-                }
-                else
-                {
-                    // Right-Left
-                    rightRotateNode(node->right);
-                    leftRotateNode(node);
-                }
+                // Left-Right
+                leftRotateNode(node->left);
+                rightRotateNode(node);
+            }
+        }
+        else if (balanceFactor < -1)
+        {
+            // Right
+            if (value > node->right->value)
+            {
+                // Right-Right
+                leftRotateNode(node);
+            }
+            else
+            {
+                // Right-Left
+                rightRotateNode(node->right);
+                leftRotateNode(node);
             }
         }
     }
 
     return 1;
+}
+
+// Breadth-First traversal / Level-Order traversal
+void printTreeBreadthFirst()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyQueue(MAIN_QUEUE);
+        enqueue(root, MAIN_QUEUE);
+        struct Node *traverse;
+
+        printf("[*] TREE: ");
+
+        while (!isQueueEmpty(MAIN_QUEUE))
+        {
+            dequeue(&traverse, MAIN_QUEUE);
+            printf("[%3d] ", traverse->value);
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left, MAIN_QUEUE);
+
+            if (traverse->right != NULL)
+                enqueue(traverse->right, MAIN_QUEUE);
+        }
+
+        printf("\n");
+    }
 }
 
 int main(void)
@@ -163,8 +238,11 @@ int main(void)
     MAIN_STACK = createNewStack("MAIN STACK");
 
     addNode(10);
+    printTreeBreadthFirst();
     addNode(20);
+    printTreeBreadthFirst();
     addNode(30);
+    printTreeBreadthFirst();
 
     return 0;
 }
