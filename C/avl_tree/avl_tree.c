@@ -41,6 +41,10 @@ void rightRotateNode(struct Node *node, struct Node *parent)
     node->left = child->right;
     child->right = node;
 
+    // Recalculate heights
+    node->height = 1 + MAX(getNodeHeight(node->left), getNodeHeight(node->right));
+    child->height = 1 + MAX(getNodeHeight(child->left), getNodeHeight(child->right));
+
     // Connect rotated subtree to parent
     if (parent == NULL)
     {
@@ -67,6 +71,10 @@ void leftRotateNode(struct Node *node, struct Node *parent)
     // Perform rotation
     node->right = child->left;
     child->left = node;
+
+    // Recalculate heights
+    node->height = 1 + MAX(getNodeHeight(node->left), getNodeHeight(node->right));
+    child->height = 1 + MAX(getNodeHeight(child->left), getNodeHeight(child->right));
 
     // Connect rotated subtree to parent
     if (parent == NULL)
@@ -100,7 +108,7 @@ int addNode(int value)
     newNode->value = value;
     newNode->left = NULL;
     newNode->right = NULL;
-    newNode->height = -1;
+    newNode->height = 0;
 
     emptyStack(MAIN_STACK);
 
@@ -221,7 +229,7 @@ void printTreeBreadthFirst()
         while (!isQueueEmpty(MAIN_QUEUE))
         {
             dequeue(&traverse, MAIN_QUEUE);
-            printf("[%3d] ", traverse->value);
+            printf("[%3d => %d] ", traverse->value, traverse->height);
 
             if (traverse->left != NULL)
                 enqueue(traverse->left, MAIN_QUEUE);
@@ -262,9 +270,9 @@ int main(void)
     // addNode(20);
 
     // => Right-Right Rotation
-    addNode(10);
-    addNode(30);
-    addNode(20);
+    // addNode(10);
+    // addNode(30);
+    // addNode(20);
     printTreeBreadthFirst();
 
     return 0;
