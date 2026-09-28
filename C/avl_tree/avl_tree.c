@@ -33,6 +33,36 @@ int getNodeHeight(struct Node *n)
     }
 }
 
+// Breadth-First traversal / Level-Order traversal
+void printTreeBreadthFirst()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyQueue(MAIN_QUEUE);
+        enqueue(root, MAIN_QUEUE);
+        struct Node *traverse;
+
+        printf("[*] TREE: ");
+
+        while (!isQueueEmpty(MAIN_QUEUE))
+        {
+            dequeue(&traverse, MAIN_QUEUE);
+            printf("[%3d => %d] ", traverse->value, traverse->height);
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left, MAIN_QUEUE);
+
+            if (traverse->right != NULL)
+                enqueue(traverse->right, MAIN_QUEUE);
+        }
+    }
+    printf("\n");
+}
+
 void rightRotateNode(struct Node *node, struct Node *parent)
 {
     struct Node *child = node->left;
@@ -211,34 +241,61 @@ int addNode(int value)
     return 1;
 }
 
-// Breadth-First traversal / Level-Order traversal
-void printTreeBreadthFirst()
+int updateNode(int old_value, int new_value)
 {
     if (root == NULL)
-    {
-        printf("[*] Tree is Empty!");
-    }
+        return 0;
     else
     {
-        emptyQueue(MAIN_QUEUE);
-        enqueue(root, MAIN_QUEUE);
-        struct Node *traverse;
-
-        printf("[*] TREE: ");
-
-        while (!isQueueEmpty(MAIN_QUEUE))
+        if (root->value == old_value)
         {
-            dequeue(&traverse, MAIN_QUEUE);
-            printf("[%3d => %d] ", traverse->value, traverse->height);
+            // if the value is found in root itself, update the root
+            root->value = new_value;
+            return 1;
+        }
+        else
+        {
+            // find / traverse the tree according to BST rules
+            // and update the value of the node accordingly
 
-            if (traverse->left != NULL)
-                enqueue(traverse->left, MAIN_QUEUE);
+            int found = 0;
+            struct Node *traverse = root;
 
-            if (traverse->right != NULL)
-                enqueue(traverse->right, MAIN_QUEUE);
+            while (traverse != NULL)
+            {
+                if (old_value < traverse->value)
+                {
+                    // try the left side
+                    if (traverse->left->value == old_value)
+                    {
+                        // replace the value
+                        traverse->left->value = new_value;
+                        found = 1;
+                        traverse = NULL;
+                    }
+                    else
+                        traverse = traverse->left;
+                }
+                else
+                {
+                    if (old_value >= traverse->value)
+                    {
+                        // try the right side
+                        if (traverse->right->value == old_value)
+                        {
+                            // replace the value
+                            traverse->right->value = new_value;
+                            found = 1;
+                            traverse = NULL;
+                        }
+                        else
+                            traverse = traverse->right;
+                    }
+                }
+            }
+            return found;
         }
     }
-    printf("\n");
 }
 
 int main(void)
@@ -273,6 +330,19 @@ int main(void)
     // addNode(10);
     // addNode(30);
     // addNode(20);
+
+    // addNode(50);
+    // addNode(30);
+    // addNode(70);
+    // addNode(20);
+    // addNode(40);
+    // addNode(35);
+    // addNode(45);
+    addNode(10);
+    addNode(10);
+    addNode(10);
+    addNode(10);
+    addNode(10);
     printTreeBreadthFirst();
 
     return 0;
