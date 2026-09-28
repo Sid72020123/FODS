@@ -1,26 +1,20 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -MMD -MP -g
 
-PROGRAM = avl_tree
+SOURCES = $(wildcard *.c)
+PROGRAMS = $(SOURCES:.c=)
 
-SOURCES = avl_tree.c \
-          headers/queue.c \
-          headers/stack.c
+all: $(PROGRAMS)
 
-OBJECTS = $(SOURCES:.c=.o)
-DEPS = $(OBJECTS:.o=.d)
-
-all: $(PROGRAM)
-
-$(PROGRAM): $(OBJECTS)
-	$(CC) $(CFLAGS) $^ -o $@
+avl_tree: avl_tree.o headers/queue.o headers/stack.o
+	$(CC) $(CFLAGS) $^ -o $@.out
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
--include $(DEPS)
+-include $(SOURCES:.c=.d)
 
 clean:
-	rm -f $(OBJECTS) $(DEPS) $(PROGRAM)
+	rm -f *.o *.d *.out
 
 .PHONY: all clean
