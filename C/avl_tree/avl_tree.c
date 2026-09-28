@@ -242,6 +242,117 @@ int addNode(int value)
     return 1;
 }
 
+int deleteNode(int value)
+{
+    if (root == NULL)
+        return 0;
+
+    int found = 0;
+    struct Node *searchNode = root;
+    struct Node *parent = NULL;
+
+    while (searchNode != NULL && !found)
+    {
+        if (searchNode->value == value)
+        {
+            found = 1;
+        }
+        else if (searchNode->value > value)
+        {
+            // traverse left side
+            parent = searchNode;
+            searchNode = searchNode->left;
+        }
+        else if (searchNode->value < value) // this condition checking is not required
+        {
+            // traverse right side
+            parent = searchNode;
+            searchNode = searchNode->right;
+        }
+    }
+
+    if (!found)
+        return 0;
+
+    // --- For leaf node ---
+    if (searchNode->left == NULL && searchNode->right == NULL)
+    {
+        if (parent != NULL)
+        {
+            // delete after removing the link to the parent pointer
+            if (parent->left == searchNode)
+                parent->left = NULL;
+            else
+                parent->right = NULL;
+        }
+        else
+            root = NULL; // the node to delete was a root node
+        free(searchNode);
+    }
+    // --- For mid-level / parent-child node ---
+    else
+    {
+        struct Node *deleteNode = NULL;
+        struct Node *deleteNodeParent = searchNode;
+
+        if (searchNode->left != NULL)
+        {
+            // get the rightmost node from left subtree
+            deleteNode = searchNode->left;
+
+            while (deleteNode->right != NULL)
+            {
+                deleteNodeParent = deleteNode;
+                deleteNode = deleteNode->right;
+            }
+        }
+        else
+        {
+            // get the leftmost node from right subtree
+            deleteNode = searchNode->right;
+
+            while (deleteNode->left != NULL)
+            {
+                deleteNodeParent = deleteNode;
+                deleteNode = deleteNode->left;
+            }
+        }
+
+        if (deleteNode->left == NULL && deleteNode->right == NULL)
+        {
+            // if the node to be deleted is a leaf node
+            if (deleteNodeParent->left == deleteNode)
+                deleteNodeParent->left = NULL;
+            else
+                deleteNodeParent->right = NULL;
+        }
+        else
+        {
+            if (deleteNode->left != NULL)
+            {
+                // attach any left child / subtree of delete node to delete node's parent
+                if (deleteNodeParent == searchNode)
+                    deleteNodeParent->left = deleteNode->left;
+                else
+                    deleteNodeParent->right = deleteNode->left;
+            }
+            else
+            {
+                // attach any right child / subtree of delete node to delete node's parent
+                if (deleteNodeParent == searchNode)
+                    deleteNodeParent->right = deleteNode->right;
+                else
+                    deleteNodeParent->left = deleteNode->right;
+            }
+        }
+
+        searchNode->value = deleteNode->value; // copy the value
+        free(deleteNode);                      // free the node / memory
+    }
+
+    return 1;
+}
+
 int updateNode(int old_value, int new_value)
 {
     if (root == NULL)
@@ -332,19 +443,19 @@ int main(void)
     // addNode(30);
     // addNode(20);
 
-    // addNode(50);
-    // addNode(30);
-    // addNode(70);
-    // addNode(20);
-    // addNode(40);
-    // addNode(35);
-    // addNode(45);
+    addNode(50);
+    addNode(30);
+    addNode(70);
+    addNode(20);
+    addNode(40);
+    addNode(35);
+    addNode(45);
 
-    addNode(10);
-    addNode(10);
-    addNode(10);
-    addNode(10);
-    addNode(5);
+    // addNode(10);
+    // addNode(10);
+    // addNode(10);
+    // addNode(10);
+    // addNode(5);
     printTreeBreadthFirst();
 
     return 0;
