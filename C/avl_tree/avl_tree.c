@@ -121,41 +121,39 @@ int addNode(int value)
 
             int balanceFactor = leftHeight - rightHeight;
 
-            if (abs(balanceFactor) >= 2)
+            if (balanceFactor > 1)
             {
-                if (balanceFactor > 0)
+                // Left
+                if (value < node->left->value)
                 {
-                    // Left
-                    if (node->left->value < value)
-                    {
-                        // Left-Left
-                        rightRotateNode(node);
-                    }
-                    else
-                    {
-                        // Left-Right
-                        leftRotateNode(node);
-                        rightRotateNode(node);
-                    }
+                    // Left-Left
+                    rightRotateNode(node);
                 }
                 else
                 {
-                    // Right
-                    if (node->left->value < value)
-                    {
-                        // Right-Left
-                        rightRotateNode(node);
-                        leftRotateNode(node);
-                    }
-                    else
-                    {
-                        // Right-Right
-                        leftRotateNode(node);
-                    }
+                    // Left-Right
+                    leftRotateNode(node->left);
+                    rightRotateNode(node);
+                }
+            }
+            else if (balanceFactor < -1)
+            {
+                // Right
+                if (value > node->right->value)
+                {
+                    // Right-Right
+                    leftRotateNode(node);
+                }
+                else
+                {
+                    // Right-Left
+                    rightRotateNode(node->right);
+                    leftRotateNode(node);
                 }
             }
         }
     }
+
     return 1;
 }
 
