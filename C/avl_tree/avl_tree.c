@@ -185,7 +185,7 @@ int addNode(int value)
         }
     }
 
-    printf("=============================================\n");
+    // printf("=============================================\n");
     _debugPrintStackContents(MAIN_STACK);
     struct Node *node = NULL;
     while (!isStackEmpty(MAIN_STACK))
@@ -204,7 +204,7 @@ int addNode(int value)
         int rightHeight = getNodeHeight(node->right);
 
         node->height = 1 + MAX(leftHeight, rightHeight);
-        printf("%i %i %i %i\n", node->value, node->height, leftHeight, rightHeight);
+        // printf("%i %i %i %i\n", node->value, node->height, leftHeight, rightHeight);
         int balanceFactor = leftHeight - rightHeight;
 
         if (balanceFactor > 1)
@@ -251,8 +251,12 @@ int deleteNode(int value)
     struct Node *searchNode = root;
     struct Node *parent = NULL;
 
+    emptyStack(MAIN_STACK);
+
     while (searchNode != NULL && !found)
     {
+        push(searchNode, MAIN_STACK);
+
         if (searchNode->value == value)
         {
             found = 1;
@@ -288,7 +292,7 @@ int deleteNode(int value)
         else
             root = NULL; // the node to delete was a root node
 
-        parent->height = 1 + MAX(getNodeHeight(parent->left), getNodeHeight(parent->right)); // re-calculate parent height
+        // parent->height = MAX(getNodeHeight(parent->left), getNodeHeight(parent->right)); // re-calculate parent height
 
         free(searchNode);
     }
@@ -305,6 +309,8 @@ int deleteNode(int value)
 
             while (deleteNode->right != NULL)
             {
+                push(deleteNode, MAIN_STACK);
+
                 deleteNodeParent = deleteNode;
                 deleteNode = deleteNode->right;
             }
@@ -316,6 +322,8 @@ int deleteNode(int value)
 
             while (deleteNode->left != NULL)
             {
+                push(deleteNode, MAIN_STACK);
+
                 deleteNodeParent = deleteNode;
                 deleteNode = deleteNode->left;
             }
@@ -349,10 +357,63 @@ int deleteNode(int value)
             }
         }
 
-        deleteNodeParent->height = 1 + MAX(getNodeHeight(deleteNodeParent->left), getNodeHeight(deleteNodeParent->right)); // re-calculate parent height
-
         searchNode->value = deleteNode->value; // copy the value
         free(deleteNode);                      // free the node / memory
+    }
+
+    // re-calculate height & balance all the traversed parent nodes
+    printf("=============================================\n");
+    _debugPrintStackContents(MAIN_STACK);
+    struct Node *node = NULL;
+    while (!isStackEmpty(MAIN_STACK))
+    {
+
+        pop(&node, MAIN_STACK);
+
+        // get parent of node
+        struct Node *parent = NULL;
+        if (!isStackEmpty(MAIN_STACK))
+        {
+            peekStack(&parent, MAIN_STACK);
+        }
+
+        int leftHeight = getNodeHeight(node->left);
+        int rightHeight = getNodeHeight(node->right);
+
+        node->height = MAX(leftHeight, rightHeight);
+        printf("%i %i %i %i\n", node->value, node->height, leftHeight, rightHeight);
+        int balanceFactor = leftHeight - rightHeight;
+
+        if (balanceFactor > 1)
+        {
+            // Left
+            if (value < node->left->value)
+            {
+                // Left-Left
+                rightRotateNode(node, parent);
+            }
+            else
+            {
+                // Left-Right
+                leftRotateNode(node->left, node);
+                rightRotateNode(node, parent);
+            }
+        }
+        else if (balanceFactor < -1)
+        {
+            // Right
+            if (value >= node->right->value) // greater-than-or-equal-to sign because duplicate values are added to the right
+            {
+                // Right-Right
+                leftRotateNode(node, parent);
+            }
+            else
+            {
+                // Right-Left
+                rightRotateNode(node->right, node);
+                leftRotateNode(node, parent);
+            }
+        }
     }
 
     return 1;
