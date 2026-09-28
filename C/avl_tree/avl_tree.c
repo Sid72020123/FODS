@@ -24,13 +24,14 @@ int getNodeHeight(struct Node *n)
 {
     if (n == NULL)
         return -1;
-    else
-    {
-        if (n->height == -1)
-            return 0;
-        else
-            return n->height;
-    }
+    // else
+    // {
+    //     if (n->height == -1)
+    //         return 0;
+    //     else
+    //         return n->height;
+    // }
+    return n->height;
 }
 
 // Breadth-First traversal / Level-Order traversal
@@ -224,7 +225,7 @@ int addNode(int value)
         else if (balanceFactor < -1)
         {
             // Right
-            if (value > node->right->value)
+            if (value >= node->right->value) // greater-than-or-equal-to sign because duplicate values are added to the right
             {
                 // Right-Right
                 leftRotateNode(node, parent);
@@ -338,11 +339,12 @@ int main(void)
     // addNode(40);
     // addNode(35);
     // addNode(45);
+
     addNode(10);
     addNode(10);
     addNode(10);
     addNode(10);
-    addNode(10);
+    addNode(5);
     printTreeBreadthFirst();
 
     return 0;
