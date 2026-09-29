@@ -294,7 +294,7 @@ int deleteNode(int value)
 
         // printf("IN LEAF NODE!");
         struct Node *deleteNode;
-        pop(&deleteNode, MAIN_STACK);
+        pop(&deleteNode, MAIN_STACK); // this is required in leaf node case because the node to delete is also pushed in the stack
         // _debugPrintStackContents(MAIN_STACK);
 
         free(searchNode);
@@ -366,7 +366,7 @@ int deleteNode(int value)
 
     // re-calculate height & balance all the traversed parent nodes
     printf("=============================================\n");
-    _debugPrintStackContents(MAIN_STACK);
+    // _debugPrintStackContents(MAIN_STACK);
     struct Node *node = NULL;
     // pop(&node, MAIN_STACK);
     while (!isStackEmpty(MAIN_STACK))
@@ -519,24 +519,91 @@ int main(void)
     // addNode(30);
     // addNode(20);
 
-    addNode(50);
-    addNode(30);
-    addNode(70);
-    addNode(20);
-    addNode(40);
-    addNode(35);
-    addNode(45);
-    addNode(65);
+    // addNode(50);
+    // addNode(30);
+    // addNode(70);
+    // addNode(20);
+    // addNode(40);
+    // addNode(35);
+    // addNode(45);
+    // addNode(65);
 
     // addNode(10);
     // addNode(10);
     // addNode(10);
     // addNode(10);
     // addNode(5);
+    // printTreeBreadthFirst();
+    // deleteNode(65);
+    // printTreeBreadthFirst();
+    // deleteNode(50);
+    // printTreeBreadthFirst();
+
+    // => Delete Node Test Cases
+    // addNode(50);
+    // addNode(30);
+    // addNode(70);
+    // addNode(20);
+    // addNode(40);
+    // addNode(60);
+    // addNode(80);
+    // addNode(10);
+    // addNode(25);
+    // addNode(35);
+    // addNode(45);
+    // addNode(55);
+    // addNode(65);
+    // addNode(75);
+    // addNode(85);
+    // printTreeBreadthFirst();
+
+    // deleteNode(10);
+    // printTreeBreadthFirst();
+    // deleteNode(25);
+    // printTreeBreadthFirst();
+    // deleteNode(20);
+    // printTreeBreadthFirst();
+    // deleteNode(40);
+    // printTreeBreadthFirst();
+    // deleteNode(70);
+    // printTreeBreadthFirst();
+
+    // deleteNode(55);
+    // printTreeBreadthFirst();
+
+    // deleteNode(65);
+    // printTreeBreadthFirst();
+
+    // deleteNode(60);
+    // printTreeBreadthFirst();
+
+    // addNode(50);
+    // addNode(30);
+    // addNode(70);
+    // addNode(20);
+    // addNode(40);
+    // addNode(10);
+
+    // printTreeBreadthFirst();
+
+    // deleteNode(20);
+    // printTreeBreadthFirst();
+
+    // addNode(60);
+    // addNode(80);
+    // addNode(90);
+
+    // printTreeBreadthFirst();
+
+    // deleteNode(80);
+    // printTreeBreadthFirst();
+
+    addNode(10);
+    addNode(20);
+    // addNode(30);
     printTreeBreadthFirst();
 
-    deleteNode(65);
+    deleteNode(10);
     printTreeBreadthFirst();
-
     return 0;
 }
