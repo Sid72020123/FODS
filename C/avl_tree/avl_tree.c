@@ -627,6 +627,12 @@ void displayTree()
     printTreePreorder();
     printTreeInorder();
     printTreePostorder();
+
+    // printTreePreorderRecursive(root);
+    // printf("\n");
+    // printTreeInorderRecursive(root);
+    // printf("\n");
+    // printTreePostorderRecursive(root);
 }
 
 void addValue()
@@ -707,7 +713,6 @@ int main(void)
     addNode(65);
     addNode(75);
     addNode(85);
-    printTreeBreadthFirst();
 
     int choice = 0;
     do
