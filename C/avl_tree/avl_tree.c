@@ -292,7 +292,10 @@ int deleteNode(int value)
         else
             root = NULL; // the node to delete was a root node
 
-        // parent->height = MAX(getNodeHeight(parent->left), getNodeHeight(parent->right)); // re-calculate parent height
+        // printf("IN LEAF NODE!");
+        struct Node *deleteNode;
+        pop(&deleteNode, MAIN_STACK);
+        // _debugPrintStackContents(MAIN_STACK);
 
         free(searchNode);
     }
@@ -365,7 +368,7 @@ int deleteNode(int value)
     printf("=============================================\n");
     _debugPrintStackContents(MAIN_STACK);
     struct Node *node = NULL;
-    pop(&node, MAIN_STACK);
+    // pop(&node, MAIN_STACK);
     while (!isStackEmpty(MAIN_STACK))
     {
 
@@ -388,7 +391,10 @@ int deleteNode(int value)
         if (balanceFactor > 1)
         {
             // Left
-            if (value < node->left->value)
+
+            int childBalance = getNodeHeight(node->left->left) - getNodeHeight(node->left->right);
+
+            if (childBalance >= 0)
             {
                 // Left-Left
                 rightRotateNode(node, parent);
@@ -403,7 +409,10 @@ int deleteNode(int value)
         else if (balanceFactor < -1)
         {
             // Right
-            if (value >= node->right->value) // greater-than-or-equal-to sign because duplicate values are added to the right
+
+            int childBalance = getNodeHeight(node->right->left) - getNodeHeight(node->right->right);
+
+            if (childBalance <= 0)
             {
                 // Right-Right
                 leftRotateNode(node, parent);
