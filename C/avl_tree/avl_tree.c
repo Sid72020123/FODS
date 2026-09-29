@@ -709,5 +709,45 @@ int main(void)
     addNode(85);
     printTreeBreadthFirst();
 
+    int choice = 0;
+    do
+    {
+        printf("\n===== MENU [AVL + BST Tree] =====\n");
+        printf("1. Display Tree (using various methods)\n");
+        printf("2. Add value\n");
+        printf("3. Delete Value\n");
+        printf("4. Update Value\n");
+        printf("5. Exit\n");
+
+        if (get_int_input("Enter your choice: ", 3, &choice))
+        {
+            switch (choice)
+            {
+            case 1:
+                printf("\n");
+                displayTree();
+                break;
+            case 2:
+                addValue();
+                break;
+            case 3:
+                deleteValue();
+                break;
+            case 4:
+                updateValue();
+                break;
+            case 5:
+                printf("\nExiting...\n");
+                break;
+            default:
+                printf("\nInvalid choice!\n");
+            }
+        }
+
+    } while (choice != 5);
+
+    emptyQueue(MAIN_QUEUE);
+    emptyStack(MAIN_STACK);
+
     return 0;
 }
