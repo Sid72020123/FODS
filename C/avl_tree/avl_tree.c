@@ -24,13 +24,7 @@ int getNodeHeight(struct Node *n)
 {
     if (n == NULL)
         return -1;
-    // else
-    // {
-    //     if (n->height == -1)
-    //         return 0;
-    //     else
-    //         return n->height;
-    // }
+
     return n->height;
 }
 
@@ -90,9 +84,6 @@ void rightRotateNode(struct Node *node, struct Node *parent)
     {
         parent->right = child;
     }
-    // peekStack(&parent, MAIN_STACK);
-
-    // parent->left = child;
 }
 
 void leftRotateNode(struct Node *node, struct Node *parent)
@@ -121,10 +112,6 @@ void leftRotateNode(struct Node *node, struct Node *parent)
     {
         parent->right = child;
     }
-    // struct Node *parent;
-    // peekStack(&parent, MAIN_STACK);
-
-    // parent->right = child;
 }
 
 int addNode(int value)
@@ -185,8 +172,6 @@ int addNode(int value)
         }
     }
 
-    // printf("=============================================\n");
-    // _debugPrintStackContents(MAIN_STACK);
     struct Node *node = NULL;
     while (!isStackEmpty(MAIN_STACK))
     {
@@ -204,7 +189,7 @@ int addNode(int value)
         int rightHeight = getNodeHeight(node->right);
 
         node->height = 1 + MAX(leftHeight, rightHeight);
-        // printf("%i %i %i %i\n", node->value, node->height, leftHeight, rightHeight);
+
         int balanceFactor = leftHeight - rightHeight;
 
         if (balanceFactor > 1)
@@ -292,10 +277,8 @@ int deleteNode(int value)
         else
             root = NULL; // the node to delete was a root node
 
-        // printf("IN LEAF NODE!");
         struct Node *deleteNode;
         pop(&deleteNode, MAIN_STACK); // this is required in leaf node case because the node to delete is also pushed in the stack
-        // _debugPrintStackContents(MAIN_STACK);
 
         free(searchNode);
     }
@@ -365,10 +348,9 @@ int deleteNode(int value)
     }
 
     // re-calculate height & balance all the traversed parent nodes
-    printf("=============================================\n");
-    // _debugPrintStackContents(MAIN_STACK);
+
     struct Node *node = NULL;
-    // pop(&node, MAIN_STACK);
+
     while (!isStackEmpty(MAIN_STACK))
     {
 
@@ -431,59 +413,12 @@ int deleteNode(int value)
 
 int updateNode(int old_value, int new_value)
 {
-    if (root == NULL)
-        return 0;
-    else
+    if (deleteNode(old_value))
     {
-        if (root->value == old_value)
-        {
-            // if the value is found in root itself, update the root
-            root->value = new_value;
-            return 1;
-        }
-        else
-        {
-            // find / traverse the tree according to BST rules
-            // and update the value of the node accordingly
-
-            int found = 0;
-            struct Node *traverse = root;
-
-            while (traverse != NULL)
-            {
-                if (old_value < traverse->value)
-                {
-                    // try the left side
-                    if (traverse->left->value == old_value)
-                    {
-                        // replace the value
-                        traverse->left->value = new_value;
-                        found = 1;
-                        traverse = NULL;
-                    }
-                    else
-                        traverse = traverse->left;
-                }
-                else
-                {
-                    if (old_value >= traverse->value)
-                    {
-                        // try the right side
-                        if (traverse->right->value == old_value)
-                        {
-                            // replace the value
-                            traverse->right->value = new_value;
-                            found = 1;
-                            traverse = NULL;
-                        }
-                        else
-                            traverse = traverse->right;
-                    }
-                }
-            }
-            return found;
-        }
+        addNode(new_value);
+        return 1;
     }
+    return 0;
 }
 
 int main(void)
@@ -491,119 +426,6 @@ int main(void)
     MAIN_QUEUE = createNewQueue("MAIN QUEUE");
     MAIN_STACK = createNewStack("MAIN STACK");
 
-    // addNode(10);
-    // addNode(20);
-    // addNode(30);
-    // addNode(40);
-    // addNode(50);
 
-    /* ===== Test Cases ===== */
-
-    // => Left-Left Rotation
-    // addNode(30);
-    // addNode(20);
-    // addNode(10);
-
-    // => Right-Right Rotation
-    // addNode(10);
-    // addNode(20);
-    // addNode(30);
-
-    // => Left-Right Rotation
-    // addNode(30);
-    // addNode(10);
-    // addNode(20);
-
-    // => Right-Right Rotation
-    // addNode(10);
-    // addNode(30);
-    // addNode(20);
-
-    // addNode(50);
-    // addNode(30);
-    // addNode(70);
-    // addNode(20);
-    // addNode(40);
-    // addNode(35);
-    // addNode(45);
-    // addNode(65);
-
-    // addNode(10);
-    // addNode(10);
-    // addNode(10);
-    // addNode(10);
-    // addNode(5);
-    // printTreeBreadthFirst();
-    // deleteNode(65);
-    // printTreeBreadthFirst();
-    // deleteNode(50);
-    // printTreeBreadthFirst();
-
-    // => Delete Node Test Cases
-    // addNode(50);
-    // addNode(30);
-    // addNode(70);
-    // addNode(20);
-    // addNode(40);
-    // addNode(60);
-    // addNode(80);
-    // addNode(10);
-    // addNode(25);
-    // addNode(35);
-    // addNode(45);
-    // addNode(55);
-    // addNode(65);
-    // addNode(75);
-    // addNode(85);
-    // printTreeBreadthFirst();
-
-    // deleteNode(10);
-    // printTreeBreadthFirst();
-    // deleteNode(25);
-    // printTreeBreadthFirst();
-    // deleteNode(20);
-    // printTreeBreadthFirst();
-    // deleteNode(40);
-    // printTreeBreadthFirst();
-    // deleteNode(70);
-    // printTreeBreadthFirst();
-
-    // deleteNode(55);
-    // printTreeBreadthFirst();
-
-    // deleteNode(65);
-    // printTreeBreadthFirst();
-
-    // deleteNode(60);
-    // printTreeBreadthFirst();
-
-    // addNode(50);
-    // addNode(30);
-    // addNode(70);
-    // addNode(20);
-    // addNode(40);
-    // addNode(10);
-
-    // printTreeBreadthFirst();
-
-    // deleteNode(20);
-    // printTreeBreadthFirst();
-
-    // addNode(60);
-    // addNode(80);
-    // addNode(90);
-
-    // printTreeBreadthFirst();
-
-    // deleteNode(80);
-    // printTreeBreadthFirst();
-
-    addNode(10);
-    addNode(20);
-    // addNode(30);
-    printTreeBreadthFirst();
-
-    deleteNode(10);
-    printTreeBreadthFirst();
     return 0;
 }
