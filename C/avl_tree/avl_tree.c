@@ -1,11 +1,15 @@
+/* === AVL + BST [Adelson-Velsky & Landis + Binary Search Tree] === */
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "headers/queue.h"
 #include "headers/stack.h"
 
+// Macros
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+// === Global Variables / Structures ===
 struct Node
 {
     int value;
@@ -20,6 +24,36 @@ struct Queue *MAIN_QUEUE;
 struct Stack *MAIN_STACK;
 struct Node *root = NULL;
 
+// === Utilities ===
+
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    int input;
+    char extra;
+    char buffer[100];
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        if (sscanf(buffer, "%d %c", &input, &extra) == 1)
+        {
+            *result = input;
+            return 1; // SUCCESS
+        }
+
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+
+// === AVL Tree Methods ===
+
 int getNodeHeight(struct Node *n)
 {
     if (n == NULL)
@@ -28,25 +62,22 @@ int getNodeHeight(struct Node *n)
     return n->height;
 }
 
-// Breadth-First traversal / Level-Order traversal
-void printTreeBreadthFirst()
+int getSize()
 {
     if (root == NULL)
-    {
-        printf("[*] Tree is Empty!");
-    }
+        return 0;
     else
     {
         emptyQueue(MAIN_QUEUE);
         enqueue(root, MAIN_QUEUE);
         struct Node *traverse;
 
-        printf("[*] TREE: ");
+        int size = 0;
 
         while (!isQueueEmpty(MAIN_QUEUE))
         {
             dequeue(&traverse, MAIN_QUEUE);
-            printf("[%3d => %d] ", traverse->value, traverse->height);
+            size++;
 
             if (traverse->left != NULL)
                 enqueue(traverse->left, MAIN_QUEUE);
@@ -54,8 +85,8 @@ void printTreeBreadthFirst()
             if (traverse->right != NULL)
                 enqueue(traverse->right, MAIN_QUEUE);
         }
+        return size;
     }
-    printf("\n");
 }
 
 void rightRotateNode(struct Node *node, struct Node *parent)
@@ -367,7 +398,7 @@ int deleteNode(int value)
         int rightHeight = getNodeHeight(node->right);
 
         node->height = 1 + MAX(leftHeight, rightHeight);
-        printf("%i %i %i %i\n", node->value, node->height, leftHeight, rightHeight);
+
         int balanceFactor = leftHeight - rightHeight;
 
         if (balanceFactor > 1)
@@ -421,11 +452,189 @@ int updateNode(int old_value, int new_value)
     return 0;
 }
 
+// Breadth-First traversal / Level-Order traversal
+void printTreeBreadthFirst()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyQueue(MAIN_QUEUE);
+        enqueue(root, MAIN_QUEUE);
+        struct Node *traverse;
+
+        printf("[*] TREE: ");
+
+        while (!isQueueEmpty(MAIN_QUEUE))
+        {
+            dequeue(&traverse, MAIN_QUEUE);
+            printf("[%3d => %d] ", traverse->value, traverse->height);
+
+            if (traverse->left != NULL)
+                enqueue(traverse->left, MAIN_QUEUE);
+
+            if (traverse->right != NULL)
+                enqueue(traverse->right, MAIN_QUEUE);
+        }
+    }
+    printf("\n");
+}
+
+// preorder traversal (root -> left -> right) [Depth-First traversal]
+void printTreePreorder()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyStack(MAIN_STACK);
+        push(root, MAIN_STACK);
+        struct Node *traverse;
+
+        printf("[*] TREE (preorder): ");
+
+        while (!isStackEmpty(MAIN_STACK))
+        {
+            pop(&traverse, MAIN_STACK);
+            printf("[%3d => %d] ", traverse->value, traverse->height);
+
+            if (traverse->right != NULL)
+                push(traverse->right, MAIN_STACK);
+
+            if (traverse->left != NULL)
+                push(traverse->left, MAIN_STACK);
+        }
+    }
+    printf("\n");
+}
+
+// inorder traversal (left -> root -> right) [Depth-First traversal]
+void printTreeInorder()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyStack(MAIN_STACK);
+        struct Node *traverse = root;
+
+        printf("[*] TREE (inorder): ");
+
+        while (traverse != NULL || !isStackEmpty(MAIN_STACK))
+        {
+            while (traverse != NULL)
+            {
+                push(traverse, MAIN_STACK);
+                traverse = traverse->left;
+            }
+
+            pop(&traverse, MAIN_STACK);
+            printf("[%3d => %d] ", traverse->value, traverse->height);
+
+            traverse = traverse->right;
+        }
+    }
+    printf("\n");
+}
+
+// postorder traversal (left -> right -> root) [Depth-First traversal]
+void printTreePostorder()
+{
+    if (root == NULL)
+    {
+        printf("[*] Tree is Empty!");
+    }
+    else
+    {
+        emptyStack(MAIN_STACK);
+        struct Node *traverse = root;
+        struct Node *previous = NULL;
+
+        printf("[*] TREE (postorder): ");
+
+        while (traverse != NULL || !isStackEmpty(MAIN_STACK))
+        {
+            while (traverse != NULL)
+            {
+                push(traverse, MAIN_STACK);
+                traverse = traverse->left;
+            }
+
+            pop(&traverse, MAIN_STACK);
+
+            if (traverse->right != NULL && traverse->right != previous)
+            {
+                push(traverse, MAIN_STACK);
+                traverse = traverse->right;
+            }
+            else
+            {
+                printf("[%3d => %d] ", traverse->value, traverse->height);
+                previous = traverse;
+                traverse = NULL;
+            }
+        }
+    }
+    printf("\n");
+}
+
+// [RECURSION] inorder traversal (left -> root -> right) [Depth-First traversal]
+void printTreeInorderRecursive(struct Node *node)
+{
+    if (node == NULL)
+        return;
+    printTreeInorderRecursive(node->left);
+    printf("[%3d => %d] ", node->value, node->height);
+    printTreeInorderRecursive(node->right);
+}
+
+// [RECURSION] preorder traversal (root -> left -> right) [Depth-First traversal]
+void printTreePreorderRecursive(struct Node *node)
+{
+    if (node == NULL)
+        return;
+    printf("[%3d => %d] ", node->value, node->height);
+    printTreePreorderRecursive(node->left);
+    printTreePreorderRecursive(node->right);
+}
+
+// [RECURSION] postorder traversal (left -> right -> root) [Depth-First traversal]
+void printTreePostorderRecursive(struct Node *node)
+{
+    if (node == NULL)
+        return;
+    printTreePostorderRecursive(node->left);
+    printTreePostorderRecursive(node->right);
+    printf("[%3d => %d] ", node->value, node->height);
+}
+
 int main(void)
 {
     MAIN_QUEUE = createNewQueue("MAIN QUEUE");
     MAIN_STACK = createNewStack("MAIN STACK");
 
+    addNode(50);
+    addNode(30);
+    addNode(70);
+    addNode(20);
+    addNode(40);
+    addNode(60);
+    addNode(80);
+    addNode(10);
+    addNode(25);
+    addNode(35);
+    addNode(45);
+    addNode(55);
+    addNode(65);
+    addNode(75);
+    addNode(85);
+    printTreeBreadthFirst();
 
     return 0;
 }
