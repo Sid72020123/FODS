@@ -14,7 +14,7 @@ struct Node
 {
     int value;
 
-    int height;
+    unsigned int height;
 
     struct Node *left;
     struct Node *right;
