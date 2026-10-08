@@ -4,15 +4,15 @@ Code for the C / C++ concepts taught in college / learned by myself & **DSA assi
 
 ### DSA Topics / Concepts in this repository:
 
-_All the concepts listed below are implemented in `C`_;
+_All the concepts listed below are implemented in **`C`**_;
 
-- `CRUD Operations`
-- `Queue`
-- `Stack`
-- `Binary Tree`
-- `Binary Search Tree`
-- `Right-threaded Binary Search Tree`
-- `AVL + Binary Search Tree`
+- [`CRUD Operations`](C/assignments/crud_linked_list.c)
+- [`Queue`](C/queue)
+- [`Stack`](C/stack)
+- [`Binary Tree`](C/binary_tree)
+- [`Binary Search Tree`](C/binary_search_tree)
+- [`Right-threaded Binary Search Tree`](C/threaded_binary_tree)
+- [`AVL + Binary Search Tree`](C/avl_tree)
 
 **Note: Use with caution, since these code implementations are for my personal academic learning and are were NOT intended for use in professional and production projects / applications.
 Since, many of the components still lack memory & error management, it is advised to review all the code properly before using a specific data structure for production.**
