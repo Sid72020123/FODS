@@ -11,7 +11,7 @@
 struct Graph
 {
     char *vertices_names;
-    int *vertices_links;
+    int **vertices_links;
 
     int *vertices_visited;
 
@@ -23,16 +23,41 @@ struct Stack *MAIN_STACK;
 
 // === Global Variables / Structures ===
 
-struct Graph *createNewGraph(char *vn, int *vl, int size)
+struct Graph *createNewGraph(int size, char *vn, int vl[size][size])
 {
+    // allocate memory to new Graph structure
     struct Graph *newGraph = (struct Graph *)malloc(sizeof(struct Graph));
 
+    // set graph vertices size
     newGraph->vertices_count = size;
-    newGraph->vertices_names = vn;
-    newGraph->vertices_links = vl;
+
+    // copy the contents of parameter vn to new array of the same size
+    newGraph->vertices_names = (char *)malloc(size * sizeof(char));
+    for (int i = 0; i < size; i++)
+    {
+        newGraph->vertices_names[i] = vn[i];
+    }
+
+    // copy the contents of parameter vl to new array of the same size
+    newGraph->vertices_links = (int **)malloc(size * sizeof(int *));
+    for (int i = 0; i < size; i++)
+    {
+        newGraph->vertices_links[i] = (int *)malloc(size * sizeof(int));
+        for (int j = 0; j < size; j++)
+        {
+            newGraph->vertices_links[i][j] = vl[i][j];
+        }
+    }
+
+    // set vertices visited as 0 for each vertex in graph
     newGraph->vertices_visited = (int *)calloc(size, sizeof(int));
 
     return newGraph;
+}
+
+void depthFirstTraverse(struct Graph *graph, char start)
+{
+    
 }
 
 int main(void)
@@ -45,6 +70,7 @@ int main(void)
                                 {0, 1, 0, 0, 1, 0},
                                 {0, 0, 1, 1, 0, 1},
                                 {0, 0, 0, 0, 1, 0}};
-    struct Graph *graph1 = createNewGraph(vertices_names, vertices_links, size);
+    struct Graph *graph1 = createNewGraph(size, vertices_names, vertices_links);
+
     return 0;
 }
