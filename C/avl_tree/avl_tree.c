@@ -698,21 +698,21 @@ int main(void)
     MAIN_QUEUE = createNewQueue("MAIN QUEUE");
     MAIN_STACK = createNewStack("MAIN STACK");
 
-    addNode(50);
-    addNode(30);
-    addNode(70);
-    addNode(20);
-    addNode(40);
-    addNode(60);
-    addNode(80);
-    addNode(10);
-    addNode(25);
-    addNode(35);
-    addNode(45);
-    addNode(55);
-    addNode(65);
-    addNode(75);
-    addNode(85);
+    // addNode(50);
+    // addNode(30);
+    // addNode(70);
+    // addNode(20);
+    // addNode(40);
+    // addNode(60);
+    // addNode(80);
+    // addNode(10);
+    // addNode(25);
+    // addNode(35);
+    // addNode(45);
+    // addNode(55);
+    // addNode(65);
+    // addNode(75);
+    // addNode(85);
 
     int choice = 0;
     do
