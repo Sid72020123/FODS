@@ -88,7 +88,6 @@ void depthFirstTraverse(struct Graph *graph, char start)
 
     emptyStack(MAIN_STACK);
     // reset vertices visited booleans for each vertex
-    // graph->vertices_visited = {0};
     for (int i = 0; i < graph->vertices_count; i++)
     {
         graph->vertices_visited[i] = 0;
@@ -96,6 +95,8 @@ void depthFirstTraverse(struct Graph *graph, char start)
 
     graph->vertices_visited[start_index] = 1;
     push(start_index, MAIN_STACK);
+
+    printf("Depth-first Traverse [start = '%c', index = %d]: ", start, start_index);
 
     while (!isStackEmpty(MAIN_STACK))
     {
@@ -127,7 +128,7 @@ int main(void)
                                        {0, 1, 0, 0, 1, 0},
                                        {0, 0, 1, 1, 0, 1},
                                        {0, 0, 0, 0, 1, 0}};
-    struct Graph *graph1 = createNewGraph(6, graph_1_vertices_names, graph_1_vertices_links);
+    struct Graph *graph1 = createNewGraph(6, graph1_vertices_names, graph1_vertices_links);
 
     depthFirstTraverse(graph1, 'C');
     depthFirstTraverse(graph1, 'E');
