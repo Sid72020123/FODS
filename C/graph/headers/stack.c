@@ -1,3 +1,4 @@
+// NOTE: This file is modified to make it easier to work with normal integers.
 // === Includes ===
 
 #include <stdio.h>
@@ -8,7 +9,7 @@
 // === Private Structures ===
 struct StackNode
 {
-    struct Node *location;
+    int data;
     struct StackNode *next;
 };
 
@@ -16,128 +17,138 @@ struct Stack
 {
     char stackName[15];
     struct StackNode *top;
+    size_t size;
 };
 
 // === Stack Methods ===
 
 struct Stack *createNewStack(const char *name)
 {
-    struct Stack *newStack = (struct Stack *)malloc(sizeof(struct Stack));
+    struct Stack *newStack = malloc(sizeof *newStack);
 
     if (newStack == NULL)
     {
         return NULL;
     }
 
+    if (name == NULL)
+    {
+        name = "";
+    }
+
     newStack->top = NULL;
+    newStack->size = 0;
     snprintf(newStack->stackName, sizeof newStack->stackName, "%s", name);
 
     return newStack;
 }
 
-int isStackEmpty(struct Stack *location)
+int isStackEmpty(struct Stack *stack)
 {
-    return location->top == NULL;
+    return stack == NULL || stack->top == NULL;
 }
 
-int getSizeStack(struct Stack *location)
+size_t getSizeStack(struct Stack *stack)
 {
-    if (isStackEmpty(location))
-        return 0;
-    else
+    return stack == NULL ? 0 : stack->size;
+}
+
+int push(int data, struct Stack *stack)
+{
+    if (stack == NULL)
     {
-        int size = 0;
-        struct StackNode *traverse = location->top;
-
-        while (traverse != NULL)
-        {
-            size++;
-            traverse = traverse->next;
-        }
-        return size;
+        return 0;
     }
-}
 
-int push(struct Node *location, struct Stack *stackLocation)
-{
-    struct StackNode *newNode = (struct StackNode *)(malloc(sizeof(struct StackNode)));
+    struct StackNode *newNode = malloc(sizeof *newNode);
 
     if (newNode == NULL)
     {
         return 0;
     }
 
-    newNode->location = location;
+    newNode->data = data;
     newNode->next = NULL;
 
-    if (stackLocation->top == NULL)
-        stackLocation->top = newNode;
+    if (stack->top == NULL)
+        stack->top = newNode;
     else
     {
-        newNode->next = stackLocation->top;
-        stackLocation->top = newNode;
+        newNode->next = stack->top;
+        stack->top = newNode;
     }
+
+    stack->size++;
 
     return 1;
 }
 
-int pop(struct Node **location, struct Stack *stackLocation)
+int pop(int *data, struct Stack *stack)
 {
-    if (stackLocation->top == NULL)
+    if (stack == NULL || data == NULL || stack->top == NULL)
     {
         return 0;
     }
 
-    *location = stackLocation->top->location;
+    *data = stack->top->data;
 
-    struct StackNode *deleteNode = stackLocation->top;
+    struct StackNode *deleteNode = stack->top;
 
-    stackLocation->top = stackLocation->top->next;
+    stack->top = stack->top->next;
     free(deleteNode);
 
+    stack->size--;
+
     return 1;
 }
 
-int peekStack(struct Node **location, struct Stack *stackLocation)
+int peekStack(int *data, struct Stack *stack)
 {
-    if (isStackEmpty(stackLocation))
+    if (data == NULL || isStackEmpty(stack))
     {
         return 0;
     }
 
-    *location = stackLocation->top->location;
+    *data = stack->top->data;
     return 1;
 }
 
-void emptyStack(struct Stack *stackLocation)
+void emptyStack(struct Stack *stack)
 {
-    if (isStackEmpty(stackLocation))
+    if (stack == NULL)
         return;
 
-    struct Node *temp;
-    while (stackLocation->top != NULL)
+    int temp;
+    while (stack->top != NULL)
     {
-        pop(&temp, stackLocation);
+        pop(&temp, stack);
     }
 }
 
-void destroyStack(struct Stack *stackLocation)
+void destroyStack(struct Stack *stack)
 {
-    if (stackLocation == NULL)
+    if (stack == NULL)
         return;
 
-    emptyStack(stackLocation);
-    free(stackLocation);
+    emptyStack(stack);
+    free(stack);
 }
 
-void _debugPrintStackContents(struct Stack *stackLocation)
+void _debugPrintStackContents(struct Stack *stack)
 {
-    int isEmpty = isStackEmpty(stackLocation);
+    if (stack == NULL)
+    {
+        printf("===== Stack Details [NULL] =====\n");
+        printf("Stack is NULL\n\n");
+        return;
+    }
 
-    printf("===== Stack Details [%p] =====\n", stackLocation);
+    int isEmpty = isStackEmpty(stack);
 
-    printf("Name: %s\n", stackLocation->stackName);
-    printf("Size: %d\n", getSizeStack(stackLocation));
+    printf("===== Stack Details [%p] =====\n", (void *)stack);
+
+    printf("Name: %s\n", stack->stackName);
+    printf("Size: %zu\n", getSizeStack(stack));
     printf("Is Empty? %s\n", (isEmpty ? "YES" : "NO"));
 
     printf("Contents:");
@@ -148,11 +159,11 @@ void _debugPrintStackContents(struct Stack *stackLocation)
     }
     else
     {
-        struct StackNode *traverse = stackLocation->top;
+        struct StackNode *traverse = stack->top;
 
         while (traverse != NULL)
         {
-            printf("\n\t[%p]", traverse->location);
+            printf("\n\t[%d]", traverse->data);
             traverse = traverse->next;
         }
     }

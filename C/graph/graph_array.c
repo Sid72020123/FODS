@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "headers/queue.h"
+// #include "headers/queue.h"
 #include "headers/stack.h"
 
 // === Global Variables / Structures ===
@@ -18,7 +18,7 @@ struct Graph
     int vertices_count;
 };
 
-struct Queue *MAIN_QUEUE;
+// struct Queue *MAIN_QUEUE;
 struct Stack *MAIN_STACK;
 
 // === Global Variables / Structures ===
@@ -55,13 +55,67 @@ struct Graph *createNewGraph(int size, char *vn, int vl[size][size])
     return newGraph;
 }
 
+// === Graph Traversal Methods ===
+
+int get_index(struct Graph *graph, char character, int *result)
+{
+    if (graph == NULL)
+    {
+        *result = -1;
+        return 0;
+    }
+
+    for (int i = 0; i < graph->vertices_count; i++)
+    {
+        if (graph->vertices_names[i] == character)
+        {
+            *result = i;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 void depthFirstTraverse(struct Graph *graph, char start)
 {
-    
+    int start_index;
+    if (!get_index(graph, start, &start_index))
+    {
+        printf("\n[*] Error getting the index of start character '%c'.\n", start);
+        return;
+    }
+
+    printf("%i\n\n", start_index);
+
+    emptyStack(MAIN_STACK);
+
+    graph->vertices_visited[start_index] = 1;
+    push(start_index, MAIN_STACK);
+    _debugPrintStackContents(MAIN_STACK);
+
+    while (!isStackEmpty(MAIN_STACK))
+    {
+        int traverse;
+        pop(&traverse, MAIN_STACK);
+
+        printf("%c ", graph->vertices_names[traverse]);
+
+        for (int i = 0; i < graph->vertices_count; i++)
+        {
+            if (graph->vertices_links[traverse][i] == 1 && graph->vertices_visited[i] == 0)
+            {
+                graph->vertices_visited[i] = 1;
+                push(i, MAIN_STACK);
+                _debugPrintStackContents(MAIN_STACK);
+            }
+        }
+    }
 }
 
 int main(void)
 {
+    MAIN_STACK = createNewStack("MAIN STACK");
     int size = 6;
     char vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
     int vertices_links[6][6] = {{0, 1, 1, 0, 0, 0},
@@ -71,6 +125,6 @@ int main(void)
                                 {0, 0, 1, 1, 0, 1},
                                 {0, 0, 0, 0, 1, 0}};
     struct Graph *graph1 = createNewGraph(size, vertices_names, vertices_links);
-
+    depthFirstTraverse(graph1, 'C');
     return 0;
 }

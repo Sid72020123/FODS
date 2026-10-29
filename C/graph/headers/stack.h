@@ -3,8 +3,10 @@
  *
  * Linked-list implementation of LIFO stack.
  *
+ * NOTE: This file is modified to make it easier to work with normal integers.
+ *
  * Version: 0.1
- * Last Modified: 16/09/2026
+ * Last Modified: 23/09/2026
  *
  * Copyright (c) 2026 Siddhesh Chavan (@Sid72020123 on Github)
  *
@@ -13,12 +15,14 @@
  *
  * Version History:
  *      16/09/2026: first release
+ *      23/09/2026: replaced the Node data-type with void*
  */
 
 #ifndef STACK_H
 #define STACK_H
 
-struct Node;
+#include <stddef.h>
+
 struct Stack;
 
 /**
@@ -43,41 +47,44 @@ int isStackEmpty(struct Stack *stack);
  * @param stack Stack to inspect.
  * @return Number of elements currently in the stack.
  */
-int getSizeStack(struct Stack *stack);
+size_t getSizeStack(struct Stack *stack);
 
 /**
- * @brief Pushes a node onto the top of the stack.
+ * @brief Pushes the data onto the top of the stack.
  *
- * @param node Node to push.
+ * The stack stores the pointer only. It does not copy or free
+ * the object pointed to by data.
+ *
+ * @param data Integer data to push.
  * @param stack Stack to modify.
- * @return 1 on success, 0 if memory allocation fails.
+ * @return 1 on success, 0 if stack is NULL or memory allocation fails.
  */
-int push(struct Node *node, struct Stack *stack);
+int push(int data, struct Stack *stack);
 
 /**
- * @brief Removes the top node from the stack.
+ * @brief Removes the top data from the stack.
  *
- * The StackNode is freed, but the Node itself is not freed.
  *
- * @param[out] node Receives the removed node.
+ * @param[out] data Receives the removed integer.
  * @param stack Stack to modify.
- * @return 1 if a node was removed, 0 if the stack is empty.
+ * @return 1 on success, 0 if stack, data, or the stack contents are invalid.
  */
-int pop(struct Node **node, struct Stack *stack);
+int pop(int *data, struct Stack *stack);
 
 /**
- * @brief Retrieves the top node without removing it.
+ * @brief Retrieves the top data without removing it.
  *
- * @param[out] node Receives the top node.
+ * @param[out] data Receives the top integer.
  * @param stack Stack to inspect.
- * @return 1 if a node was retrieved, 0 if the stack is empty.
+ * @return 1 on success, 0 if stack is NULL, data is NULL, or the stack is empty.
  */
-int peekStack(struct Node **node, struct Stack *stack);
+int peekStack(int *data, struct Stack *stack);
 
 /**
  * @brief Removes all elements from the stack.
  *
- * StackNode objects are freed. Node objects are not freed.
+ * StackNode objects are freed.
+ * The data stored in the stack is not freed.
  *
  * @param stack Stack to empty.
  */
@@ -86,12 +93,14 @@ void emptyStack(struct Stack *stack);
 /**
  * @brief Destroys a stack and releases its memory.
  *
+ * The stack is emptied and its memory is released.
+ *
  * @param stack Stack to destroy.
  */
 void destroyStack(struct Stack *stack);
 
 /**
- * @brief Prints stack information for debugging.
+ * @brief Prints the current contents of a stack for debugging.
  *
  * @param stack Stack to print.
  */

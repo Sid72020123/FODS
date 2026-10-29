@@ -2,14 +2,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "queue.h"
 
 // === Private Structures ===
 struct QueueNode
 {
-    struct Node *location;
+    void *data;
     struct QueueNode *next;
 };
 
@@ -18,132 +17,143 @@ struct Queue
     char queueName[15];
     struct QueueNode *front;
     struct QueueNode *rear;
+    size_t size;
 };
 
 // === Queue Methods ===
 
 struct Queue *createNewQueue(const char *name)
 {
-    struct Queue *newQueue = (struct Queue *)malloc(sizeof(struct Queue));
+    struct Queue *newQueue = malloc(sizeof *newQueue);
 
     if (newQueue == NULL)
     {
         return NULL;
     }
 
+    if (name == NULL)
+    {
+        name = "";
+    }
+
     newQueue->front = NULL;
     newQueue->rear = NULL;
+    newQueue->size = 0;
     snprintf(newQueue->queueName, sizeof newQueue->queueName, "%s", name);
 
     return newQueue;
 }
 
-int isQueueEmpty(struct Queue *location)
+int isQueueEmpty(struct Queue *queue)
 {
-    return location->front == NULL;
+    return queue == NULL || queue->front == NULL;
 }
 
-int getSizeQueue(struct Queue *location)
+size_t getSizeQueue(struct Queue *queue)
 {
-    if (isQueueEmpty(location))
-        return 0;
-    else
+    return queue == NULL ? 0 : queue->size;
+}
+
+int enqueue(void *data, struct Queue *queue)
+{
+    if (queue == NULL)
     {
-        int size = 0;
-        struct QueueNode *traverse = location->front;
-
-        while (traverse != NULL)
-        {
-            size++;
-            traverse = traverse->next;
-        }
-        return size;
+        return 0;
     }
-}
 
-int enqueue(struct Node *location, struct Queue *queueLocation)
-{
-    struct QueueNode *newNode = (struct QueueNode *)(malloc(sizeof(struct QueueNode)));
+    struct QueueNode *newNode = malloc(sizeof *newNode);
 
     if (newNode == NULL)
     {
         return 0;
     }
 
-    newNode->location = location;
+    newNode->data = data;
     newNode->next = NULL;
 
-    if (queueLocation->front == NULL)
-        queueLocation->front = newNode, queueLocation->rear = newNode;
+    if (queue->front == NULL)
+        queue->front = newNode, queue->rear = newNode;
     else
     {
-        queueLocation->rear->next = newNode;
-        queueLocation->rear = newNode;
+        queue->rear->next = newNode;
+        queue->rear = newNode;
     }
+
+    queue->size++;
 
     return 1;
 }
 
-int dequeue(struct Node **location, struct Queue *queueLocation)
+int dequeue(void **data, struct Queue *queue)
 {
-    if (queueLocation->front == NULL)
+    if (queue == NULL || data == NULL || queue->front == NULL)
         return 0;
 
-    *location = queueLocation->front->location;
+    *data = queue->front->data;
 
-    if (queueLocation->front == queueLocation->rear)
+    if (queue->front == queue->rear)
     {
-        free(queueLocation->front);
-        queueLocation->front = queueLocation->rear = NULL;
+        free(queue->front);
+        queue->front = queue->rear = NULL;
     }
     else
     {
-        struct QueueNode *deleteNode = queueLocation->front;
-        queueLocation->front = queueLocation->front->next;
+        struct QueueNode *deleteNode = queue->front;
+        queue->front = queue->front->next;
         free(deleteNode);
     }
+
+    queue->size--;
+
     return 1;
 }
 
-int peekQueue(struct Node **location, struct Queue *queueLocation)
+int peekQueue(void **data, struct Queue *queue)
 {
-    if (isQueueEmpty(queueLocation))
+    if (data == NULL || isQueueEmpty(queue))
     {
         return 0;
     }
-    *location = queueLocation->front->location;
+    *data = queue->front->data;
     return 1;
 }
 
-void emptyQueue(struct Queue *queueLocation)
+void emptyQueue(struct Queue *queue)
 {
-    if (isQueueEmpty(queueLocation))
+    if (queue == NULL)
         return;
 
-    struct Node *temp;
-    while (queueLocation->front != NULL)
+    void *temp;
+    while (queue->front != NULL)
     {
-        dequeue(&temp, queueLocation);
+        dequeue(&temp, queue);
     }
 }
 
-void destroyQueue(struct Queue *queueLocation)
+void destroyQueue(struct Queue *queue)
 {
-    if (queueLocation == NULL)
+    if (queue == NULL)
         return;
 
-    emptyQueue(queueLocation);
-    free(queueLocation);
+    emptyQueue(queue);
+    free(queue);
 }
 
-void _debugPrintQueueContents(struct Queue *queueLocation)
+void _debugPrintQueueContents(struct Queue *queue)
 {
-    int isEmpty = isQueueEmpty(queueLocation);
+    if (queue == NULL)
+    {
+        printf("===== Queue Details [NULL] =====\n");
+        printf("Queue is NULL\n\n");
+        return;
+    }
 
-    printf("===== Queue Details [%p] =====\n", queueLocation);
+    int isEmpty = isQueueEmpty(queue);
 
-    printf("Name: %s\n", queueLocation->queueName);
-    printf("Size: %d\n", getSizeQueue(queueLocation));
+    printf("===== Queue Details [%p] =====\n", (void *)queue);
+
+    printf("Name: %s\n", queue->queueName);
+    printf("Size: %zu\n", getSizeQueue(queue));
     printf("Is Empty? %s\n", (isEmpty ? "YES" : "NO"));
 
     printf("Contents: ");
@@ -154,11 +164,11 @@ void _debugPrintQueueContents(struct Queue *queueLocation)
     }
     else
     {
-        struct QueueNode *traverse = queueLocation->front;
+        struct QueueNode *traverse = queue->front;
 
         while (traverse != NULL)
         {
-            printf("[%p] ", traverse->location);
+            printf("[%p] ", traverse->data);
             traverse = traverse->next;
         }
     }
