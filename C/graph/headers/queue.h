@@ -3,6 +3,8 @@
  *
  * Linked-list implementation of FIFO queue.
  *
+ * NOTE: This file is modified to make it easier to work with normal integers.
+ *
  * Version: 0.1
  * Last Modified: 20/09/2026
  *
@@ -53,32 +55,30 @@ size_t getSizeQueue(struct Queue *queue);
  * The queue stores the pointer only. It does not copy or free
  * the object pointed to by data.
  *
- * @param data Pointer to data to add.
+ * @param data  Integer data to add.
  * @param queue Queue to modify.
  * @return 1 on success, 0 if the queue is NULL or memory allocation fails.
  */
-int enqueue(void *data, struct Queue *queue);
+int enqueue(int data, struct Queue *queue);
 
 /**
  * @brief Removes the front data from the queue.
  *
- * The QueueNode is freed, but the stored data is not freed.
- * Ownership of the data remains with the caller.
  *
- * @param[out] data Receives the removed data pointer.
+ * @param[out] data Receives the removed integer.
  * @param queue Queue to modify.
  * @return 1 on success, 0 if queue, data, or the queue contents are invalid.
  */
-int dequeue(void **data, struct Queue *queue);
+int dequeue(int *data, struct Queue *queue);
 
 /**
  * @brief Retrieves the front data without removing it.
  *
- * @param[out] data Receives the front data pointer.
+ * @param[out] data Receives the front integer.
  * @param queue Queue to inspect.
  * @return 1 on success, 0 if queue, data, or the queue contents are invalid.
  */
-int peekQueue(void **data, struct Queue *queue);
+int peekQueue(int *data, struct Queue *queue);
 
 /**
  * @brief Removes all elements from the queue.

@@ -1,3 +1,4 @@
+// NOTE: This file is modified to make it easier to work with normal integers.
 // === Includes ===
 
 #include <stdio.h>
@@ -8,7 +9,7 @@
 // === Private Structures ===
 struct QueueNode
 {
-    void *data;
+    int data;
     struct QueueNode *next;
 };
 
@@ -54,7 +55,7 @@ size_t getSizeQueue(struct Queue *queue)
     return queue == NULL ? 0 : queue->size;
 }
 
-int enqueue(void *data, struct Queue *queue)
+int enqueue(int data, struct Queue *queue)
 {
     if (queue == NULL)
     {
@@ -84,7 +85,7 @@ int enqueue(void *data, struct Queue *queue)
     return 1;
 }
 
-int dequeue(void **data, struct Queue *queue)
+int dequeue(int *data, struct Queue *queue)
 {
     if (queue == NULL || data == NULL || queue->front == NULL)
         return 0;
@@ -108,7 +109,7 @@ int dequeue(void **data, struct Queue *queue)
     return 1;
 }
 
-int peekQueue(void **data, struct Queue *queue)
+int peekQueue(int *data, struct Queue *queue)
 {
     if (data == NULL || isQueueEmpty(queue))
     {
@@ -123,7 +124,7 @@ void emptyQueue(struct Queue *queue)
     if (queue == NULL)
         return;
 
-    void *temp;
+    int temp;
     while (queue->front != NULL)
     {
         dequeue(&temp, queue);
@@ -168,7 +169,7 @@ void _debugPrintQueueContents(struct Queue *queue)
 
         while (traverse != NULL)
         {
-            printf("[%p] ", traverse->data);
+            printf("[%d] ", traverse->data);
             traverse = traverse->next;
         }
     }

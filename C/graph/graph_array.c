@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// #include "headers/queue.h"
+#include "headers/queue.h"
 #include "headers/stack.h"
 
 // === Global Variables / Structures ===
@@ -18,7 +18,7 @@ struct Graph
     int vertices_count;
 };
 
-// struct Queue *MAIN_QUEUE;
+struct Queue *MAIN_QUEUE;
 struct Stack *MAIN_STACK;
 
 // === Global Variables / Structures ===
@@ -117,8 +117,50 @@ void depthFirstTraverse(struct Graph *graph, char start)
     printf("\n");
 }
 
+void breadthFirstTraverse(struct Graph *graph, char start)
+{
+    int start_index;
+    // get the starting character's index from the vertices names array
+    if (!get_index(graph, start, &start_index))
+    {
+        printf("\n[*] Error getting the index of start character '%c'.\n", start);
+        return;
+    }
+
+    emptyQueue(MAIN_QUEUE);
+    // reset vertices visited booleans for each vertex
+    for (int i = 0; i < graph->vertices_count; i++)
+    {
+        graph->vertices_visited[i] = 0;
+    }
+
+    graph->vertices_visited[start_index] = 1;
+    enqueue(start_index, MAIN_QUEUE);
+
+    printf("Breadth-first Traverse [start = '%c', index = %d]: ", start, start_index);
+
+    while (!isQueueEmpty(MAIN_QUEUE))
+    {
+        int traverse;
+        dequeue(&traverse, MAIN_QUEUE);
+
+        printf("%c ", graph->vertices_names[traverse]);
+
+        for (int i = 0; i < graph->vertices_count; i++)
+        {
+            if (graph->vertices_links[traverse][i] == 1 && graph->vertices_visited[i] == 0)
+            {
+                graph->vertices_visited[i] = 1;
+                enqueue(i, MAIN_QUEUE);
+            }
+        }
+    }
+    printf("\n");
+}
+
 int main(void)
 {
+    MAIN_QUEUE = createNewQueue("MAIN QUEUE");
     MAIN_STACK = createNewStack("MAIN STACK");
 
     char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
@@ -131,7 +173,6 @@ int main(void)
     struct Graph *graph1 = createNewGraph(6, graph1_vertices_names, graph1_vertices_links);
 
     depthFirstTraverse(graph1, 'C');
-    depthFirstTraverse(graph1, 'E');
-    depthFirstTraverse(graph1, 'F');
+    breadthFirstTraverse(graph1, 'C');
     return 0;
 }
