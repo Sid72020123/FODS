@@ -61,7 +61,6 @@ int get_index(struct Graph *graph, char character, int *result)
 {
     if (graph == NULL)
     {
-        *result = -1;
         return 0;
     }
 
@@ -80,6 +79,7 @@ int get_index(struct Graph *graph, char character, int *result)
 void depthFirstTraverse(struct Graph *graph, char start)
 {
     int start_index;
+    // get the starting character's index from the vertices names array
     if (!get_index(graph, start, &start_index))
     {
         printf("\n[*] Error getting the index of start character '%c'.\n", start);
@@ -87,6 +87,12 @@ void depthFirstTraverse(struct Graph *graph, char start)
     }
 
     emptyStack(MAIN_STACK);
+    // reset vertices visited booleans for each vertex
+    // graph->vertices_visited = {0};
+    for (int i = 0; i < graph->vertices_count; i++)
+    {
+        graph->vertices_visited[i] = 0;
+    }
 
     graph->vertices_visited[start_index] = 1;
     push(start_index, MAIN_STACK);
@@ -113,15 +119,18 @@ void depthFirstTraverse(struct Graph *graph, char start)
 int main(void)
 {
     MAIN_STACK = createNewStack("MAIN STACK");
-    int size = 6;
-    char vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
-    int vertices_links[6][6] = {{0, 1, 1, 0, 0, 0},
-                                {1, 0, 0, 1, 0, 0},
-                                {1, 0, 0, 0, 1, 0},
-                                {0, 1, 0, 0, 1, 0},
-                                {0, 0, 1, 1, 0, 1},
-                                {0, 0, 0, 0, 1, 0}};
-    struct Graph *graph1 = createNewGraph(size, vertices_names, vertices_links);
+
+    char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+    int graph1_vertices_links[6][6] = {{0, 1, 1, 0, 0, 0},
+                                       {1, 0, 0, 1, 0, 0},
+                                       {1, 0, 0, 0, 1, 0},
+                                       {0, 1, 0, 0, 1, 0},
+                                       {0, 0, 1, 1, 0, 1},
+                                       {0, 0, 0, 0, 1, 0}};
+    struct Graph *graph1 = createNewGraph(6, graph_1_vertices_names, graph_1_vertices_links);
+
     depthFirstTraverse(graph1, 'C');
+    depthFirstTraverse(graph1, 'E');
+    depthFirstTraverse(graph1, 'F');
     return 0;
 }
