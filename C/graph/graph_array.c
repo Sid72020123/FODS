@@ -86,13 +86,10 @@ void depthFirstTraverse(struct Graph *graph, char start)
         return;
     }
 
-    printf("%i\n\n", start_index);
-
     emptyStack(MAIN_STACK);
 
     graph->vertices_visited[start_index] = 1;
     push(start_index, MAIN_STACK);
-    _debugPrintStackContents(MAIN_STACK);
 
     while (!isStackEmpty(MAIN_STACK))
     {
@@ -107,10 +104,10 @@ void depthFirstTraverse(struct Graph *graph, char start)
             {
                 graph->vertices_visited[i] = 1;
                 push(i, MAIN_STACK);
-                _debugPrintStackContents(MAIN_STACK);
             }
         }
     }
+    printf("\n");
 }
 
 int main(void)
