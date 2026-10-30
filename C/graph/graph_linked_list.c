@@ -233,25 +233,27 @@ int main(void)
     breadthFirstTraverse(graph1, 'C');
 
     // Graph 2
-    // char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    // int graph2_vertices_links[5][5] = {{0, 1, 0, 1, 0},
-    //                                    {1, 0, 0, 0, 1},
-    //                                    {0, 0, 0, 0, 1},
-    //                                    {1, 0, 0, 0, 1},
-    //                                    {0, 1, 1, 1, 0}};
-    // struct Graph *graph2 = createNewGraph(5, graph2_vertices_names, graph2_vertices_links);
-    // depthFirstTraverse(graph2, 'C');
-    // breadthFirstTraverse(graph2, 'C');
+    char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
+    struct Graph *graph2 = createNewGraph(5, graph2_vertices_names);
+    addLink(graph2, 'A', 'B');
+    addLink(graph2, 'A', 'D');
+    addLink(graph2, 'B', 'E');
+    addLink(graph2, 'C', 'E');
+    addLink(graph2, 'D', 'E');
+    depthFirstTraverse(graph2, 'C');
+    breadthFirstTraverse(graph2, 'C');
 
-    // // Graph 3
-    // char graph3_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    // int graph3_vertices_links[5][5] = {{0, 1, 1, 0, 1},
-    //                                    {1, 0, 1, 0, 1},
-    //                                    {1, 1, 0, 1, 0},
-    //                                    {0, 0, 1, 0, 1},
-    //                                    {1, 1, 0, 1, 0}};
-    // struct Graph *graph3 = createNewGraph(5, graph3_vertices_names, graph3_vertices_links);
-    // depthFirstTraverse(graph3, 'C');
-    // breadthFirstTraverse(graph3, 'C');
+    // Graph 3
+    char graph3_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
+    struct Graph *graph3 = createNewGraph(5, graph3_vertices_names);
+    addLink(graph3, 'A', 'B');
+    addLink(graph3, 'A', 'C');
+    addLink(graph3, 'A', 'E');
+    addLink(graph3, 'B', 'C');
+    addLink(graph3, 'B', 'E');
+    addLink(graph3, 'C', 'D');
+    addLink(graph3, 'D', 'E');
+    depthFirstTraverse(graph3, 'C');
+    breadthFirstTraverse(graph3, 'C');
     return 0;
 }
