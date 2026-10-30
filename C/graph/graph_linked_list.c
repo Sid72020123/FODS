@@ -100,12 +100,20 @@ void addLink(struct Graph *graph, char source, char destination)
     newNode->next = NULL;
 
     struct Node *traverse = graph->vertices_links[source_index]; // start from the source index in the array
-    // find the empty / last Node
-    while (traverse->next != NULL)
+
+    if (traverse == NULL)
     {
-        traverse = traverse->next;
+        graph->vertices_links[source_index] = newNode;
     }
-    traverse->next = newNode;
+    else
+    {
+        // find the empty / last Node
+        while (traverse->next != NULL)
+        {
+            traverse = traverse->next;
+        }
+        traverse->next = newNode;
+    }
 }
 
 void depthFirstTraverse(struct Graph *graph, char start)
@@ -139,56 +147,61 @@ void depthFirstTraverse(struct Graph *graph, char start)
 
         for (int i = 0; i < graph->vertices_count; i++)
         {
-            if (graph->vertices_links[traverse][i] == 1 && graph->vertices_visited[i] == 0)
+            struct Node *traverseVertex = graph->vertices_links[i];
+            while (traverseVertex != NULL)
             {
-                graph->vertices_visited[i] = 1;
-                push(i, MAIN_STACK);
+                if (graph->vertices_visited[traverseVertex->data] == 0)
+                {
+                    graph->vertices_visited[traverseVertex->data] = 1;
+                    push(traverseVertex->data, MAIN_STACK);
+                }
+                traverseVertex = traverseVertex->next;
             }
         }
     }
     printf("\n");
 }
 
-void breadthFirstTraverse(struct Graph *graph, char start)
-{
-    int start_index;
-    // get the starting character's index from the vertices names array
-    if (!get_index(graph, start, &start_index))
-    {
-        printf("\n[*] Error getting the index of start character '%c'.\n", start);
-        return;
-    }
+// void breadthFirstTraverse(struct Graph *graph, char start)
+// {
+//     int start_index;
+//     // get the starting character's index from the vertices names array
+//     if (!get_index(graph, start, &start_index))
+//     {
+//         printf("\n[*] Error getting the index of start character '%c'.\n", start);
+//         return;
+//     }
 
-    emptyQueue(MAIN_QUEUE);
-    // reset vertices visited booleans for each vertex
-    for (int i = 0; i < graph->vertices_count; i++)
-    {
-        graph->vertices_visited[i] = 0;
-    }
+//     emptyQueue(MAIN_QUEUE);
+//     // reset vertices visited booleans for each vertex
+//     for (int i = 0; i < graph->vertices_count; i++)
+//     {
+//         graph->vertices_visited[i] = 0;
+//     }
 
-    graph->vertices_visited[start_index] = 1;
-    enqueue(start_index, MAIN_QUEUE);
+//     graph->vertices_visited[start_index] = 1;
+//     enqueue(start_index, MAIN_QUEUE);
 
-    printf("Breadth-first Traverse [start = '%c', index = %d]: ", start, start_index);
+//     printf("Breadth-first Traverse [start = '%c', index = %d]: ", start, start_index);
 
-    while (!isQueueEmpty(MAIN_QUEUE))
-    {
-        int traverse;
-        dequeue(&traverse, MAIN_QUEUE);
+//     while (!isQueueEmpty(MAIN_QUEUE))
+//     {
+//         int traverse;
+//         dequeue(&traverse, MAIN_QUEUE);
 
-        printf("%c ", graph->vertices_names[traverse]);
+//         printf("%c ", graph->vertices_names[traverse]);
 
-        for (int i = 0; i < graph->vertices_count; i++)
-        {
-            if (graph->vertices_links[traverse][i] == 1 && graph->vertices_visited[i] == 0)
-            {
-                graph->vertices_visited[i] = 1;
-                enqueue(i, MAIN_QUEUE);
-            }
-        }
-    }
-    printf("\n");
-}
+//         for (int i = 0; i < graph->vertices_count; i++)
+//         {
+//             if (graph->vertices_links[traverse][i] == 1 && graph->vertices_visited[i] == 0)
+//             {
+//                 graph->vertices_visited[i] = 1;
+//                 enqueue(i, MAIN_QUEUE);
+//             }
+//         }
+//     }
+//     printf("\n");
+// }
 
 int main(void)
 {
@@ -197,36 +210,36 @@ int main(void)
 
     // Graph 1
     char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
-    int graph1_vertices_links[6][6] = {{0, 1, 1, 0, 0, 0},
-                                       {1, 0, 0, 1, 0, 0},
-                                       {1, 0, 0, 0, 1, 0},
-                                       {0, 1, 0, 0, 1, 0},
-                                       {0, 0, 1, 1, 0, 1},
-                                       {0, 0, 0, 0, 1, 0}};
-    struct Graph *graph1 = createNewGraph(6, graph1_vertices_names, graph1_vertices_links);
+    struct Graph *graph1 = createNewGraph(6, graph1_vertices_names);
+    addLink(graph1, 'A', 'B');
+    addLink(graph1, 'A', 'C');
+    addLink(graph1, 'B', 'D');
+    addLink(graph1, 'C', 'E');
+    addLink(graph1, 'D', 'E');
+    addLink(graph1, 'E', 'F');
     depthFirstTraverse(graph1, 'C');
-    breadthFirstTraverse(graph1, 'C');
+    // breadthFirstTraverse(graph1, 'C');
 
     // Graph 2
-    char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    int graph2_vertices_links[5][5] = {{0, 1, 0, 1, 0},
-                                       {1, 0, 0, 0, 1},
-                                       {0, 0, 0, 0, 1},
-                                       {1, 0, 0, 0, 1},
-                                       {0, 1, 1, 1, 0}};
-    struct Graph *graph2 = createNewGraph(5, graph2_vertices_names, graph2_vertices_links);
-    depthFirstTraverse(graph2, 'C');
-    breadthFirstTraverse(graph2, 'C');
+    // char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
+    // int graph2_vertices_links[5][5] = {{0, 1, 0, 1, 0},
+    //                                    {1, 0, 0, 0, 1},
+    //                                    {0, 0, 0, 0, 1},
+    //                                    {1, 0, 0, 0, 1},
+    //                                    {0, 1, 1, 1, 0}};
+    // struct Graph *graph2 = createNewGraph(5, graph2_vertices_names, graph2_vertices_links);
+    // depthFirstTraverse(graph2, 'C');
+    // breadthFirstTraverse(graph2, 'C');
 
-    // Graph 3
-    char graph3_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    int graph3_vertices_links[5][5] = {{0, 1, 1, 0, 1},
-                                       {1, 0, 1, 0, 1},
-                                       {1, 1, 0, 1, 0},
-                                       {0, 0, 1, 0, 1},
-                                       {1, 1, 0, 1, 0}};
-    struct Graph *graph3 = createNewGraph(5, graph3_vertices_names, graph3_vertices_links);
-    depthFirstTraverse(graph3, 'C');
-    breadthFirstTraverse(graph3, 'C');
+    // // Graph 3
+    // char graph3_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
+    // int graph3_vertices_links[5][5] = {{0, 1, 1, 0, 1},
+    //                                    {1, 0, 1, 0, 1},
+    //                                    {1, 1, 0, 1, 0},
+    //                                    {0, 0, 1, 0, 1},
+    //                                    {1, 1, 0, 1, 0}};
+    // struct Graph *graph3 = createNewGraph(5, graph3_vertices_names, graph3_vertices_links);
+    // depthFirstTraverse(graph3, 'C');
+    // breadthFirstTraverse(graph3, 'C');
     return 0;
 }
