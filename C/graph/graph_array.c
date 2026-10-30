@@ -21,7 +21,7 @@ struct Graph
 struct Queue *MAIN_QUEUE;
 struct Stack *MAIN_STACK;
 
-// === Global Variables / Structures ===
+// === Graph Traversal Methods ===
 
 struct Graph *createNewGraph(int size, char *vn, int vl[size][size])
 {
@@ -54,8 +54,6 @@ struct Graph *createNewGraph(int size, char *vn, int vl[size][size])
 
     return newGraph;
 }
-
-// === Graph Traversal Methods ===
 
 int get_index(struct Graph *graph, char character, int *result)
 {
