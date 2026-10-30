@@ -77,6 +77,11 @@ int get_index(struct Graph *graph, char character, int *result)
 
 void addLink(struct Graph *graph, char source, char destination)
 {
+    if (source == destination)
+    {
+        printf("\n[addLink] A vertex cannot be linked to itself.\n");
+    }
+
     int source_index, destination_index;
     if (!get_index(graph, source, &source_index))
     {
@@ -94,7 +99,8 @@ void addLink(struct Graph *graph, char source, char destination)
     newNode->data = destination_index;
     newNode->next = NULL;
 
-    struct Node *traverse = graph->vertices_links[0];
+    struct Node *traverse = graph->vertices_links[source_index]; // start from the source index in the array
+    // find the empty / last Node
     while (traverse->next != NULL)
     {
         traverse = traverse->next;
