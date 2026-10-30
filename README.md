@@ -7,8 +7,8 @@ Code for the C / C++ concepts taught in college / learned by myself & **DSA assi
 _All the concepts listed below are implemented in **`C`**_;
 
 - [`CRUD Operations`](C/assignments/crud_linked_list.c)
-- [`Queue (using Array))`](C/queue/array_queue.c)
-- [`Queue (using Linked List))`](C/queue/linked_list_queue.c)
+- [`Queue (using Array)`](C/queue/array_queue.c)
+- [`Queue (using Linked List)`](C/queue/linked_list_queue.c)
 - [`Stack (using Array)`](C/stack/array_stack.c)
 - [`Stack (using Linked List)`](C/stack/linked_list_stack.c)
 - [`Binary Tree`](C/binary_tree)
