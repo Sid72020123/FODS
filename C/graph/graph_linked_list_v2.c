@@ -69,18 +69,10 @@ struct Graph *createNewGraph(int size, char *vn)
     // set graph vertices size
     newGraph->vertices_count = size;
 
-    // create new vertices for each element in vn list
-    newGraph->vertices_names = (char *)malloc(size * sizeof(char));
+    // create new vertex for each element in vn list
     for (int i = 0; i < size; i++)
     {
-        newGraph->vertices_names[i] = vn[i];
-    }
-
-    // create the necessary memory space for the vertices_links array
-    newGraph->vertices_links = (struct Node **)malloc(size * sizeof(struct Node *));
-    for (int i = 0; i < size; i++)
-    {
-        newGraph->vertices_links[i] = NULL;
+        createVertexInGraph(vn[i], newGraph);
     }
 
     // set vertices visited as 0 for each vertex in graph
@@ -96,6 +88,14 @@ int get_index(struct Graph *graph, char character, int *result)
         return 0;
     }
 
+    struct Vertex *traverse = graph->vertices;
+    while (traverse != NULL)
+    {
+        if (traverse->vertex_data == character)
+        {
+            *result = i;
+        }
+    }
     for (int i = 0; i < graph->vertices_count; i++)
     {
         if (graph->vertices_names[i] == character)
