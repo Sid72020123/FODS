@@ -162,27 +162,27 @@ int main(void)
     MAIN_STACK = createNewStack("MAIN STACK");
 
     // Graph 1
-    char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
-    int graph1_vertices_links[6][6] = {{0, 1, 1, 0, 0, 0},
-                                       {1, 0, 0, 1, 0, 0},
-                                       {1, 0, 0, 0, 1, 0},
-                                       {0, 1, 0, 0, 1, 0},
-                                       {0, 0, 1, 1, 0, 1},
-                                       {0, 0, 0, 0, 1, 0}};
-    struct Graph *graph1 = createNewGraph(6, graph1_vertices_names, graph1_vertices_links);
-    depthFirstTraverse(graph1, 'C');
-    breadthFirstTraverse(graph1, 'C');
+    // char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+    // int graph1_vertices_links[6][6] = {{0, 1, 1, 0, 0, 0},
+    //                                    {1, 0, 0, 1, 0, 0},
+    //                                    {1, 0, 0, 0, 1, 0},
+    //                                    {0, 1, 0, 0, 1, 0},
+    //                                    {0, 0, 1, 1, 0, 1},
+    //                                    {0, 0, 0, 0, 1, 0}};
+    // struct Graph *graph1 = createNewGraph(6, graph1_vertices_names, graph1_vertices_links);
+    // depthFirstTraverse(graph1, 'C');
+    // breadthFirstTraverse(graph1, 'C');
 
     // Graph 2
-    char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    int graph2_vertices_links[5][5] = {{0, 1, 0, 1, 0},
-                                       {1, 0, 0, 0, 1},
-                                       {0, 0, 0, 0, 1},
-                                       {1, 0, 0, 0, 1},
-                                       {0, 1, 1, 1, 0}};
-    struct Graph *graph2 = createNewGraph(5, graph2_vertices_names, graph2_vertices_links);
-    depthFirstTraverse(graph2, 'C');
-    breadthFirstTraverse(graph2, 'C');
+    // char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
+    // int graph2_vertices_links[5][5] = {{0, 1, 0, 1, 0},
+    //                                    {1, 0, 0, 0, 1},
+    //                                    {0, 0, 0, 0, 1},
+    //                                    {1, 0, 0, 0, 1},
+    //                                    {0, 1, 1, 1, 0}};
+    // struct Graph *graph2 = createNewGraph(5, graph2_vertices_names, graph2_vertices_links);
+    // depthFirstTraverse(graph2, 'C');
+    // breadthFirstTraverse(graph2, 'C');
 
     // Graph 3
     char graph3_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};

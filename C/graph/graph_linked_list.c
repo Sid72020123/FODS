@@ -220,28 +220,28 @@ int main(void)
     MAIN_QUEUE = createNewQueue("MAIN QUEUE");
     MAIN_STACK = createNewStack("MAIN STACK");
 
-    // Graph 1
-    char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
-    struct Graph *graph1 = createNewGraph(6, graph1_vertices_names);
-    addLink(graph1, 'A', 'B');
-    addLink(graph1, 'A', 'C');
-    addLink(graph1, 'B', 'D');
-    addLink(graph1, 'C', 'E');
-    addLink(graph1, 'D', 'E');
-    addLink(graph1, 'E', 'F');
-    depthFirstTraverse(graph1, 'C');
-    breadthFirstTraverse(graph1, 'C');
+    // // Graph 1
+    // char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+    // struct Graph *graph1 = createNewGraph(6, graph1_vertices_names);
+    // addLink(graph1, 'A', 'B');
+    // addLink(graph1, 'A', 'C');
+    // addLink(graph1, 'B', 'D');
+    // addLink(graph1, 'C', 'E');
+    // addLink(graph1, 'D', 'E');
+    // addLink(graph1, 'E', 'F');
+    // depthFirstTraverse(graph1, 'C');
+    // breadthFirstTraverse(graph1, 'C');
 
-    // Graph 2
-    char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    struct Graph *graph2 = createNewGraph(5, graph2_vertices_names);
-    addLink(graph2, 'A', 'B');
-    addLink(graph2, 'A', 'D');
-    addLink(graph2, 'B', 'E');
-    addLink(graph2, 'C', 'E');
-    addLink(graph2, 'D', 'E');
-    depthFirstTraverse(graph2, 'C');
-    breadthFirstTraverse(graph2, 'C');
+    // // Graph 2
+    // char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
+    // struct Graph *graph2 = createNewGraph(5, graph2_vertices_names);
+    // addLink(graph2, 'A', 'B');
+    // addLink(graph2, 'A', 'D');
+    // addLink(graph2, 'B', 'E');
+    // addLink(graph2, 'C', 'E');
+    // addLink(graph2, 'D', 'E');
+    // depthFirstTraverse(graph2, 'C');
+    // breadthFirstTraverse(graph2, 'C');
 
     // Graph 3
     char graph3_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
