@@ -7,18 +7,22 @@
 #include "headers/stack.h"
 
 // === Global Variables / Structures ===
-
 struct Node
 {
-    char vertex_name;
     int data;
     struct Node *next;
 };
 
+struct Vertex
+{
+    char vertex_data;
+    struct Node **links;
+    struct Vertex *next;
+};
+
 struct Graph
 {
-    char *vertices_names;
-    struct Node **vertices_links;
+    struct Vertex **vertices;
     int vertices_count;
 
     int *vertices_visited;
@@ -29,6 +33,34 @@ struct Stack *MAIN_STACK;
 
 // === Graph Traversal Methods ===
 
+struct Vertex *createVertexInGraph(char vertex_data, struct Graph *graph)
+{
+    // allocate memory to new Vertex structure
+    struct Vertex *newVertex = (struct Vertex *)malloc(sizeof(struct Vertex));
+
+    newVertex->vertex_data = vertex_data;
+    newVertex->links = NULL;
+    newVertex->next = NULL;
+
+    if (graph->vertices == NULL)
+    {
+        graph->vertices = newVertex;
+    }
+    else
+    {
+        struct Node *traverse = graph->vertices;
+
+        // find the empty / last Vertex node
+        while (traverse->next != NULL)
+        {
+            traverse = traverse->next;
+        }
+        traverse->next = newVertex;
+    }
+
+    return newVertex;
+}
+
 struct Graph *createNewGraph(int size, char *vn)
 {
     // allocate memory to new Graph structure
@@ -37,7 +69,7 @@ struct Graph *createNewGraph(int size, char *vn)
     // set graph vertices size
     newGraph->vertices_count = size;
 
-    // copy the contents of parameter vn to new array of the same size
+    // create new vertices for each element in vn list
     newGraph->vertices_names = (char *)malloc(size * sizeof(char));
     for (int i = 0; i < size; i++)
     {
