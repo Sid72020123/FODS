@@ -380,10 +380,11 @@ int main(void)
                                       {0, 0, 1, 0, 1},
                                       {1, 1, 0, 1, 0}};
     struct Graph *graph = createNewGraph(5, graph_vertices_names, graph_vertices_links);
-    depthFirstTraverse(graph, 'C');
-    breadthFirstTraverse(graph, 'C');
+    // depthFirstTraverse(graph, 'C');
+    // breadthFirstTraverse(graph, 'C');
 
     int choice = 0;
+    char start_char;
     do
     {
         printf("\n===== MENU [Graph using Array] =====\n");
@@ -411,6 +412,18 @@ int main(void)
                 break;
             case 4:
                 crud_addEdge(graph);
+                break;
+            case 5:
+                if (get_char_input("Enter starting vertex character name: ", 3, &start_char))
+                {
+                    depthFirstTraverse(graph, start_char);
+                }
+                break;
+            case 6:
+                if (get_char_input("Enter starting vertex character name: ", 3, &start_char))
+                {
+                    breadthFirstTraverse(graph, start_char);
+                }
                 break;
             case 7:
                 printf("\nExiting...\n");
