@@ -198,11 +198,13 @@ int addEdge(char start_char, char end_char, struct Graph *graph)
         printf("\n[addEdge] Error getting the index of start character '%c'.\n", start_char);
         return 0;
     }
+
     if (!get_index(graph, end_char, &end_index))
     {
         printf("\n[addEdge] Error getting the index of end character '%c'.\n", end_char);
         return 0;
     }
+
     if (start_char == end_char)
     {
         printf("\n[addEdge]: Cannot link the same vertices.\n");
@@ -211,6 +213,116 @@ int addEdge(char start_char, char end_char, struct Graph *graph)
 
     graph->vertices_links[start_index][end_index] = 1;
     graph->vertices_links[end_index][start_index] = 1;
+    return 1;
+}
+
+int removeEdge(char start_char, char end_char, struct Graph *graph)
+{
+    int start_index, end_index;
+
+    if (!get_index(graph, start_char, &start_index))
+    {
+        printf("\n[removeEdge] Error getting the index of start character '%c'.\n", start_char);
+        return 0;
+    }
+
+    if (!get_index(graph, end_char, &end_index))
+    {
+        printf("\n[removeEdge] Error getting the index of end character '%c'.\n", end_char);
+        return 0;
+    }
+
+    if (start_char == end_char)
+    {
+        printf("\n[removeEdge]: Cannot unlink the same vertices.\n");
+        return 0;
+    }
+
+    graph->vertices_links[start_index][end_index] = 0;
+    graph->vertices_links[end_index][start_index] = 0;
+    return 1;
+}
+
+int removeVertex(char vertex_name, struct Graph *graph)
+{
+    int vertex_index;
+    if (!get_index(graph, vertex_name, &vertex_index))
+    {
+        printf("\n[removeVertex] Error getting the index of character '%c'.\n", vertex_name);
+        return 0;
+    }
+
+    int old_size = graph->vertices_count;
+    int new_size = old_size - 1;
+
+    char *new_vertices_names = NULL;
+    int **new_vertices_links = NULL;
+
+    if (new_size > 0)
+    {
+        new_vertices_names = (char *)malloc(new_size * sizeof(char));
+        new_vertices_links = (int **)malloc(new_size * sizeof(int *));
+
+        if (new_vertices_names == NULL || new_vertices_links == NULL)
+        {
+            free(new_vertices_names);
+            free(new_vertices_links);
+            printf("\n[removeVertex] Error allocating memory.\n");
+            return 0;
+        }
+
+        for (int i = 0; i < new_size; i++)
+        {
+            new_vertices_links[i] = (int *)malloc(new_size * sizeof(int));
+            if (new_vertices_links[i] == NULL)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    free(new_vertices_links[j]);
+                }
+                free(new_vertices_links);
+                free(new_vertices_names);
+                printf("\n[removeVertex] Error allocating memory.\n");
+                return 0;
+            }
+        }
+
+        int new_i = 0;
+        for (int old_i = 0; old_i < old_size; old_i++)
+        {
+            if (old_i == vertex_index)
+            {
+                continue;
+            }
+
+            new_vertices_names[new_i] = graph->vertices_names[old_i];
+
+            int new_j = 0;
+            for (int old_j = 0; old_j < old_size; old_j++)
+            {
+                if (old_j == vertex_index)
+                {
+                    continue;
+                }
+
+                new_vertices_links[new_i][new_j] =
+                    graph->vertices_links[old_i][old_j];
+                new_j++;
+            }
+            new_i++;
+        }
+    }
+
+    for (int i = 0; i < old_size; i++)
+    {
+        free(graph->vertices_links[i]);
+    }
+    free(graph->vertices_links);
+    free(graph->vertices_names);
+
+    graph->vertices_names = new_vertices_names;
+    graph->vertices_links = new_vertices_links;
+    graph->vertices_count = new_size;
     return 1;
 }
 
@@ -373,6 +485,39 @@ void crud_addEdge(struct Graph *graph)
         printf("\n[*] Added new edge '%c' -> '%c'.\n", start_char, end_char);
 }
 
+void crud_removeEdge(struct Graph *graph)
+{
+    char start_char, end_char;
+
+    if (!get_char_input("Enter starting vertex character name: ", 3, &start_char))
+    {
+        return;
+    };
+
+    if (!get_char_input("Enter ending vertex character name: ", 3, &end_char))
+    {
+        return;
+    };
+
+    if (removeEdge(start_char, end_char, graph))
+        printf("\n[*] Removed edge '%c' --X-> '%c'.\n", start_char, end_char);
+}
+
+void crud_removeVertex(struct Graph *graph)
+{
+    char vertex_name;
+
+    if (!get_char_input("Enter vertex character name to remove: ", 3, &vertex_name))
+    {
+        return;
+    }
+
+    if (removeVertex(vertex_name, graph))
+    {
+        printf("\n[*] Removed vertex with name '%c'.\n", vertex_name);
+    }
+}
+
 int main(void)
 {
     MAIN_QUEUE = createNewQueue("MAIN QUEUE");
@@ -397,9 +542,11 @@ int main(void)
         printf("2. Display Connection Matrix\n");
         printf("3. Add New Vertex\n");
         printf("4. Add Edge\n");
-        printf("5. Print Graph [depth-first]\n");
-        printf("6. Print Graph [breadth-first]\n");
-        printf("7. Exit\n");
+        printf("5. Remove Vertex\n");
+        printf("6. Remove Edge\n");
+        printf("7. Print Graph [depth-first]\n");
+        printf("8. Print Graph [breadth-first]\n");
+        printf("9. Exit\n");
 
         if (get_int_input("Enter your choice: ", 3, &choice))
         {
@@ -419,25 +566,31 @@ int main(void)
                 crud_addEdge(graph);
                 break;
             case 5:
+                crud_removeVertex(graph);
+                break;
+            case 6:
+                crud_removeEdge(graph);
+                break;
+            case 7:
                 if (get_char_input("Enter starting vertex character name: ", 3, &start_char))
                 {
                     depthFirstTraverse(graph, start_char);
                 }
                 break;
-            case 6:
+            case 8:
                 if (get_char_input("Enter starting vertex character name: ", 3, &start_char))
                 {
                     breadthFirstTraverse(graph, start_char);
                 }
                 break;
-            case 7:
+            case 9:
                 printf("\nExiting...\n");
                 break;
             default:
                 printf("\nInvalid choice!\n");
             }
         }
-    } while (choice != 7);
+    } while (choice != 8);
 
     emptyQueue(MAIN_QUEUE);
     emptyStack(MAIN_STACK);
