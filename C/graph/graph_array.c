@@ -123,46 +123,90 @@ int get_index(struct Graph *graph, char character, int *result)
     return 0;
 }
 
-void addNewVertex(char vertex_name, struct Graph *graph)
+int addNewVertex(char vertex_name, struct Graph *graph)
 {
-    // increase the size of vertices names array
+    if (graph == NULL)
+    {
+        return 0;
+    }
+
     int old_size = graph->vertices_count;
-    graph->vertices_names = (char *)realloc(graph->vertices_names, (old_size* sizeof(char) + 1));
-
-    // put the new vertex name in array
-    graph->vertices_names[old_size] = vertex_name;
-    graph->vertices_count = old_size + 1;
-
     int new_size = old_size + 1;
 
-    // create a new space for new vertex links
-    graph->vertices_links = (int **)realloc(graph->vertices_links, (new_size * sizeof(int *)));
+    char *new_vertices_names = (char *)malloc(new_size * sizeof(char));
+    int **new_vertices_links = (int **)malloc(new_size * sizeof(int *));
 
-    // create a new array fot the links of new vertex and set each element to 0
-    graph->vertices_links[new_size] = (int *)malloc(new_size * sizeof(int));
+    if (new_vertices_names == NULL || new_vertices_links == NULL)
+    {
+        free(new_vertices_names);
+        free(new_vertices_links);
+        printf("\n[addNewVertex] Error allocating memory.\n");
+        return 0;
+    }
+
+    for (int i = 0; i < new_size; i++)
+    {
+        new_vertices_links[i] = (int *)malloc(new_size * sizeof(int));
+        if (new_vertices_links[i] == NULL)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                free(new_vertices_links[j]);
+            }
+            free(new_vertices_links);
+            free(new_vertices_names);
+            printf("\n[addNewVertex] Error allocating memory.\n");
+            return 0;
+        }
+    }
+
+    for (int i = 0; i < old_size; i++)
+    {
+        new_vertices_names[i] = graph->vertices_names[i];
+        for (int j = 0; j < old_size; j++)
+        {
+            new_vertices_links[i][j] = graph->vertices_links[i][j];
+        }
+        new_vertices_links[i][old_size] = 0;
+    }
+
+    new_vertices_names[old_size] = vertex_name;
     for (int j = 0; j < new_size; j++)
     {
-        graph->vertices_links[old_size][j] = 0;
+        new_vertices_links[old_size][j] = 0;
     }
+
+    for (int i = 0; i < old_size; i++)
+    {
+        free(graph->vertices_links[i]);
+    }
+    free(graph->vertices_links);
+    free(graph->vertices_names);
+
+    graph->vertices_names = new_vertices_names;
+    graph->vertices_links = new_vertices_links;
+    graph->vertices_count = new_size;
+    return 1;
 }
 
-void addEdge(char start_char, char end_char, struct Graph *graph)
+int addEdge(char start_char, char end_char, struct Graph *graph)
 {
     int start_index, end_index;
 
     if (!get_index(graph, start_char, &start_index))
     {
         printf("\n[addEdge] Error getting the index of start character '%c'.\n", start_char);
-        return;
+        return 0;
     }
     if (!get_index(graph, end_char, &end_index))
     {
         printf("\n[addEdge] Error getting the index of end character '%c'.\n", end_char);
-        return;
+        return 0;
     }
 
     graph->vertices_links[start_index][end_index] = 1;
     graph->vertices_links[end_index][start_index] = 1;
+    return 1;
 }
 
 void depthFirstTraverse(struct Graph *graph, char start)
@@ -296,7 +340,14 @@ void crud_addNewVertex(struct Graph *graph)
         return;
     }
 
-    addNewVertex(new_char, graph);
+    if (!addNewVertex(new_char, graph))
+    {
+        printf("\n[*] Unable to add vertex '%c'.\n", new_char);
+    }
+    else
+    {
+        printf("\n[*] Added new vertex with name '%c'.\n", new_char);
+    }
 }
 
 void crud_addEdge(struct Graph *graph)
@@ -313,7 +364,8 @@ void crud_addEdge(struct Graph *graph)
         return;
     };
 
-    addEdge(start_char, end_char, graph);
+    if (addEdge(start_char, end_char, graph))
+        printf("\n[*] Added new edge '%c' -> '%c'.\n", start_char, end_char);
 }
 
 int main(void)
