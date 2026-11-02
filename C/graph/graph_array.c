@@ -13,8 +13,6 @@ struct Graph
     char *vertices_names;
     int **vertices_links;
 
-    int *vertices_visited;
-
     int vertices_count;
 };
 
@@ -49,9 +47,6 @@ struct Graph *createNewGraph(int size, char *vn, int vl[size][size])
         }
     }
 
-    // set vertices visited as 0 for each vertex in graph
-    newGraph->vertices_visited = (int *)calloc(size, sizeof(int));
-
     return newGraph;
 }
 
@@ -74,9 +69,18 @@ int get_index(struct Graph *graph, char character, int *result)
     return 0;
 }
 
+void addNewVertex(char vertex_name, struct Graph *graph)
+{
+    graph->vertices_names = (int *)realloc(graph->vertices_names, (graph->vertices_count * sizeof(int) + 1));
+    graph->vertices_names[graph->vertices_count] = vertex_name;
+    graph->vertices_count++;
+}
+
 void depthFirstTraverse(struct Graph *graph, char start)
 {
     int start_index;
+    int *vertices_visited = (int *)malloc(graph->vertices_count * sizeof(int));
+
     // get the starting character's index from the vertices names array
     if (!get_index(graph, start, &start_index))
     {
@@ -88,10 +92,10 @@ void depthFirstTraverse(struct Graph *graph, char start)
     // reset vertices visited booleans for each vertex
     for (int i = 0; i < graph->vertices_count; i++)
     {
-        graph->vertices_visited[i] = 0;
+        vertices_visited[i] = 0;
     }
 
-    graph->vertices_visited[start_index] = 1;
+    vertices_visited[start_index] = 1;
     push(start_index, MAIN_STACK);
 
     printf("Depth-first Traverse [start = '%c', index = %d]: ", start, start_index);
@@ -105,19 +109,22 @@ void depthFirstTraverse(struct Graph *graph, char start)
 
         for (int i = 0; i < graph->vertices_count; i++)
         {
-            if (graph->vertices_links[traverse][i] == 1 && graph->vertices_visited[i] == 0)
+            if (graph->vertices_links[traverse][i] == 1 && vertices_visited[i] == 0)
             {
-                graph->vertices_visited[i] = 1;
+                vertices_visited[i] = 1;
                 push(i, MAIN_STACK);
             }
         }
     }
     printf("\n");
+    free(vertices_visited); // free the temporary memory
 }
 
 void breadthFirstTraverse(struct Graph *graph, char start)
 {
     int start_index;
+    int *vertices_visited = (int *)malloc(graph->vertices_count * sizeof(int));
+
     // get the starting character's index from the vertices names array
     if (!get_index(graph, start, &start_index))
     {
@@ -129,10 +136,10 @@ void breadthFirstTraverse(struct Graph *graph, char start)
     // reset vertices visited booleans for each vertex
     for (int i = 0; i < graph->vertices_count; i++)
     {
-        graph->vertices_visited[i] = 0;
+        vertices_visited[i] = 0;
     }
 
-    graph->vertices_visited[start_index] = 1;
+    vertices_visited[start_index] = 1;
     enqueue(start_index, MAIN_QUEUE);
 
     printf("Breadth-first Traverse [start = '%c', index = %d]: ", start, start_index);
@@ -146,14 +153,15 @@ void breadthFirstTraverse(struct Graph *graph, char start)
 
         for (int i = 0; i < graph->vertices_count; i++)
         {
-            if (graph->vertices_links[traverse][i] == 1 && graph->vertices_visited[i] == 0)
+            if (graph->vertices_links[traverse][i] == 1 && vertices_visited[i] == 0)
             {
-                graph->vertices_visited[i] = 1;
+                vertices_visited[i] = 1;
                 enqueue(i, MAIN_QUEUE);
             }
         }
     }
     printf("\n");
+    free(vertices_visited); // free the temporary memory
 }
 
 int main(void)
