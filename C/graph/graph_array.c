@@ -590,7 +590,7 @@ int main(void)
                 printf("\nInvalid choice!\n");
             }
         }
-    } while (choice != 8);
+    } while (choice != 9);
 
     emptyQueue(MAIN_QUEUE);
     emptyStack(MAIN_STACK);
