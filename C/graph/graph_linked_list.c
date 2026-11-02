@@ -24,6 +24,58 @@ struct Graph
 struct Queue *MAIN_QUEUE;
 struct Stack *MAIN_STACK;
 
+// === Utilities ===
+
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    int input;
+    char extra;
+    char buffer[100];
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL &&
+            sscanf(buffer, "%d %c", &input, &extra) == 1)
+        {
+            *result = input;
+            return 1;
+        }
+
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0;
+}
+
+int get_char_input(const char *prompt, int max_tries, char *result)
+{
+    char input;
+    char extra;
+    char buffer[100];
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL &&
+            sscanf(buffer, " %c %c", &input, &extra) == 1)
+        {
+            *result = input;
+            return 1;
+        }
+
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0;
+}
+
 // === Graph Traversal Methods ===
 
 struct Graph *createNewGraph(int size, char *vn)
@@ -68,6 +120,42 @@ int get_index(struct Graph *graph, char character, int *result)
     }
 
     return 0;
+}
+
+int addNewVertex(char vertex_name, struct Graph *graph)
+{
+    if (graph == NULL)
+    {
+        return 0;
+    }
+
+    int old_size = graph->vertices_count;
+    int new_size = old_size + 1;
+    char *new_vertices_names = (char *)malloc(new_size * sizeof(char));
+    struct Node **new_vertices_links = (struct Node **)malloc(new_size * sizeof(struct Node *));
+
+    if (new_vertices_names == NULL || new_vertices_links == NULL)
+    {
+        free(new_vertices_names);
+        free(new_vertices_links);
+        printf("\n[addNewVertex] Error allocating memory.\n");
+        return 0;
+    }
+
+    for (int i = 0; i < old_size; i++)
+    {
+        new_vertices_names[i] = graph->vertices_names[i];
+        new_vertices_links[i] = graph->vertices_links[i];
+    }
+    new_vertices_names[old_size] = vertex_name;
+    new_vertices_links[old_size] = NULL;
+
+    free(graph->vertices_names);
+    free(graph->vertices_links);
+    graph->vertices_names = new_vertices_names;
+    graph->vertices_links = new_vertices_links;
+    graph->vertices_count = new_size;
+    return 1;
 }
 
 void _addItemToLinkedList(struct Node *newItem, struct Node **linkedList)
@@ -216,45 +304,143 @@ void breadthFirstTraverse(struct Graph *graph, char start)
     free(vertices_visited); // free the temporary memory
 }
 
+// === CRUD Methods ===
+
+void printVertexNames(struct Graph *graph)
+{
+    for (int i = 0; i < graph->vertices_count; i++)
+    {
+        printf("   %c", graph->vertices_names[i]);
+    }
+    printf("\n");
+}
+
+void showConnectionsList(struct Graph *graph)
+{
+    printf("\n[*] Connections of Graph [size = %d]:\n", graph->vertices_count);
+    for (int i = 0; i < graph->vertices_count; i++)
+    {
+        printf("%c -> ", graph->vertices_names[i]);
+        struct Node *traverse = graph->vertices_links[i];
+        while (traverse != NULL)
+        {
+            printf("%c", graph->vertices_names[traverse->data]);
+            if (traverse->next != NULL)
+            {
+                printf(" -> ");
+            }
+            traverse = traverse->next;
+        }
+        printf("\n");
+    }
+}
+
+void crud_addNewVertex(struct Graph *graph)
+{
+    char new_char;
+    int temp_result;
+
+    if (!get_char_input("Enter vertex character name: ", 3, &new_char))
+    {
+        return;
+    }
+
+    if (get_index(graph, new_char, &temp_result))
+    {
+        printf("\n[*] Vertex with that character already exists!\n");
+        return;
+    }
+
+    if (addNewVertex(new_char, graph))
+    {
+        printf("\n[*] Added new vertex with name '%c'.\n", new_char);
+    }
+    else
+    {
+        printf("\n[*] Unable to add vertex '%c'.\n", new_char);
+    }
+}
+
+void crud_addEdge(struct Graph *graph)
+{
+    char start_char, end_char;
+
+    if (!get_char_input("Enter starting vertex character name: ", 3, &start_char) ||
+        !get_char_input("Enter ending vertex character name: ", 3, &end_char))
+    {
+        return;
+    }
+
+    addLink(graph, start_char, end_char);
+}
+
 int main(void)
 {
     MAIN_QUEUE = createNewQueue("MAIN QUEUE");
     MAIN_STACK = createNewStack("MAIN STACK");
 
-    // // Graph 1
-    // char graph1_vertices_names[] = {'A', 'B', 'C', 'D', 'E', 'F'};
-    // struct Graph *graph1 = createNewGraph(6, graph1_vertices_names);
-    // addLink(graph1, 'A', 'B');
-    // addLink(graph1, 'A', 'C');
-    // addLink(graph1, 'B', 'D');
-    // addLink(graph1, 'C', 'E');
-    // addLink(graph1, 'D', 'E');
-    // addLink(graph1, 'E', 'F');
-    // depthFirstTraverse(graph1, 'C');
-    // breadthFirstTraverse(graph1, 'C');
+    char graph_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
+    struct Graph *graph = createNewGraph(5, graph_vertices_names);
+    addLink(graph, 'A', 'B');
+    addLink(graph, 'A', 'C');
+    addLink(graph, 'A', 'E');
+    addLink(graph, 'B', 'C');
+    addLink(graph, 'B', 'E');
+    addLink(graph, 'C', 'D');
+    addLink(graph, 'D', 'E');
 
-    // // Graph 2
-    // char graph2_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    // struct Graph *graph2 = createNewGraph(5, graph2_vertices_names);
-    // addLink(graph2, 'A', 'B');
-    // addLink(graph2, 'A', 'D');
-    // addLink(graph2, 'B', 'E');
-    // addLink(graph2, 'C', 'E');
-    // addLink(graph2, 'D', 'E');
-    // depthFirstTraverse(graph2, 'C');
-    // breadthFirstTraverse(graph2, 'C');
+    int choice = 0;
+    char start_char;
+    do
+    {
+        printf("\n===== MENU [Graph using Linked List] =====\n");
+        printf("1. Display Vertices Names\n");
+        printf("2. Display Connections List\n");
+        printf("3. Add New Vertex\n");
+        printf("4. Add Edge\n");
+        printf("5. Print Graph [depth-first]\n");
+        printf("6. Print Graph [breadth-first]\n");
+        printf("7. Exit\n");
 
-    // Graph 3
-    char graph3_vertices_names[] = {'A', 'B', 'C', 'D', 'E'};
-    struct Graph *graph3 = createNewGraph(5, graph3_vertices_names);
-    addLink(graph3, 'A', 'B');
-    addLink(graph3, 'A', 'C');
-    addLink(graph3, 'A', 'E');
-    addLink(graph3, 'B', 'C');
-    addLink(graph3, 'B', 'E');
-    addLink(graph3, 'C', 'D');
-    addLink(graph3, 'D', 'E');
-    depthFirstTraverse(graph3, 'C');
-    breadthFirstTraverse(graph3, 'C');
+        if (get_int_input("Enter your choice: ", 3, &choice))
+        {
+            switch (choice)
+            {
+            case 1:
+                printf("\n[*] Vertices of Graph: [size = %d]:\n", graph->vertices_count);
+                printVertexNames(graph);
+                break;
+            case 2:
+                showConnectionsList(graph);
+                break;
+            case 3:
+                crud_addNewVertex(graph);
+                break;
+            case 4:
+                crud_addEdge(graph);
+                break;
+            case 5:
+                if (get_char_input("Enter starting vertex character name: ", 3, &start_char))
+                {
+                    depthFirstTraverse(graph, start_char);
+                }
+                break;
+            case 6:
+                if (get_char_input("Enter starting vertex character name: ", 3, &start_char))
+                {
+                    breadthFirstTraverse(graph, start_char);
+                }
+                break;
+            case 7:
+                printf("\nExiting...\n");
+                break;
+            default:
+                printf("\nInvalid choice!\n");
+            }
+        }
+    } while (choice != 7);
+
+    emptyQueue(MAIN_QUEUE);
+    emptyStack(MAIN_STACK);
     return 0;
 }

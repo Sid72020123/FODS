@@ -203,6 +203,11 @@ int addEdge(char start_char, char end_char, struct Graph *graph)
         printf("\n[addEdge] Error getting the index of end character '%c'.\n", end_char);
         return 0;
     }
+    if (start_char == end_char)
+    {
+        printf("\n[addEdge]: Cannot link the same vertices.\n");
+        return 0;
+    }
 
     graph->vertices_links[start_index][end_index] = 1;
     graph->vertices_links[end_index][start_index] = 1;
