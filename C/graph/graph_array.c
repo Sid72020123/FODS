@@ -71,9 +71,43 @@ int get_index(struct Graph *graph, char character, int *result)
 
 void addNewVertex(char vertex_name, struct Graph *graph)
 {
-    graph->vertices_names = (int *)realloc(graph->vertices_names, (graph->vertices_count * sizeof(int) + 1));
+    // increase the size of vertices names array
+    graph->vertices_names = (char *)realloc(graph->vertices_names, (graph->vertices_count * sizeof(char) + 1));
+
+    // put the new vertex name in array
     graph->vertices_names[graph->vertices_count] = vertex_name;
     graph->vertices_count++;
+
+    int new_size = graph->vertices_count;
+
+    // create a new space for new vertex links
+    graph->vertices_links = (int **)realloc(graph->vertices_links, (new_size * sizeof(int *)));
+
+    // create a new array fot the links of new vertex and set each element to 0
+    graph->vertices_links[new_size] = (int *)malloc(new_size * sizeof(int));
+    for (int j = 0; j < new_size; j++)
+    {
+        graph->vertices_links[new_size][j] = 0;
+    }
+}
+
+void addEdge(char start_char, char end_char, struct Graph *graph)
+{
+    int start_index, end_index;
+
+    if (!get_index(graph, start_char, &start_index))
+    {
+        printf("\n[addEdge] Error getting the index of start character '%c'.\n", start_char);
+        return;
+    }
+    if (!get_index(graph, end_char, &end_index))
+    {
+        printf("\n[addEdge] Error getting the index of end character '%c'.\n", end_char);
+        return;
+    }
+
+    graph->vertices_links[start_index][end_index] = 1;
+    graph->vertices_links[end_index][start_index] = 1;
 }
 
 void depthFirstTraverse(struct Graph *graph, char start)
