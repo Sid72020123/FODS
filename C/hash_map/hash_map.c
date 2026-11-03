@@ -18,6 +18,58 @@ struct Node
 
 struct Node *HASH_TABLE[TABLE_SIZE] = {NULL};
 
+int get_int_input(const char *prompt, int max_tries, int *result)
+{
+    int input;
+    char extra;
+    char buffer[100];
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        if (sscanf(buffer, "%d %c", &input, &extra) == 1)
+        {
+            *result = input;
+            return 1; // SUCCESS
+        }
+
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+
+int get_string_input(const char *prompt, int max_tries, char *result)
+{
+    char buffer[100];
+    int tries = 0;
+
+    while (tries < max_tries)
+    {
+        printf("%s", prompt);
+        fgets(buffer, sizeof(buffer), stdin);
+
+        buffer[strcspn(buffer, "\n")] = '\0'; // remove the trailing "\n" from the input received
+
+        if (buffer[0] != '\0')
+        {
+            sprintf(result, "%s", buffer);
+            return 1; // SUCCESS
+        }
+
+        printf("Invalid input. Try again.\n");
+        tries++;
+    }
+
+    printf("Maximum tries exceeded! Please try again...\n");
+    return 0; // FAILURE
+}
+
 // === Hashing Functions  ===
 
 int hash_string(char *string)
@@ -35,12 +87,21 @@ int hash_string(char *string)
 
 // === HashMap Functions ===
 
-void insert(char *key, int roll_no, char *email)
+int insert(char *key, int roll_no, char *email)
 {
-
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    if (newNode == NULL)
+    {
+        return 0;
+    }
     newNode->name = (char *)malloc(strlen(key) + 1); // +1 for the null terminator '\0'
     newNode->email = (char *)malloc(strlen(email) + 1);
+
+    if (newNode->name == NULL || newNode->email == NULL)
+    {
+        free(newNode);
+        return 0;
+    }
 
     newNode->roll_no = roll_no;
     strcpy(newNode->name, key);
@@ -61,6 +122,7 @@ void insert(char *key, int roll_no, char *email)
         }
         traverse->next = newNode;
     }
+    return 1;
 }
 
 struct Node *copyElement(struct Node *node)
@@ -139,19 +201,35 @@ struct Node *get(char *key)
 
 void insertRecord()
 {
+    char *name;
+    char *email;
+    int roll_no;
+
+    if (!get_string_input("Enter key (name): ", 3, name))
+    {
+        return;
+    }
+    if (!get_int_input("Enter roll no.: ", 3, &roll_no))
+    {
+        return;
+    }
+    if (!get_string_input("Enter email: ", 3, email))
+    {
+        return;
+    }
+
+    if (!insert(name, roll_no, email))
+    {
+        printf("\n[*] Error inserting the record.\n");
+    }
+    else
+    {
+        printf("\n[*] New record [key = '%s'] inserted.\n", name);
+    }
 }
 
 int main(void)
 {
-    int result = hash_string("ABCDEF");
-    printf("%d\n", result);
-    insert("A", 10, "abcdef@gmail.com");
-    insert("A", 10, "abcdef@gmail.com");
-    insert("A", 10, "abcdef@gmail.com");
-    insert("A", 10, "abcdef@gmail.com");
-    insert("A", 10, "abcdef@gmail.com");
-    insert("A", 10, "abcdef@gmail.com");
-
     int choice = 0;
     do
     {
@@ -168,6 +246,7 @@ int main(void)
             switch (choice)
             {
             case 1:
+                insertRecord();
                 break;
             case 2:
 
