@@ -99,6 +99,8 @@ int insert(char *key, int roll_no, char *email)
 
     if (newNode->name == NULL || newNode->email == NULL)
     {
+        free(newNode->name);
+        free(newNode->email);
         free(newNode);
         return 0;
     }
