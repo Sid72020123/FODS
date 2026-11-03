@@ -543,15 +543,12 @@ void loadFileData(char *file_name)
 int main(void)
 {
     loadFileData("dummy_data.csv");
-    // insert("A", 100, "TESTING");
-    // insert("A", 101, "TESTING");
-    // insert("A", 102, "TESTING");
-    // insert("A", 103, "TESTING");
-    // insert("A", 104, "TESTING");
-    // insert("A", 105, "TESTING");
-    // insert("A", 106, "TESTING");
-    // insert("A", 107, "TESTING");
-    // insert("ABCDEF", 108, "TESTING");
+
+    // insert("Person 1", 101, "person_1@mail.com");
+    // insert("Person 2", 102, "person_2@mail.com");
+    // insert("Person 3", 103, "person_3@mail.com");
+    // insert("Person 4", 104, "person_4@mail.com");
+    // insert("Person 5", 105, "person_5@mail.com");
 
     int choice = 0;
     do

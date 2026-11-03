@@ -17,6 +17,7 @@ _All the concepts listed below are implemented in **`C`**_;
 - [`AVL + Binary Search Tree`](C/avl_tree)
 - [`Graph Traversal (using Adjacency Matrix)`](C/graph/graph_array.c)
 - [`Graph Traversal (using Adjacency Lists)`](C/graph/graph_linked_list.c)
+- [`Hash Map`](C/hash_map/hash_map.c)
 
 **Note: Use with caution, since these code implementations are for my personal academic learning and are were NOT intended for use in professional and production projects / applications.
 Since, many of the components still lack memory & error management, it is advised to review all the code properly before using a specific data structure for production.**
