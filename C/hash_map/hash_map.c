@@ -253,6 +253,42 @@ int removeElement(char *key, int index)
     return 0;
 }
 
+int updateElement(char *key, int index, int new_roll_no, char *new_email)
+{
+    // update the (index)th element from the block of a hash table with the key "key"
+    int hashed_index = hash_string(key);
+
+    struct Node *traverse = HASH_TABLE[hashed_index];
+
+    if (traverse == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        int i = 0;
+        while (traverse != NULL)
+        {
+            if (strcmp(traverse->name, key) == 0)
+            {
+                if (index == i)
+                {
+                    free(traverse->email);
+                    traverse->roll_no = new_roll_no;
+
+                    traverse->email = (char *)malloc(strlen(new_email) + 1);
+                    strcpy(traverse->email, new_email);
+
+                    return 1;
+                }
+                i++;
+            }
+            traverse = traverse->next;
+        }
+    }
+    return 0;
+}
+
 // === CRUD Methods ===
 
 void insertRecord()
@@ -380,6 +416,86 @@ void deleteRecords()
     }
 }
 
+void updateRecords()
+{
+    char key[100];
+    printf("\n");
+
+    if (!get_string_input("Enter key to update (name): ", 3, key))
+    {
+        return;
+    }
+    printf("\n[*] Search Results:\n");
+    struct Node *results = get(key);
+
+    if (results == NULL)
+    {
+        printf("\tNo records found with the key '%s'.\n", key);
+        return;
+    }
+
+    int count = 0;
+    while (results != NULL)
+    {
+        count += 1;
+        struct Node *temp = results;
+        printf("\t[%3d] %s | %d | %s\n", count, results->name, results->roll_no, results->email);
+        results = results->next;
+        freeElement(temp);
+    }
+    printf("\t[%3d] (UPDATE ALL)\n", count + 1);
+
+    int choice;
+    if (get_int_input("\tEnter index of record you want to update: ", 3, &choice))
+    {
+        printf("\n");
+        if (choice <= 0 || choice > count + 1)
+        {
+            printf("[*] Invalid choice entered. No records will be updated.\n");
+            return;
+        }
+
+        int new_roll_no;
+        char new_email[100];
+
+        if (!get_int_input("\tEnter the new roll no.: ", 3, &new_roll_no))
+        {
+            return;
+        }
+
+        if (!get_string_input("\tEnter the new email: ", 3, new_email))
+        {
+            return;
+        }
+
+        if (choice == count + 1)
+        {
+            for (int i = count; i > 0; i--)
+            {
+                if (updateElement(key, i - 1, new_roll_no, new_email))
+                {
+                    printf("[*] Updated record no. %d with key '%s'.\n", i, key);
+                }
+                else
+                {
+                    printf("[X] Couldn't update record no. %d with key '%s'.\n", i, key);
+                }
+            }
+        }
+        else
+        {
+            if (updateElement(key, choice - 1, new_roll_no, new_email))
+            {
+                printf("[*] Updated record no. %d with key '%s'.\n", choice, key);
+            }
+            else
+            {
+                printf("[X] Couldn't update record no. %d with key '%s'.\n", choice, key);
+            }
+        }
+    }
+}
+
 void displayHashTable()
 {
     // prints the entire hash table, including all records
@@ -439,7 +555,7 @@ int main(void)
                 searchRecords();
                 break;
             case 3:
-
+                updateRecords();
                 break;
             case 4:
                 deleteRecords();
