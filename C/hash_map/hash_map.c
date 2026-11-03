@@ -211,9 +211,9 @@ struct Node *get(char *key)
     }
 }
 
-int delete(char *key, int index)
+int remove(char *key, int index)
 {
-    // delete the (index)th element from the block of a hash table with the key "key"
+    // remove / delete the (index)th element from the block of a hash table with the key "key"
     int hashed_index = hash_string(key);
 
     struct Node *traverse = HASH_TABLE[hashed_index];
@@ -352,7 +352,7 @@ void deleteRecords()
         {
             for (int i = count; i > 0; i--)
             {
-                if (delete(key, i - 1))
+                if (remove(key, i - 1))
                 {
                     printf("[*] Deleted record no. %d with key '%s'.\n", i, key);
                 }
@@ -364,7 +364,7 @@ void deleteRecords()
         }
         else
         {
-            if (delete(key, choice - 1))
+            if (remove(key, choice - 1))
             {
                 printf("[*] Deleted record no. %d with key '%s'.\n", choice, key);
             }
@@ -404,14 +404,14 @@ void displayHashTable()
 int main(void)
 {
     insert("A", 100, "TESTING");
-    insert("A", 100, "TESTING");
-    insert("A", 100, "TESTING");
-    insert("A", 100, "TESTING");
-    insert("A", 100, "TESTING");
-    insert("A", 100, "TESTING");
-    insert("A", 100, "TESTING");
-    insert("A", 100, "TESTING");
-    insert("ABCDEF", 100, "TESTING");
+    insert("A", 101, "TESTING");
+    insert("A", 102, "TESTING");
+    insert("A", 103, "TESTING");
+    insert("A", 104, "TESTING");
+    insert("A", 105, "TESTING");
+    insert("A", 106, "TESTING");
+    insert("A", 107, "TESTING");
+    insert("ABCDEF", 108, "TESTING");
 
     int choice = 0;
     do
