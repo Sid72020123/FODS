@@ -211,7 +211,7 @@ struct Node *get(char *key)
     }
 }
 
-int remove(char *key, int index)
+int removeElement(char *key, int index)
 {
     // remove / delete the (index)th element from the block of a hash table with the key "key"
     int hashed_index = hash_string(key);
@@ -352,7 +352,7 @@ void deleteRecords()
         {
             for (int i = count; i > 0; i--)
             {
-                if (remove(key, i - 1))
+                if (removeElement(key, i - 1))
                 {
                     printf("[*] Deleted record no. %d with key '%s'.\n", i, key);
                 }
@@ -364,7 +364,7 @@ void deleteRecords()
         }
         else
         {
-            if (remove(key, choice - 1))
+            if (removeElement(key, choice - 1))
             {
                 printf("[*] Deleted record no. %d with key '%s'.\n", choice, key);
             }
