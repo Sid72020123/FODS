@@ -65,6 +65,7 @@ void insert(char *key, int roll_no, char *email)
 
 struct Node *copyElement(struct Node *node)
 {
+    // deep copy the node from the linked list
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
     if (newNode == NULL)
     {
@@ -112,7 +113,7 @@ struct Node *get(char *key)
                 struct Node *copy = copyElement(traverse);
                 if (copy == NULL)
                 {
-                    printf("[get] Unable to copy matching node.");
+                    printf("\n[get] Unable to copy matching node.\n");
                     return resultStart;
                 }
 
@@ -134,6 +135,12 @@ struct Node *get(char *key)
     }
 }
 
+// === CRUD Methods ===
+
+void insertRecord()
+{
+}
+
 int main(void)
 {
     int result = hash_string("ABCDEF");
@@ -144,5 +151,44 @@ int main(void)
     insert("A", 10, "abcdef@gmail.com");
     insert("A", 10, "abcdef@gmail.com");
     insert("A", 10, "abcdef@gmail.com");
+
+    int choice = 0;
+    do
+    {
+        printf("\n===== MENU [HashMap] =====\n");
+        printf("1. Insert new Record\n");
+        printf("2. Search Records\n");
+        printf("3. Update Record\n");
+        printf("4. Delete Record\n");
+        printf("5. Display Hash Table\n");
+        printf("6. Exit\n");
+
+        if (get_int_input("Enter your choice: ", 3, &choice))
+        {
+            switch (choice)
+            {
+            case 1:
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+            case 5:
+
+                break;
+            case 6:
+                printf("\nExiting...\n");
+                break;
+            default:
+                printf("\nInvalid choice!\n");
+            }
+        }
+    } while (choice != 6);
+
     return 0;
 }
