@@ -63,6 +63,17 @@ void insert(char *key, int roll_no, char *email)
     }
 }
 
+struct Node *copyElement(struct Node *node)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+
+    newNode->roll_no = node->roll_no;
+    strcpy(newNode->name, node->name);
+    strcpy(newNode->email, node->email);
+    newNode->next = NULL;
+    return newNode;
+}
+
 struct Node *get(char *key)
 {
     int hashed_index = hash_string(key);
@@ -75,10 +86,18 @@ struct Node *get(char *key)
     }
     else
     {
+        struct Node *result = NULL;
+        struct Node *resultStart = result;
         short int found = 0;
-        while (traverse != NULL || !found)
+
+        while (traverse != NULL)
         {
-            // TODO
+            if (strcmp(traverse->name, key) == 0)
+            {
+                result = copyElement(traverse);
+                result = result->next;
+                found = 1;
+            }
         }
     }
 }
