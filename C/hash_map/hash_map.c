@@ -272,6 +272,30 @@ void searchRecords()
     }
 }
 
+void displayHashTable()
+{
+    // prints the entire hash table, including all records
+    printf("\n[*] HASH TABLE:");
+
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        printf("\n\t[%3d]:", i);
+        struct Node *traverse = HASH_TABLE[i];
+        if (traverse == NULL)
+        {
+            printf("(No slots)");
+        }
+        else
+        {
+            while (traverse != NULL)
+            {
+                printf("(%s, %d, %s) -> ", traverse->name, traverse->roll_no, traverse->email);
+                traverse = traverse->next;
+            }
+        }
+    }
+}
+
 int main(void)
 {
     insert("A", 100, "TESTING");
@@ -311,7 +335,7 @@ int main(void)
 
                 break;
             case 5:
-
+                displayHashTable();
                 break;
             case 6:
                 printf("\nExiting...\n");
