@@ -228,22 +228,26 @@ int removeElement(char *key, int index)
         struct Node *parent = NULL;
         while (traverse != NULL)
         {
-            if (strcmp(traverse->name, key) == 0 && index == i)
+            if (strcmp(traverse->name, key) == 0)
             {
-                if (parent == NULL)
+                if (index == i)
                 {
-                    HASH_TABLE[hashed_index] = traverse->next;
+                    if (parent == NULL)
+                    {
+                        HASH_TABLE[hashed_index] = traverse->next;
+                    }
+                    else
+                    {
+                        parent->next = traverse->next;
+                    }
+                    freeElement(traverse);
+                    return 1;
                 }
-                else
-                {
-                    parent->next = traverse->next;
-                }
-                freeElement(traverse);
-                return 1;
+                i++;
             }
+
             parent = traverse;
             traverse = traverse->next;
-            i++;
         }
     }
     return 0;
