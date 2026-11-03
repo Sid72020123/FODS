@@ -521,17 +521,37 @@ void displayHashTable()
     printf("\n");
 }
 
+void loadFileData(char *file_name)
+{
+    FILE *fp = fopen(file_name, "r");
+    if (fp == NULL)
+    {
+        printf("\n[loadFileData] Unable to open file.\n");
+        return;
+    }
+    char name[100];
+    char email[100];
+    int roll_no;
+    while (fscanf(fp, " %99[^,],%d,%99s", name, &roll_no, email) == 3)
+    {
+        insert(name, roll_no, email);
+    }
+
+    fclose(fp);
+}
+
 int main(void)
 {
-    insert("A", 100, "TESTING");
-    insert("A", 101, "TESTING");
-    insert("A", 102, "TESTING");
-    insert("A", 103, "TESTING");
-    insert("A", 104, "TESTING");
-    insert("A", 105, "TESTING");
-    insert("A", 106, "TESTING");
-    insert("A", 107, "TESTING");
-    insert("ABCDEF", 108, "TESTING");
+    loadFileData("dummy_data.csv");
+    // insert("A", 100, "TESTING");
+    // insert("A", 101, "TESTING");
+    // insert("A", 102, "TESTING");
+    // insert("A", 103, "TESTING");
+    // insert("A", 104, "TESTING");
+    // insert("A", 105, "TESTING");
+    // insert("A", 106, "TESTING");
+    // insert("A", 107, "TESTING");
+    // insert("ABCDEF", 108, "TESTING");
 
     int choice = 0;
     do
