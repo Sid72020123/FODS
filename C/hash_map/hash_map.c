@@ -238,7 +238,7 @@ int delete(char *key, int index)
                 {
                     parent->next = traverse->next;
                 }
-                free(traverse);
+                freeElement(traverse);
                 return 1;
             }
             parent = traverse;
@@ -310,7 +310,7 @@ void searchRecords()
     }
 }
 
-void deleteRecord()
+void deleteRecords()
 {
     char key[100];
     printf("\n");
@@ -352,13 +352,13 @@ void deleteRecord()
         {
             for (int i = count; i > 0; i--)
             {
-                if (delete(key, i))
+                if (delete(key, i - 1))
                 {
-                    printf("[*] Deleted record no. %d with key '%s'.\n", i + 1, key);
+                    printf("[*] Deleted record no. %d with key '%s'.\n", i, key);
                 }
                 else
                 {
-                    printf("[X] Couldn't delete record no. %d with key '%s'.\n", i + 1, key);
+                    printf("[X] Couldn't delete record no. %d with key '%s'.\n", i, key);
                 }
             }
         }
@@ -419,8 +419,8 @@ int main(void)
         printf("\n===== MENU [HashMap] =====\n");
         printf("1. Insert new Record\n");
         printf("2. Search Records\n");
-        printf("3. Update Record\n");
-        printf("4. Delete Record\n");
+        printf("3. Update Records\n");
+        printf("4. Delete Records\n");
         printf("5. Display Hash Table\n");
         printf("6. Exit\n");
 
@@ -438,7 +438,7 @@ int main(void)
 
                 break;
             case 4:
-
+                deleteRecords();
                 break;
             case 5:
                 displayHashTable();
