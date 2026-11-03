@@ -152,6 +152,18 @@ struct Node *copyElement(struct Node *node)
     return newNode;
 }
 
+void freeElement(struct Node *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+
+    free(node->name);
+    free(node->email);
+    free(node);
+}
+
 struct Node *get(char *key)
 {
     int hashed_index = hash_string(key);
@@ -201,9 +213,10 @@ struct Node *get(char *key)
 
 void insertRecord()
 {
-    char *name;
-    char *email;
+    char name[100];
+    char email[100];
     int roll_no;
+    printf("\n");
 
     if (!get_string_input("Enter key (name): ", 3, name))
     {
@@ -228,8 +241,46 @@ void insertRecord()
     }
 }
 
+void searchRecords()
+{
+    char key[100];
+    printf("\n");
+
+    if (!get_string_input("Enter key (name): ", 3, key))
+    {
+        return;
+    }
+    printf("\n[*] Search Results:\n");
+    struct Node *results = get(key);
+
+    if (results == NULL)
+    {
+        printf("\tNo records found with the key '%s'.\n", key);
+        return;
+    }
+
+    int index = 1;
+    while (results != NULL)
+    {
+        struct Node *temp = results;
+        printf("\t[%3d] %s | %d | %s\n", index, results->name, results->roll_no, results->email);
+        results = results->next;
+        freeElement(temp);
+        index += 1;
+    }
+}
+
 int main(void)
 {
+    insert("A", 100, "TESTING");
+    insert("A", 100, "TESTING");
+    insert("A", 100, "TESTING");
+    insert("A", 100, "TESTING");
+    insert("A", 100, "TESTING");
+    insert("A", 100, "TESTING");
+    insert("A", 100, "TESTING");
+    insert("A", 100, "TESTING");
+
     int choice = 0;
     do
     {
@@ -249,7 +300,7 @@ int main(void)
                 insertRecord();
                 break;
             case 2:
-
+                searchRecords();
                 break;
             case 3:
 
