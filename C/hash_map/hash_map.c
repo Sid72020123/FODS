@@ -211,6 +211,44 @@ struct Node *get(char *key)
     }
 }
 
+int delete(char *key, int index)
+{
+    // delete the (index)th element from the block of a hash table with the key "key"
+    int hashed_index = hash_string(key);
+
+    struct Node *traverse = HASH_TABLE[hashed_index];
+
+    if (traverse == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        int i = 0;
+        struct Node *parent = NULL;
+        while (traverse != NULL)
+        {
+            if (strcmp(traverse->name, key) == 0 && index == i)
+            {
+                if (parent == NULL)
+                {
+                    HASH_TABLE[hashed_index] = traverse->next;
+                }
+                else
+                {
+                    parent->next = traverse->next;
+                }
+                free(traverse);
+                return 1;
+            }
+            parent = traverse;
+            traverse = traverse->next;
+            i++;
+        }
+    }
+    return 0;
+}
+
 // === CRUD Methods ===
 
 void insertRecord()
@@ -272,6 +310,72 @@ void searchRecords()
     }
 }
 
+void deleteRecord()
+{
+    char key[100];
+    printf("\n");
+
+    if (!get_string_input("Enter key to delete (name): ", 3, key))
+    {
+        return;
+    }
+    printf("\n[*] Search Results:\n");
+    struct Node *results = get(key);
+
+    if (results == NULL)
+    {
+        printf("\tNo records found with the key '%s'.\n", key);
+        return;
+    }
+
+    int count = 0;
+    while (results != NULL)
+    {
+        count += 1;
+        struct Node *temp = results;
+        printf("\t[%3d] %s | %d | %s\n", count, results->name, results->roll_no, results->email);
+        results = results->next;
+        freeElement(temp);
+    }
+    printf("\t[%3d] (DELETE ALL)\n", count + 1);
+
+    int choice;
+    if (get_int_input("\tEnter index of record you want to delete: ", 3, &choice))
+    {
+        printf("\n");
+        if (choice <= 0 || choice > count + 1)
+        {
+            printf("[*] Invalid choice entered. No records deleted.\n");
+            return;
+        }
+        if (choice == count + 1)
+        {
+            for (int i = count; i > 0; i--)
+            {
+                if (delete(key, i))
+                {
+                    printf("[*] Deleted record no. %d with key '%s'.\n", i + 1, key);
+                }
+                else
+                {
+                    printf("[X] Couldn't delete record no. %d with key '%s'.\n", i + 1, key);
+                }
+            }
+        }
+        else
+        {
+            if (delete(key, choice - 1))
+            {
+                printf("[*] Deleted record no. %d with key '%s'.\n", choice, key);
+            }
+            else
+            {
+                printf("[X] Couldn't delete record no. %d with key '%s'.\n", choice, key);
+            }
+        }
+    }
+}
+
 void displayHashTable()
 {
     // prints the entire hash table, including all records
@@ -283,17 +387,18 @@ void displayHashTable()
         struct Node *traverse = HASH_TABLE[i];
         if (traverse == NULL)
         {
-            printf("(No slots)");
+            printf(" (No slots)");
         }
         else
         {
             while (traverse != NULL)
             {
-                printf("(%s, %d, %s) -> ", traverse->name, traverse->roll_no, traverse->email);
+                printf(" (%s, %d, %s) |", traverse->name, traverse->roll_no, traverse->email);
                 traverse = traverse->next;
             }
         }
     }
+    printf("\n");
 }
 
 int main(void)
@@ -306,6 +411,7 @@ int main(void)
     insert("A", 100, "TESTING");
     insert("A", 100, "TESTING");
     insert("A", 100, "TESTING");
+    insert("ABCDEF", 100, "TESTING");
 
     int choice = 0;
     do
