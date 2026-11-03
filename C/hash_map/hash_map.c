@@ -66,8 +66,23 @@ void insert(char *key, int roll_no, char *email)
 struct Node *copyElement(struct Node *node)
 {
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    if (newNode == NULL)
+    {
+        return NULL;
+    }
 
     newNode->roll_no = node->roll_no;
+    newNode->name = (char *)malloc(strlen(node->name) + 1);
+    newNode->email = (char *)malloc(strlen(node->email) + 1);
+
+    if (newNode->name == NULL || newNode->email == NULL)
+    {
+        free(newNode->name);
+        free(newNode->email);
+        free(newNode);
+        return NULL;
+    }
+
     strcpy(newNode->name, node->name);
     strcpy(newNode->email, node->email);
     newNode->next = NULL;
@@ -83,22 +98,39 @@ struct Node *get(char *key)
     if (traverse == NULL)
     {
         // No slots in this bucket
+        return NULL;
     }
     else
     {
         struct Node *result = NULL;
-        struct Node *resultStart = result;
-        short int found = 0;
+        struct Node *resultStart = NULL;
 
         while (traverse != NULL)
         {
             if (strcmp(traverse->name, key) == 0)
             {
-                result = copyElement(traverse);
-                result = result->next;
-                found = 1;
+                struct Node *copy = copyElement(traverse);
+                if (copy == NULL)
+                {
+                    printf("[get] Unable to copy matching node.");
+                    return resultStart;
+                }
+
+                if (resultStart == NULL)
+                {
+                    resultStart = copy;
+                }
+                else
+                {
+                    result->next = copy;
+                }
+                result = copy;
             }
+
+            traverse = traverse->next;
         }
+
+        return resultStart;
     }
 }
 
