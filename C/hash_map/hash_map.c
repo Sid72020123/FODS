@@ -29,7 +29,7 @@ int hash_string(char *string)
     {
         sum += (int)string[i];
     }
-    printf("%d\n", sum);
+
     return sum % TABLE_SIZE;
 }
 
@@ -63,10 +63,35 @@ void insert(char *key, int roll_no, char *email)
     }
 }
 
+struct Node *get(char *key)
+{
+    int hashed_index = hash_string(key);
+
+    struct Node *traverse = HASH_TABLE[hashed_index];
+
+    if (traverse == NULL)
+    {
+        // No slots in this bucket
+    }
+    else
+    {
+        short int found = 0;
+        while (traverse != NULL || !found)
+        {
+            // TODO
+        }
+    }
+}
+
 int main(void)
 {
     int result = hash_string("ABCDEF");
     printf("%d\n", result);
+    insert("A", 10, "abcdef@gmail.com");
+    insert("A", 10, "abcdef@gmail.com");
+    insert("A", 10, "abcdef@gmail.com");
+    insert("A", 10, "abcdef@gmail.com");
+    insert("A", 10, "abcdef@gmail.com");
     insert("A", 10, "abcdef@gmail.com");
     return 0;
 }
